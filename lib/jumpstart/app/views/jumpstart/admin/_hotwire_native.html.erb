@@ -24,16 +24,17 @@
 <h5 class="mt-8">Android Notifications</h5>
 
 <section class="space-y-4">
-<p class="text-sm text-gray-600 dark:text-gray-300/75">
-  To send native push notifications to Android devices, you'll need to use Firebase Cloud Messaging. Enabling this adds the GoogleAuth dependency for Noticed.
-</p>
+  <p class="text-sm text-gray-600 dark:text-gray-300/75">
+    To send native push notifications to Android devices, you'll need to use Firebase Cloud Messaging. Enabling this adds the GoogleAuth dependency for Noticed.
+  </p>
 
-<div class="form-picker-group toggle">
-  <%= f.check_box :fcm, value: true, checked: Jumpstart.config.fcm? %>
-  <div>
-    <%= f.label :fcm, "Android Notifications" %>
-    <p>
-      Don't forget to follow the <%= link_to "FCM documentation in Noticed", "https://github.com/excid3/noticed/blob/master/docs/delivery_methods/fcm.md", target: :_blank %> to configure your credentials.
-    </p>
+  <div class="form-picker-group toggle">
+    <%= f.check_box :fcm, value: true, checked: Jumpstart.config.fcm? %>
+    <div>
+      <%= f.label :fcm, "Android Notifications" %>
+      <p>
+        Don't forget to follow the <%= link_to "FCM documentation in Noticed", "https://github.com/excid3/noticed/blob/master/docs/delivery_methods/fcm.md", target: :_blank %> to configure your credentials.
+      </p>
+    </div>
   </div>
-</div>
+</section>
