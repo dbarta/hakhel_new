@@ -4,8 +4,8 @@ class Pay::ChargeResource < Madmin::Resource
   # Attributes
   attribute :id, form: false
   attribute :processor_id, index: true
-  attribute :amount, index: true
-  attribute :amount_refunded, index: true
+  attribute :amount, :currency, index: true, minor_units: true
+  attribute :amount_refunded, :currency, index: true, minor_units: true
   attribute :created_at, form: false
   attribute :updated_at, form: false
   attribute :application_fee_amount
