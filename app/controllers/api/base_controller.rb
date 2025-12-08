@@ -15,6 +15,7 @@ class Api::BaseController < ActionController::API
   prepend_before_action :require_api_authentication
 
   helper :all
+  helper AvatarHelper
 
   private
 

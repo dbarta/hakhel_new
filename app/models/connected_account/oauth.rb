@@ -26,6 +26,6 @@ module ConnectedAccount::Oauth
   end
 
   def image_url
-    auth&.dig("info", "image") || GravatarHelper.gravatar_url_for(email)
+    auth&.dig("info", "image") || AvatarHelper.gravatar_url_for(email)
   end
 end
