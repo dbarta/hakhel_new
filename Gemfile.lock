@@ -130,9 +130,6 @@ GEM
       railties (>= 4.1.0)
       responders
       warden (~> 1.2.3)
-    devise-i18n (1.15.0)
-      devise (>= 4.9.0)
-      rails-i18n
     dotenv (3.2.0)
     drb (2.2.3)
     ed25519 (1.4.0)
@@ -352,9 +349,6 @@ GEM
     rails-html-sanitizer (1.6.2)
       loofah (~> 2.21)
       nokogiri (>= 1.15.7, != 1.16.7, != 1.16.6, != 1.16.5, != 1.16.4, != 1.16.3, != 1.16.2, != 1.16.1, != 1.16.0.rc1, != 1.16.0)
-    rails-i18n (8.1.0)
-      i18n (>= 0.7, < 2)
-      railties (>= 8.0.0, < 9)
     railties (8.1.1)
       actionpack (= 8.1.1)
       activesupport (= 8.1.1)
@@ -525,7 +519,6 @@ DEPENDENCIES
   capybara (>= 3.39)
   debug
   devise (~> 4.9.0)
-  devise-i18n (~> 1.10)
   erb_lint
   hotwire_combobox (~> 0.3)
   image_processing (~> 1.12)
@@ -601,7 +594,6 @@ CHECKSUMS
   date (3.5.0) sha256=5e74fd6c04b0e65d97ad4f3bb5cb2d8efb37f386cc848f46310b4593ffc46ee5
   debug (1.11.0) sha256=1425db64cfa0130c952684e3dc974985be201dd62899bf4bbe3f8b5d6cf1aef2
   devise (4.9.4) sha256=920042fe5e704c548aa4eb65ebdd65980b83ffae67feb32c697206bfd975a7f8
-  devise-i18n (1.15.0) sha256=aff406e8a2941cd1d7614643b1619031a403b2855bb6057e391d1c7c273205cd
   dotenv (3.2.0) sha256=e375b83121ea7ca4ce20f214740076129ab8514cd81378161f11c03853fe619d
   drb (2.2.3) sha256=0b00d6fdb50995fe4a45dea13663493c841112e4068656854646f418fda13373
   ed25519 (1.4.0) sha256=16e97f5198689a154247169f3453ef4cfd3f7a47481fde0ae33206cdfdcac506
@@ -706,7 +698,6 @@ CHECKSUMS
   rails (8.1.1) sha256=877509b7aef309239978685883097d2c03e21383a50a3f78882cf9b3b5c136f7
   rails-dom-testing (2.3.0) sha256=8acc7953a7b911ca44588bf08737bc16719f431a1cc3091a292bca7317925c1d
   rails-html-sanitizer (1.6.2) sha256=35fce2ca8242da8775c83b6ba9c1bcaad6751d9eb73c1abaa8403475ab89a560
-  rails-i18n (8.1.0) sha256=52d5fd6c0abef28d84223cc05647f6ae0fd552637a1ede92deee9545755b6cf3
   railties (8.1.1) sha256=fb0c7038b147bea41bf6697fa443ff1c5c47d3bb1eedd9ecf1bceeb90efcb868
   rainbow (3.1.1) sha256=039491aa3a89f42efa1d6dec2fc4e62ede96eb6acd95e52f1ad581182b79bc6a
   rake (13.3.1) sha256=8c9e89d09f66a26a01264e7e3480ec0607f0c497a861ef16063604b1b08eb19c
