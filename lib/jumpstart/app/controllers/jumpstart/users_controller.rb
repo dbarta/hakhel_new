@@ -1,5 +1,3 @@
-require_dependency "jumpstart/application_controller"
-
 module Jumpstart
   class UsersController < ApplicationController
     def index

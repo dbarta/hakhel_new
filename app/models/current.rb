@@ -27,13 +27,9 @@ class Current < ActiveSupport::CurrentAttributes
     @account_user ||= account.account_users.includes(:user).find_by(user: user)
   end
 
-  def roles
-    Array.wrap(account_user&.active_roles)
-  end
+  def roles = Array.wrap(account_user&.active_roles)
 
-  def account_admin?
-    !!account_user&.admin?
-  end
+  def account_admin? = !!account_user&.admin?
 
   def other_accounts
     @other_accounts ||= user.present? ? user.accounts.order(name: :asc).where.not(id: account.id) : Account.none

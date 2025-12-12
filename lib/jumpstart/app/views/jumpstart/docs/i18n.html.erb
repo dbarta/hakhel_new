@@ -89,14 +89,13 @@ en:
 
 <div class="not-prose">
   <pre class="lang-ruby"><code># app/controllers/messages_controller.rb
-MessagesController < BaseController
-       def update
-       # Some business logic
-
-       return redirect_to:index, notice: t(".notice") if @resource.save
-       render :edit, alert: t(".alert")
-       end
-       end</code></pre>
+class MessagesController &lt; BaseController
+   def update
+     # Some business logic
+     return redirect_to:index, notice: t(".notice") if @resource.save
+     render :edit, alert: t(".alert")
+   end
+end</code></pre>
 </div>
 
 <div class="not-prose">

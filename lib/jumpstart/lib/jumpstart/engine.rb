@@ -9,9 +9,9 @@ module Jumpstart
     end
 
     config.to_prepare do
-      if Rails.env.development?
-        ::ApplicationController.include Jumpstart::Welcome
-      end
+      ::ApplicationController.helper(Jumpstart::Engine.helpers)
+      ::Api::BaseController.helper(Jumpstart::Engine.helpers)
+      ::ApplicationController.include(Jumpstart::Welcome) if Rails.env.development?
     end
 
     initializer "turbo.native.navigation.helper" do
@@ -20,14 +20,15 @@ module Jumpstart
       end
     end
 
-    initializer "jumpstart.setup" do |app|
-      if Rails.env.development?
-        # This makes sure we can load the Jumpstart assets in development
-        config.assets.precompile << "jumpstart_manifest.js"
-      end
-
+    initializer "jumpstart.account_middleware" do |app|
       if Jumpstart::Multitenancy.path? || Rails.env.test?
         app.config.middleware.use Jumpstart::AccountMiddleware
+      end
+    end
+
+    if Rails.env.development?
+      initializer "jumpstart.copy_default_overrides" do
+        Jumpstart.copy_default_overrides
       end
     end
   end

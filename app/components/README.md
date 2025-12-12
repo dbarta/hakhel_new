@@ -26,6 +26,15 @@ Components may capture content for a specific slot. To provide HTML for the slot
 
 The `content` of a component is the output of the main block. In this case, the `<button>` tag for opening the Slideover.
 
+## Built-in Components
+
+Jumpstart includes several built-in components that you can use.
+
+* ModalComponent
+* SlideoverComponent
+* TabsComponent
+* ToastComponent
+
 ## Creating your own components
 
 Components are standard Ruby objects so you can add your own attributes, methods and logic.

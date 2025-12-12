@@ -1,6 +1,5 @@
 Jumpstart::Engine.routes.draw do
-  resource :admin, only: [:show]
-  resource :config, only: [:create]
+  resource :config, only: [:show, :create]
   resources :users, only: [:index, :create]
 
   resource :docs do
@@ -69,5 +68,5 @@ Jumpstart::Engine.routes.draw do
     get :integrations
   end
 
-  root to: "admin#show"
+  root to: "configs#show"
 end

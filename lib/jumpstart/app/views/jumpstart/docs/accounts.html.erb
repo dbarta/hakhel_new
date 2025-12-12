@@ -35,7 +35,7 @@
 </div>
 <p>You can then scope the queries in your controllers to the <code>current_account</code> so the resources are shared between users in the associated account.</p>
 <div class="not-prose">
-  <pre><code>class PostsController < ApplicationController
+  <pre><code>class PostsController &lt; ApplicationController
   def index
     @posts = current_account.posts
   end

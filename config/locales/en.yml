@@ -42,7 +42,7 @@ en:
   reveal: "Reveal"
   try_again_later: "Try again later."
 
-  account_invitations_mailer:
+  account_mailer:
     invite:
       subject: "%{inviter} invited you to %{account}"
       header_html: "%{inviter} has invited you to collaborate on <strong>%{account}</strong>"
@@ -238,7 +238,7 @@ en:
     actions: "Actions"
     view: "View"
 
-  static:
+  public:
     about:
       title: "About Us"
     privacy:

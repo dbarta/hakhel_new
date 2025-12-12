@@ -20,8 +20,8 @@ end
 # Use Inter font for full UTF-8 support in PDFs
 # https://github.com/rsms/inter
 Receipts.default_font = {
-  bold: Rails.root.join("app/assets/fonts/Inter-Bold.ttf"),
-  normal: Rails.root.join("app/assets/fonts/Inter-Regular.ttf")
+  bold: Jumpstart::Engine.root.join("app/assets/fonts/Inter-Bold.ttf"),
+  normal: Jumpstart::Engine.root.join("app/assets/fonts/Inter-Regular.ttf")
 }
 
 ActiveSupport.on_load :pay_subscription do

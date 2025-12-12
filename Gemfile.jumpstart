@@ -1,3 +1,9 @@
+require_relative "lib/jumpstart/lib/jumpstart/configuration"
+begin
+  load "config/jumpstart"
+rescue LoadError
+end
+
 # Jumpstart Pro dependencies
 gem "devise", "~> 4.9.0"
 gem "invisible_captcha", "~> 2.0"

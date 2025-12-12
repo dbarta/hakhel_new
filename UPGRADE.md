@@ -2,6 +2,20 @@
 
 This file includes notes on major changes that might affect your application and require changes from you to update.
 
+### December 12, 2025
+
+The Jumpstart config yaml file is now being replaced with a Ruby config which removes the need for a YAML parser. Your config will be automatically upgraded in development on the first request.
+
+Controllers, Views, Helpers, and most Models have been moved to `lib/jumpstart/app` to make updates simpler with git merge. Your application will now override files from Jumpstart which prevents git conflicts.
+
+To override something, copy the file from `/lib/jumpstart/app` into `app` and make your changes.
+
+Other notable changes:
+
+* `StaticController` has been renamed to `PublicController`
+* API controllers now set `Current.account` from `params[:account_id]` and skip the `fallback_account`
+* Removed `empty.svg`
+
 ### August 28, 2025
 
 API clients now raise `UnprocessableContent` instead of `UnprocessableEntity` errors when a 422 is received to match rfc9110.

@@ -42,4 +42,22 @@ module Jumpstart
     User.connection.execute("UPDATE users SET admin=false WHERE users.id='#{user.id}'")
     user.reload
   end
+
+  def self.copy_default_overrides
+    [
+      "app/views/layouts/application.html.erb",
+      "app/views/application/_head.html.erb",
+      "app/views/application/_left_nav.html.erb",
+      "app/views/application/_right_nav.html.erb",
+      "app/views/dashboard/show.html.erb",
+      "app/views/public/about.html.erb",
+      "app/views/users/agreements/_privacy_policy.html.erb",
+      "app/views/users/agreements/_terms_of_service.html.erb"
+    ].each do |path|
+      unless Rails.root.join(path).exist?
+        FileUtils.makedirs Rails.root.join(File.dirname(path))
+        FileUtils.copy Engine.root.join(path), Rails.root.join(path)
+      end
+    end
+  end
 end

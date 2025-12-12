@@ -11,8 +11,7 @@
     <button
       class="btn btn-secondary"
       data-turbo-confirm="Are you sure?"
-      data-turbo-confirm-description="This action is permanent and cannot be undone."
-      >Confirm</button>
+      data-turbo-confirm-description="This action is permanent and cannot be undone.">Confirm</button>
   </form>
 <% end %>
 
@@ -80,7 +79,7 @@
       <h2 class="modal-title">Are you sure?</h2>
       <p class="modal-body">Are you sure you want to do that. Seriously?</p>
   <% end %>
-  
+
   <% component.capture_for :actions do %>
     <button class="btn btn-secondary" data-action="click->modal#close:prevent">Cancel</button>
     <button class="btn btn-primary" data-action="click->modal#close:prevent">Continue</button>

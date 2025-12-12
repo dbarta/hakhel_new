@@ -35,7 +35,7 @@
 <p>Once set up, you can easily scope projects to the <code>current_account</code> in your <code>ProjectsController</code>:</p>
 
 <div class="not-prose">
-  <pre class="lang-ruby"><code>class ProjectsController < ApplicationController
+  <pre class="lang-ruby"><code>class ProjectsController &lt; ApplicationController
   def index
     @projects = current_account.projects
   end
@@ -61,7 +61,7 @@ end</code></pre>
 <p>Enabling multitenancy with <code>acts_as_tenant</code> is optional and must be specified for each model requiring tenant scoping. Any models without multitenancy will be globally available. It's recommended to keep models like <code>User</code> and <code>Account</code> globally available outside of tenants.</p>
 <p>To scope a resource to a tenant, ensure your model has an <code>account_id:integer</code> column in the database, and then add <code>acts_as_tenant :account</code> to the model:</p>
 <div class="not-prose">
-  <pre class="lang-ruby"><code>class Project < ApplicationRecord
+  <pre class="lang-ruby"><code>class Project &lt; ApplicationRecord
   acts_as_tenant :account
 end</code></pre>
 </div>

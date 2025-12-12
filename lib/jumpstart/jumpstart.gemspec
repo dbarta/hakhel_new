@@ -7,8 +7,8 @@ require "jumpstart/version"
 Gem::Specification.new do |s|
   s.name = "jumpstart"
   s.version = Jumpstart::VERSION
-  s.authors = ["Jason Charnes", "Chris Oliver"]
-  s.email = ["jason@thecharnes.com", "excid3@gmail.com"]
+  s.authors = ["Chris Oliver"]
+  s.email = ["chris@gorails.com"]
   s.homepage = "https://jumpstartrails.com"
   s.summary = "Jumpstart your Rails project."
   s.description = "Jumpstart your Rails project, build a business."
