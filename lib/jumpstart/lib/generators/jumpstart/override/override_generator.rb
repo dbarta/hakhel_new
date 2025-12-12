@@ -1,4 +1,4 @@
-class Jumpstart::OverrideGenerator < Rails::Generators::NamedBase
+class Jumpstart::OverrideGenerator < Rails::Generators::Base
   source_root Jumpstart::Engine.root
 
   argument :paths, type: :array, banner: "path path"
