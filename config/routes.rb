@@ -10,6 +10,12 @@ Rails.application.routes.draw do
   # get "manifest" => "rails/pwa#manifest", as: :pwa_manifest
   # get "service-worker" => "rails/pwa#service_worker", as: :pwa_service_worker
 
+  authenticated :user do
+    root to: "dashboard#show", as: :user_root
+    # Alternate route to use if logged in users should still see public root
+    # get "/dashboard", to: "dashboard#show", as: :user_root
+  end
+
   # Public marketing homepage
   root to: "public#index"
 end
