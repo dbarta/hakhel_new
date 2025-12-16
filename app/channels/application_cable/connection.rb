@@ -10,6 +10,7 @@ module ApplicationCable
     def connect
       self.current_user = find_verified_user
       set_request_details
+      set_fallback_account
       self.current_account = Current.account
 
       logger.add_tags "ActionCable", "User #{current_user.id}", "Account #{current_account.id}"
