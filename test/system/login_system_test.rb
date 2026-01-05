@@ -8,7 +8,7 @@ class LoginSystemTest < ApplicationSystemTestCase
 
   test "handles invalid email" do
     login_with_email_and_password "missing@example.org", UNIQUE_PASSWORD
-    assert_selector "p", text: I18n.t("devise.failure.invalid", authentication_keys: "Email")
+    assert_selector "p", text: I18n.t("devise.failure.invalid", authentication_keys: "email")
   end
 
   test "two factor required" do
