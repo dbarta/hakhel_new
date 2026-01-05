@@ -3,6 +3,24 @@ require "net/http"
 class ActionText::Embed < ApplicationRecord
   include ActionText::Attachable
 
+  # Implements a matching PermitScrubber to Rails that allows scripts from trusted sources
+  # https://github.com/rails/rails-html-sanitizer/blob/main/lib/rails/html/sanitizer.rb#L156-L167
+  class Scrubber < Rails::HTML::PermitScrubber
+    def initialize(...)
+      super
+      self.tags = ActionText::ContentHelper.allowed_tags || (ActionText::ContentHelper.sanitizer.class.allowed_tags + [ ActionText::Attachment.tag_name, "figure", "figcaption", "iframe", "blockquote", "time" ])
+      self.attributes = ActionText::ContentHelper.allowed_attributes || (ActionText::ContentHelper.sanitizer.class.allowed_attributes + ActionText::Attachment::ATTRIBUTES + [ "data-id", "data-flickr-embed", "target", "allow", "frameborder", "referrerpolicy", "allowfullscreen", "loading" ])
+    end
+
+    def scrub(node)
+      if node.name == "script" && ActionText::Embed.allowed_script?(node)
+        STOP
+      else
+        super
+      end
+    end
+  end
+
   # Allowed script src URLs for OEmbeds
   ALLOWED_SCRIPTS = [
     /^\/\/s.imgur.com/,
