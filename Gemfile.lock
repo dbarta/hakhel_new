@@ -81,6 +81,8 @@ GEM
       securerandom (>= 0.3)
       tzinfo (~> 2.0, >= 2.0.5)
       uri (>= 0.13.1)
+    acts_as_tenant (1.0.1)
+      rails (>= 6.0)
     addressable (2.8.8)
       public_suffix (>= 2.0.2, < 8.0)
     ast (2.4.3)
@@ -321,6 +323,9 @@ GEM
     raabro (1.4.0)
     racc (1.8.1)
     rack (3.2.4)
+    rack-cors (3.0.0)
+      logger
+      rack (>= 3.0.14)
     rack-session (2.1.1)
       base64 (>= 0.1.0)
       rack (>= 3.0.0)
@@ -520,6 +525,7 @@ PLATFORMS
   x86_64-linux-musl
 
 DEPENDENCIES
+  acts_as_tenant (~> 1.0)
   bootsnap (>= 1.4.2)
   brakeman
   bundler-audit
@@ -550,6 +556,7 @@ DEPENDENCIES
   propshaft (~> 1.0)
   puma (~> 7.0)
   pundit (~> 2.1)
+  rack-cors
   rails (~> 8.1.0)
   receipts (~> 2.1)
   rotp (~> 6.2)
@@ -581,6 +588,7 @@ CHECKSUMS
   activerecord (8.1.2) sha256=acfbe0cadfcc50fa208011fe6f4eb01cae682ebae0ef57145ba45380c74bcc44
   activestorage (8.1.2) sha256=8a63a48c3999caeee26a59441f813f94681fc35cc41aba7ce1f836add04fba76
   activesupport (8.1.2) sha256=88842578ccd0d40f658289b0e8c842acfe9af751afee2e0744a7873f50b6fdae
+  acts_as_tenant (1.0.1) sha256=6944e4d64533337938a8817a6b4ff9b11189c9dcc0b1333bb89f3821a4c14c53
   addressable (2.8.8) sha256=7c13b8f9536cf6364c03b9d417c19986019e28f7c00ac8132da4eb0fe393b057
   ast (2.4.3) sha256=954615157c1d6a382bc27d690d973195e79db7f55e9765ac7c481c60bdb4d383
   base64 (0.3.0) sha256=27337aeabad6ffae05c265c450490628ef3ebd4b67be58257393227588f5a97b
@@ -699,6 +707,7 @@ CHECKSUMS
   raabro (1.4.0) sha256=d4fa9ff5172391edb92b242eed8be802d1934b1464061ae5e70d80962c5da882
   racc (1.8.1) sha256=4a7f6929691dbec8b5209a0b373bc2614882b55fc5d2e447a21aaa691303d62f
   rack (3.2.4) sha256=5d74b6f75082a643f43c1e76b419c40f0e5527fcfee1e669ac1e6b73c0ccb6f6
+  rack-cors (3.0.0) sha256=7b95be61db39606906b61b83bd7203fa802b0ceaaad8fcb2fef39e097bf53f68
   rack-session (2.1.1) sha256=0b6dc07dea7e4b583f58a48e8b806d4c9f1c6c9214ebc202ec94562cbea2e4e9
   rack-test (2.2.0) sha256=005a36692c306ac0b4a9350355ee080fd09ddef1148a5f8b2ac636c720f5c463
   rackup (2.3.1) sha256=6c79c26753778e90983761d677a48937ee3192b3ffef6bc963c0950f94688868
