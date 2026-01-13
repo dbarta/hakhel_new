@@ -3,12 +3,12 @@ require "json"
 
 module Hke
   module Heb
-    # Simple caches/flags
     @heb_debug = false
     @h2g_cache = {}
     @g2h_cache = {}
 
-    # Control debug output
+    module_function
+
     def heb_debug=(value)
       @heb_debug = value
     end
@@ -17,14 +17,10 @@ module Hke
       puts message if @heb_debug
     end
 
-    # Returns the hebrew letter number, or zero if not a hebrew letter
     def hebrew_letter_to_number(aleph)
       debug_puts "@@@ in hebrew_letter_to_number, aleph: #{aleph}"
       i = "אבגדהוזחטיכלמנסעפצקרשת".index(aleph)
-      if i.nil?
-        # Maybe ot sofit
-        i = "אבגדהוזחטיךלםןסעףץקרשת".index(aleph)
-      end
+      i = "אבגדהוזחטיךלםןסעףץקרשת".index(aleph) if i.nil?
       result = i.nil? ? 0 : [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 200, 300, 400][i]
       debug_puts "@@@ Out of hebrew_letter_to_number, return: #{result}"
       result
@@ -32,6 +28,9 @@ module Hke
 
     def clean_name(text)
       debug_puts "@@@ in clean_name, text: #{text}"
+      text = text.to_s.dup
+      text.force_encoding("UTF-8")
+      text = text.encode("UTF-8", invalid: :replace, undef: :replace, replace: "")
       letters = "ךלםןסעףץאבגדהוזחטיכלמנסעפצקרשת "
       text.chars.filter { |a| letters.include?(a) }.join.tap do |text1|
         debug_puts "@@@ Out of clean_name, return: #{text1}"
@@ -151,7 +150,6 @@ module Hke
       result
     end
 
-    # Returns the nearest future gregorian yahrzeit date
     def yahrzeit_date(name, hebrew_month, hebrew_day)
       debug_puts "@@@ in yahrzeit_date, name: #{name}, hebrew_month: #{hebrew_month}, hebrew_day: #{hebrew_day}"
       hyd = next_hebrew_date(name, hebrew_month, hebrew_day)
@@ -160,9 +158,4 @@ module Hke
       result
     end
   end
-
-  extend Heb
-  @heb_debug = false
-  @h2g_cache = {}
-  @g2h_cache = {}
 end

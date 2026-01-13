@@ -1,0 +1,10 @@
+<div class="py-32 max-w-2xl m-auto text-right flex flex-col items-right justify-right">
+  <% if @token %>
+    <h3>SMS Preview</h3>
+    <div><%= raw @sms_preview %><br/><br/></div>
+    <h3>Landing Page Preview</h3>
+    <div><%= raw @landing_page_preview %><br/><br/></div>
+  <% else %>
+    <h3>No relation exists</h3>
+  <% end %>
+</div>

@@ -1,0 +1,26 @@
+<%= render 'hke/shared/community_admin_navbar' %>
+
+<div class="container mx-auto my-8">
+  <div class="flex items-center mb-8">
+    <h4 class="h4 ml-10">
+      <span id="people_count"><%= "#{@contact_people.count}" %></span>
+      <%= " #{t('contact_people')}" %></h4>
+    </h4>
+
+    <div class="mr-auto flex items-center">
+      <%= render partial: "hke/shared/search_box", locals: {url: contact_people_path} %>
+      <%= link_to t("shared.scaffold.new.title", model: t("contact_person")), new_contact_person_path, class: "btn btn-small btn-primary mr-10" %>
+    </div>
+  </div>
+  <div id="search_results">
+      <%= render partial: "hke/shared/search_results",
+        locals: {       items: @contact_people,
+                        fields: [ :first_name, :last_name, :email, :phone, :gender],
+                        other_fields: [],
+                        actions:     [
+                                      {name: "action_edit", path: :edit_contact_person_path},
+                                      {name: "action_delete", path: :contact_person_path, method: :delete, confirm: true}
+                                    ]
+                } %>
+  </div>
+</div>

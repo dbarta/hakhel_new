@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html class="h-full antialiased" lang="<%= I18n.locale %>">
+  <head>
+    <title>
+      <% if content_for?(:title) %>
+        <%= yield :title %> |
+      <% end %>
+      <%= Jumpstart.config.application_name %>
+    </title>
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+    <%= viewport_meta_tag %>
+    <%= javascript_include_tag "application", "data-turbo-track": "reload", defer: true %>
+    <%= stylesheet_link_tag "application", media: "all", "data-turbo-track": "reload" %>
+    <%= render "shared/favicons" %>
+    <script defer src="https://kit.fontawesome.com/0e5ab6a736.js" crossorigin="anonymous"></script>
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <%= yield :head %>
+  </head>
+  <body dir="rtl" class="min-h-screen font-sans antialiased font-normal leading-normal bg-gradient-to-br from-blue-50 to-indigo-100">
+    <div class="min-h-screen flex flex-col justify-center py-6 sm:py-12 px-4 sm:px-6 lg:px-8">
+      <%= render partial: "shared/flash" %>
+      <main class="flex-1 flex flex-col justify-center">
+        <%= yield %>
+      </main>
+    </div>
+  </body>
+</html>

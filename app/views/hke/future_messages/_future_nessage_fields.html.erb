@@ -1,0 +1,12 @@
+<div  data-controller="visibility">
+  <div class="flex gap-4">
+    <%= toggle_visibility_button %>
+    <div class="grid grid-cols-7 gap-2">
+      <%= text_fld    form, :deceased_first_name %>
+      <%= text_fld    form, :deceased_last_name %>
+      <%= text_fld    form, :full_message %>
+
+      <%= text_fld_optional form, :phone %>
+    </div>
+  </div>
+</div>

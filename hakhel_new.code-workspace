@@ -1,0 +1,17 @@
+{
+	"folders": [
+		{
+			"path": "."
+		},
+		{
+			"path": "../hakhel"
+		},
+		{
+			"path": "../hke"
+		},
+		{
+			"path": "../../rails_scripts"
+		}
+	],
+	"settings": {}
+}

@@ -1,0 +1,23 @@
+<% 
+  total_messages = messages.count
+  approved_messages = messages.approved_messages.count
+  pending_messages = messages.pending_approval.count
+  time_period_text = case time_filter
+                    when 'one_week' then '7 ימים'
+                    when 'two_weeks' then '14 ימים'  
+                    when 'one_month' then '30 ימים'
+                    else 'כל התקופות'
+                    end
+%>
+<div class="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
+  <p class="text-blue-800 font-medium">
+    יש <%= total_messages %> הודעות לשלוח תוך <%= time_period_text %>
+    <% if approved_messages > 0 && pending_messages > 0 %>
+      מתוכן <%= approved_messages %> מאושרות ו-<%= pending_messages %> לא מאושרות
+    <% elsif approved_messages > 0 %>
+      מתוכן <%= approved_messages %> מאושרות
+    <% elsif pending_messages > 0 %>
+      מתוכן <%= pending_messages %> לא מאושרות
+    <% end %>
+  </p>
+</div>

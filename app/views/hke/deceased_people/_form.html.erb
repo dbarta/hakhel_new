@@ -1,0 +1,42 @@
+<%= form_with(model: deceased_person) do |form| %>
+  <%= render "shared/error_messages", resource: form.object %>
+
+
+  <div class="flex items-center justify-between mb-4 h4">
+
+        <%= t("shared.scaffold.edit.title", model: t("deceased_person")) + ": #{@deceased_person.name}" %>
+        <div class="mr-auto flex">
+          <%= form.button t('save_deceased'), class: "btn btn-link" %>
+          <% if form.object.persisted? %>
+            <%= link_to t("delete"), form.object, class: "btn btn-link", data: { turbo_method: :delete, turbo_confirm: t("are_you_sure") } %>
+          <% end %>
+          <%= link_to t("cancel"), @deceased_person, class: "btn btn-link" %>
+        </div>
+
+  </div>
+
+  <%= render "deceased_person_fields", form: form %>
+
+
+  <div data-controller="nested-forms" >
+    <h4 class="mb-3"><%= deceased_person.relations.empty? ? t("no_contacts_for_deceased") : t("contact_people_details") %></h4>
+    <div class="mb-3">
+        <%= link_to t("add_contact"), "#", class: "btn btn-primary", data: { action: "click->nested-forms#add_association"} %>
+    </div>
+
+      <template data-nested-forms-target="template">
+        <%= form.fields_for :relations,
+              Hke::Relation.new(deceased_person: deceased_person, contact_person: Hke::ContactPerson.new),
+              child_index: "NEW_RECORD" do |rel_form| %>
+          <%= render "hke/relations/relation_fields", rel_form: rel_form, rel_class: Hke::ContactPerson %>
+        <% end %>
+      </template>
+
+      <%= form.fields_for :relations do |rel_form| %>
+        <%= render "hke/relations/relation_fields", rel_form: rel_form, rel_class: Hke::ContactPerson %>
+      <% end %>
+      <div class="mb-3" data-nested-forms-target="links"></div>
+  </div>
+
+
+<% end %>

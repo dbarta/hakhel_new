@@ -1,0 +1,50 @@
+<div data-controller="visibility">
+  <div class="flex gap-4">
+    <%= toggle_visibility_button if defined?(toggle_visibility_button) %>
+    <div class="grid grid-cols-2 gap-4">
+
+      <div class="space-y-4">
+        <h5 class="text-lg font-medium"><%= t('admin.system_preferences.form.sending_settings') %></h5>
+
+        <div class="flex items-center">
+          <%= form.check_box :enable_send_email, class: "rounded border-gray-300" %>
+          <%= form.label :enable_send_email, t('admin.system_preferences.form.enable_send_email_label'), class: "ml-2" %>
+        </div>
+
+        <div class="flex items-center">
+          <%= form.check_box :enable_send_sms, class: "rounded border-gray-300" %>
+          <%= form.label :enable_send_sms, t('admin.system_preferences.form.enable_send_sms_label'), class: "ml-2" %>
+        </div>
+
+        <div class="flex items-center">
+          <%= form.check_box :enable_send_whatsapp, class: "rounded border-gray-300" %>
+          <%= form.label :enable_send_whatsapp, t('admin.system_preferences.form.enable_send_whatsapp_label'), class: "ml-2" %>
+        </div>
+
+        <div class="flex items-center">
+          <%= form.check_box :attempt_to_resend_if_no_sent_on_time, class: "rounded border-gray-300" %>
+          <%= form.label :attempt_to_resend_if_no_sent_on_time, t('admin.system_preferences.form.attempt_to_resend_label'), class: "ml-2" %>
+        </div>
+      </div>
+
+      <div class="space-y-4">
+        <h5 class="text-lg font-medium"><%= t('admin.system_preferences.form.timing_settings') %></h5>
+
+        <div class="field">
+          <%= form.label :how_many_days_before_yahrzeit_to_send_message, t('admin.system_preferences.form.days_before_yahrzeit_label'), class: "block text-sm font-medium text-gray-700" %>
+          <div class="mt-2 space-y-2">
+            <% [1, 2, 3, 5, 7, 14, 30].each do |days| %>
+              <div class="flex items-center">
+                <%= check_box_tag "preference[how_many_days_before_yahrzeit_to_send_message][]",
+                    days,
+                    form.object.how_many_days_before_yahrzeit_to_send_message.include?(days),
+                    { id: "preference_days_#{days}", class: "rounded border-gray-300" } %>
+                <%= label_tag "preference_days_#{days}", "#{days} #{t('admin.system_preferences.form.days_suffix')}", class: "ml-2" %>
+              </div>
+            <% end %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

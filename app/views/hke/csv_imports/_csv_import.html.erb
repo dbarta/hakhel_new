@@ -1,0 +1,181 @@
+<div id="<%= dom_id(csv_import) %>">
+  <div class="bg-white rounded-lg shadow-sm p-6">
+    <div class="flex items-center justify-between mb-6">
+      <h1 class="text-2xl font-bold"><%= t('csv_imports.show.title') %></h1>
+      <div class="flex space-x-3 space-x-reverse">
+        <%= link_to t('csv_imports.show.back_to_list'), hke_csv_imports_path,
+            class: "px-4 py-2 border border-gray-300 rounded text-sm hover:bg-gray-50" %>
+        <% if csv_import.can_retry? %>
+          <%= link_to t('csv_imports.show.retry'), new_hke_csv_import_path,
+              class: "px-4 py-2 bg-blue-600 text-white rounded text-sm hover:bg-blue-700" %>
+        <% end %>
+      </div>
+    </div>
+
+    <!-- Import Status -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+      <div class="space-y-4">
+        <div>
+          <label class="block text-sm font-medium text-gray-700"><%= t('csv_imports.show.status') %></label>
+          <div class="mt-1">
+            <% case csv_import.status %>
+            <% when 'pending' %>
+              <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
+                <%= t('csv_imports.statuses.pending') %>
+              </span>
+            <% when 'processing' %>
+              <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                <%= t('csv_imports.statuses.processing') %>
+              </span>
+            <% when 'completed' %>
+              <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                <%= t('csv_imports.statuses.completed') %>
+              </span>
+            <% when 'failed' %>
+              <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
+                <%= t('csv_imports.statuses.failed') %>
+              </span>
+            <% end %>
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-sm font-medium text-gray-700"><%= t('csv_imports.show.run_name') %></label>
+          <p class="mt-1 text-sm text-gray-900"><%= csv_import.name.presence || '-' %></p>
+        </div>
+
+        <div>
+          <label class="block text-sm font-medium text-gray-700"><%= t('csv_imports.show.uploaded_by') %></label>
+          <p class="mt-1 text-sm text-gray-900"><%= csv_import.user&.name || '-' %></p>
+        </div>
+
+        <div>
+          <label class="block text-sm font-medium text-gray-700"><%= t('csv_imports.show.uploaded_at') %></label>
+          <p class="mt-1 text-sm text-gray-900"><%= csv_import.created_at.strftime("%b %d, %Y at %H:%M") %></p>
+        </div>
+      </div>
+
+      <!-- Progress and Statistics -->
+      <div class="space-y-4">
+        <% if csv_import.processing? || csv_import.completed? %>
+          <div>
+            <label class="block text-sm font-medium text-gray-700"><%= t('csv_imports.show.progress') %></label>
+            <div class="mt-1">
+              <div class="bg-gray-200 rounded-full h-2">
+                <div class="bg-blue-600 h-2 rounded-full transition-all duration-300"
+                     style="width: <%= csv_import.progress_percentage %>%"></div>
+              </div>
+              <p class="text-xs text-gray-500 mt-1">
+                <%= csv_import.processed_rows %> / <%= csv_import.total_rows %>
+                (<%= csv_import.progress_percentage %>%)
+              </p>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-3 gap-4 mb-4">
+            <div class="text-center p-3 bg-green-50 rounded">
+              <div class="text-lg font-semibold text-green-600"><%= csv_import.successful_rows %></div>
+              <div class="text-xs text-green-700"><%= t('csv_imports.show.successful') %></div>
+            </div>
+            <div class="text-center p-3 bg-red-50 rounded">
+              <div class="text-lg font-semibold text-red-600"><%= csv_import.failed_rows %></div>
+              <div class="text-xs text-red-700"><%= t('csv_imports.show.failed') %></div>
+            </div>
+            <div class="text-center p-3 bg-blue-50 rounded">
+              <div class="text-lg font-semibold text-blue-600"><%= csv_import.success_rate %>%</div>
+              <div class="text-xs text-blue-700"><%= t('csv_imports.show.success_rate') %></div>
+            </div>
+          </div>
+
+          <!-- Statistics -->
+          <div class="grid grid-cols-2 gap-4">
+            <div class="text-center p-3 bg-purple-50 rounded">
+              <div class="text-lg font-semibold text-purple-600"><%= csv_import.total_deceased_in_input %></div>
+              <div class="text-xs text-purple-700"><%= t('csv_imports.show.total_deceased_input', default: 'נפטרים בקלט') %></div>
+            </div>
+            <div class="text-center p-3 bg-indigo-50 rounded">
+              <div class="text-lg font-semibold text-indigo-600"><%= csv_import.total_contacts_in_input %></div>
+              <div class="text-xs text-indigo-700"><%= t('csv_imports.show.total_contacts_input', default: 'אנשי קשר בקלט') %></div>
+            </div>
+            <div class="text-center p-3 bg-green-50 rounded">
+              <div class="text-lg font-semibold text-green-600"><%= csv_import.new_deceased %></div>
+              <div class="text-xs text-green-700"><%= t('csv_imports.show.new_deceased', default: 'נפטרים חדשים') %></div>
+            </div>
+            <div class="text-center p-3 bg-blue-50 rounded">
+              <div class="text-lg font-semibold text-blue-600"><%= csv_import.existing_deceased %></div>
+              <div class="text-xs text-blue-700"><%= t('csv_imports.show.existing_deceased', default: 'נפטרים קיימים') %></div>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    </div>
+
+    <!-- Note about existing records -->
+    <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 mt-6">
+      <p class="text-sm text-blue-800">
+        <strong>ℹ️ <%= t('csv_imports.show.existing_records_note') %></strong>
+      </p>
+    </div>
+
+    <!-- Error Details -->
+    <% if (csv_import.failed? || csv_import.completed?) && csv_import.errors_list.any? %>
+      <div class="bg-red-50 rounded-lg p-4 mt-6">
+        <h3 class="text-lg font-medium text-red-800 mb-4">
+          <%= t('csv_imports.show.errors_title') %> (<%= csv_import.errors_list.count %>)
+        </h3>
+        <div class="max-h-64 overflow-y-auto">
+          <table class="min-w-full">
+            <thead class="bg-red-100">
+              <tr>
+                <th class="px-4 py-2 text-right text-xs font-medium text-red-700 uppercase">
+                  <%= t('csv_imports.show.row_number') %>
+                </th>
+                <th class="px-4 py-2 text-right text-xs font-medium text-red-700 uppercase">
+                  <%= t('csv_imports.show.error_message') %>
+                </th>
+              </tr>
+            </thead>
+            <tbody class="bg-white divide-y divide-red-200">
+              <% csv_import.errors_list.each do |error| %>
+                <tr>
+                  <td class="px-4 py-2 text-sm text-gray-900 text-right"><%= error['row'] %></td>
+                  <td class="px-4 py-2 text-sm text-gray-900 text-right"><%= error['message'] %></td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    <% end %>
+
+    <!-- Per-run Logs -->
+    <% if csv_import.logs.exists? %>
+      <div class="bg-gray-50 rounded-lg p-4 mt-6">
+        <h3 class="text-lg font-medium text-gray-900 mb-4">
+          <%= t('csv_imports.show.logs_title', default: 'יומן יבוא') %> (<%= csv_import.logs.count %>)
+        </h3>
+        <div class="max-h-64 overflow-y-auto">
+          <table class="min-w-full">
+            <thead class="bg-gray-100">
+              <tr>
+                <th class="px-4 py-2 text-right text-xs font-medium text-gray-700 uppercase"><%= t('csv_imports.show.row_number', default: 'שורה') %></th>
+                <th class="px-4 py-2 text-right text-xs font-medium text-gray-700 uppercase"><%= t('level', default: 'רמה') %></th>
+                <th class="px-4 py-2 text-right text-xs font-medium text-gray-700 uppercase"><%= t('message', default: 'הודעה') %></th>
+              </tr>
+            </thead>
+            <tbody class="bg-white divide-y divide-gray-200">
+              <% csv_import.logs.order(Arel.sql("COALESCE(row_number, 0) ASC"), :id).limit(1000).each do |log| %>
+                <tr>
+                  <td class="px-4 py-2 text-sm text-gray-900 text-right"><%= log.row_number || '-' %></td>
+                  <td class="px-4 py-2 text-sm text-gray-900 text-right"><%= t("logs.levels.#{log.level}", default: log.level) %></td>
+                  <td class="px-4 py-2 text-sm text-gray-900 text-right"><%= log.message %></td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>
+

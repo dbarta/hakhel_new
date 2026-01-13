@@ -1,5 +1,6 @@
 module Hke
   module ApplicationHelper
+    include Hke::HebrewSelects
 
     def sort_link(column, label)
       current = params[:sort] == column
@@ -13,7 +14,7 @@ module Hke
     end
 
     def num_days_till_yahrzeit(deceased, reference_date = Time.zone.today)
-      gregorian_yahrzeit_date = Hke.yahrzeit_date(
+      gregorian_yahrzeit_date = Hke::Heb.yahrzeit_date(
         deceased.name,
         deceased.hebrew_month_of_death,
         deceased.hebrew_day_of_death
@@ -31,7 +32,7 @@ module Hke
         5 => "שישי",   # Friday
         6 => "שבת"     # Saturday
       }
-      gregorian_yahrzeit_date = Hke.yahrzeit_date(deceased.name, deceased.hebrew_month_of_death, deceased.hebrew_day_of_death)
+      gregorian_yahrzeit_date = Hke::Heb.yahrzeit_date(deceased.name, deceased.hebrew_month_of_death, deceased.hebrew_day_of_death)
       return hebrew_days[gregorian_yahrzeit_date.wday]
     end
 
@@ -40,7 +41,7 @@ module Hke
     end
 
     def num_of_years_gone(deceased)
-      gregorian_yahrzeit_date = Hke.yahrzeit_date(deceased.name, deceased.hebrew_month_of_death, deceased.hebrew_day_of_death)
+      gregorian_yahrzeit_date = Hke::Heb.yahrzeit_date(deceased.name, deceased.hebrew_month_of_death, deceased.hebrew_day_of_death)
       years = gregorian_yahrzeit_date.year - deceased.date_of_death.year
       return years
     end
@@ -138,20 +139,6 @@ module Hke
         "aunt", "husband", "wife", "groom", "bride",
         "brother", "sister", "brother_in_law", "sister_in_law", "friend",
         "ex_wife", "ex_husband"].map{ |x| [I18n.t(x), x] }
-    end
-
-    def gender_select
-      [ "male", "female" ].map{ |x| [I18n.t(x), x] }
-      #[ [ "זכר" , "male" ],  [ "נקבה" , "female" ] ]
-    end
-
-
-    def hebrew_month_select
-      ["תשרי","חשוון","כסלו","טבת","שבט","אדר","אדר א׳","אדר ב׳","ניסן","אייר","תמוז","אב","אלול","סיוון"]
-    end
-
-    def hebrew_day_select
-      ["א׳","ב׳","ג׳","ד׳","ה׳","ו׳","ז׳","ח׳","ט׳","י׳","י״א","י״ב","י״ג","י״ד","ט״ו","ט״ז","י״ז","י״ח","י״ט","כ׳","כ״א","כ״ב","כ״ג","כ״ד","כ״ה","כ״ו","כ״ז","כ״ח","כ״ט","ל׳","ל״א"].map{|x| x.gsub("״",'"').gsub("׳","'")}
     end
 
     def generate_salutation gender

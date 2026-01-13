@@ -1,0 +1,52 @@
+<div class="container px-4 mx-auto my-8">
+  <div class="mx-auto">
+    <div class="flex items-center justify-between mb-4">
+      <h1 class="h3"><%= link_to t('admin.communities.index.title'), hke_admin_communities_path %> </h1>
+      <%= link_to t("edit"), edit_hke_admin_community_path(@community), class: "btn btn-link" %>
+    </div>
+
+    <div class="p-8 bg-white rounded shadow">
+    <div class="grid grid-cols-8">
+      <div class="mb-4">
+          <h5 class=""><%= t("name") %></h5>
+          <%= @community.name %>
+      </div>
+
+      <div class="mb-4">
+        <h5><%= t("community_type") %></h5>
+        <%= @community.community_type&.humanize %>
+      </div>
+
+      <div class="mb-4">
+        <h5><%= t("admin.communities.index.account") %></h5>
+        <%= @community.account&.name %>
+      </div>
+
+      <div class="mb-4">
+        <h5><%= t("admin.communities.index.phone_number") %></h5>
+        <%= @community.phone_number.present? ? @community.phone_number : "לא הוגדר" %>
+      </div>
+
+      <div class="mb-4">
+        <h5><%= t("admin.communities.index.email_address") %></h5>
+        <%= @community.email_address.present? ? @community.email_address : "לא הוגדר" %>
+      </div>
+
+      <div class="mb-4">
+        <h5><%= t("created_at") %></h5>
+        <%= @community.created_at.strftime("%B %d, %Y") %>
+      </div>
+
+      <div class="mb-4">
+        <h5>סה״כ משתמשים</h5>
+        <%= @stats[:total_users] %>
+      </div>
+
+      <div class="mb-4">
+        <h5>מנהלי קהילה</h5>
+        <%= @stats[:total_admins] %>
+      </div>
+    </div>
+    </div>
+  </div>
+</div>

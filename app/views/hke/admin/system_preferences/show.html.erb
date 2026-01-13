@@ -1,0 +1,47 @@
+<div class="container px-4 mx-auto my-8">
+  <div class="mx-auto">
+    <div class="flex items-center justify-between mb-4">
+      <h1 class="h3"><%= link_to t('admin.system_preferences.index.title'), hke_admin_system_preferences_path %> </h1>
+      <%= link_to t("edit"), edit_hke_admin_system_preferences_path, class: "btn btn-link" %>
+    </div>
+
+    <div class="p-8 bg-white rounded shadow">
+    <div class="grid grid-cols-8">
+      <div class="mb-4">
+          <h5 class=""><%= t('admin.system_preferences.show.product_name') %></h5>
+          <%= @system.product_name %>
+      </div>
+
+      <div class="mb-4">
+        <h5><%= t('admin.system_preferences.show.version') %></h5>
+        <%= @system.version %>
+      </div>
+
+      <div class="mb-4">
+        <h5><%= t('admin.system_preferences.show.enable_send_email') %></h5>
+        <%= @preference.enable_send_email? ? t('admin.system_preferences.show.enabled') : t('admin.system_preferences.show.disabled') %>
+      </div>
+
+      <div class="mb-4">
+        <h5><%= t('admin.system_preferences.show.enable_send_sms') %></h5>
+        <%= @preference.enable_send_sms? ? t('admin.system_preferences.show.enabled') : t('admin.system_preferences.show.disabled') %>
+      </div>
+
+      <div class="mb-4">
+        <h5><%= t('admin.system_preferences.show.enable_send_whatsapp') %></h5>
+        <%= @preference.enable_send_whatsapp? ? t('admin.system_preferences.show.enabled') : t('admin.system_preferences.show.disabled') %>
+      </div>
+
+      <div class="mb-4">
+        <h5><%= t('admin.system_preferences.show.attempt_to_resend_if_no_sent_on_time') %></h5>
+        <%= @preference.attempt_to_resend_if_no_sent_on_time? ? t('admin.system_preferences.show.enabled') : t('admin.system_preferences.show.disabled') %>
+      </div>
+
+      <div class="mb-4">
+        <h5><%= t('admin.system_preferences.show.how_many_days_before_yahrzeit_to_send_message') %></h5>
+        <%= @preference.how_many_days_before_yahrzeit_to_send_message.join(", ") %>
+      </div>
+    </div>
+    </div>
+  </div>
+</div>

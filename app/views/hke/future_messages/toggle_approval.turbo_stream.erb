@@ -1,0 +1,8 @@
+<%= turbo_stream.replace "message_#{@message.id}" do %>
+  <%= render partial: "message_row", locals: { message: @message } %>
+<% end %>
+
+<%= turbo_stream.update "stats_line" do %>
+  <%= render partial: "hke/dashboard/stats_line", locals: { messages: @messages, time_filter: @time_filter } %>
+<% end %>
+

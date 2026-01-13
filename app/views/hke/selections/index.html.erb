@@ -1,0 +1,53 @@
+<div class="container mx-auto my-8">
+  <div class="flex items-center mb-8 ">
+    <h4 class="h4 ml-10" >
+      <%= " #{t('selections')}" %>
+    </h4>
+    <div class="mr-auto flex items-center">
+      <%= link_to t("new_selection"), new_selection_path, class: "btn btn-small btn-primary mr-10" %>
+    </div>
+  </div>
+  
+
+  <% if @selections.any? %>
+    <div class="bg-white rounded shadow table-responsive">
+      <table class="table">
+        <thead>
+          <tr>
+            <th class="p-3 text-xs text-left uppercase"><%= sortable @selections, :name, "Name", class: "text-gray-700" %></th>
+            <th class="p-3 text-xs text-left uppercase"><%= sortable @selections, :purpose, "Purpose", class: "text-gray-700" %></th>
+            <th class="w-20 p-3 text-xs text-left text-gray-700 uppercase"><%= t("shared.scaffold.actions") %></th>
+          </tr>
+        </thead>
+
+        <tbody>
+        <% @selections.each do |selection| %>
+          <tr class="border-t border-gray-400 group hover:bg-gray-100">
+            <td class="p-3"><%= selection.name %></td>
+            <td class="p-3"><%= selection.purpose %></td>
+
+            <td>
+              <%= link_to t("shared.scaffold.view"), selection, class: "btn btn-link no-underline" %>
+            </td>
+          </tr>
+        <% end %>
+        </tbody>
+      </table>
+    </div>
+
+    <% if @pagy.pages > 1 %>
+      <div class="my-6 text-center">
+        <%== pagy_nav(@pagy) %>
+      </div>
+    <% end %>
+
+  <% else %>
+    <div class="flex flex-col items-center justify-between p-8 bg-white rounded shadow lg:flex-row">
+      <%= image_tag "empty.svg", class: "mb-4 lg:w-1/2" %>
+      <div class="flex-1 text-center">
+        <p class="mb-4 h3">צור את בחירתך הראשונה</p>
+        <%= link_to t("new_selection"), new_selection_path, class: "btn btn-primary" %>
+      </div>
+    </div>
+  <% end %>
+</div>

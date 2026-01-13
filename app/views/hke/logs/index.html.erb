@@ -1,0 +1,74 @@
+<style>
+  table.hke-log-table {
+    table-layout: fixed;
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  table.hke-log-table th,
+  table.hke-log-table td {
+    border: 1px solid #ccc;
+    padding: 4px 8px;
+    text-align: right;
+    word-break: break-word;
+    vertical-align: top;
+  }
+
+  .col-date   { width: 150px; }
+  .col-event  { width: 150px; }
+  .col-entity { width: 170px; }
+  /* Other columns grow automatically */
+</style>
+
+<div style="padding-left: 1rem; padding-right: 1rem;">
+  <table class="hke-log-table text-sm">
+    <thead class="bg-gray-100">
+      <tr>
+        <th class="col-date"><%= sort_link("event_time", "תאריך") %></th>
+        <th class="col-event"><%= sort_link("event_type", "אירוע") %></th>
+        <th class="col-entity"><%= sort_link("entity_type", "ישות") %></th>
+        <th>פרטים</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @logs.each do |log| %>
+        <% details = log.details || {} %>
+        <% human_details = case log.entity_type
+          when "Hke::DeceasedPerson"
+            name = "שם: #{details['first_name']} #{details['last_name']}"
+            date = "תאריך פטירה: #{details['date_of_death']&.to_date}"
+            hebrew_date = "תאריך עברי: #{[details['hebrew_day_of_death'], details['hebrew_month_of_death'], details['hebrew_year_of_death']].compact.join(' ')}"
+            [name, date, hebrew_date].join("; ")
+
+          when "Hke::ContactPerson"
+            name = "שם: #{details['first_name']} #{details['last_name']}"
+            phone = "טלפון: #{details['phone']}"
+            email = details['email'].present? ? "אימייל: #{details['email']}" : nil
+            [name, phone, email].compact.join("; ")
+
+          when "Hke::Relation"
+            relation = "Relation: #{details['relation_of_deceased_to_contact']}"
+            contact_id = "Contact: #{details['contact_person_id']}"
+            deceased_id = "Deceased: #{details['deceased_person_id']}"
+            [relation, contact_id, deceased_id].join("; ")
+
+          when "Hke::FutureMessage"
+            "הודעה: #{details['full_message']}<br>טלפון: #{details['phone']}}"
+
+          when "Hke::SentMessage"
+            "הודעה: #{details['full_message']}<br>טלפון: #{details['phone']}}"
+
+          else
+            details.map { |k, v| "<strong>#{h k}:</strong> #{h v}" }.join("<br>").html_safe
+          end %>
+        <tr>
+          <td class="col-date"><%= log.event_time.strftime("%H:%M:%S.%L %m/%d ") %></td>
+          <td class="col-event"><%= log.event_type %></td>
+          <td class="col-entity"><%= [log.entity_type&.demodulize, log.entity_id].compact.join("#") %></td>
+          <td><%= human_details.html_safe %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>
+

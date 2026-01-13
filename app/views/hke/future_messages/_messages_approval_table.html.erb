@@ -1,0 +1,28 @@
+<div class="overflow-x-auto">
+  <% if messages.any? %>
+    <table class="min-w-full bg-white border border-gray-200 rounded-lg">
+      <thead class="bg-gray-50">
+        <tr>
+          <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+            <%= t('community_admin.dashboard.message_approval.table_headers.send_date') %>
+          </th>
+          <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+            <%= t('community_admin.dashboard.message_approval.table_headers.message_preview') %>
+          </th>
+          <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+            <%= t('community_admin.dashboard.message_approval.table_headers.approve') %>
+          </th>
+        </tr>
+      </thead>
+      <tbody class="bg-white divide-y divide-gray-200">
+        <% messages.each do |message| %>
+          <%= render partial: "message_row", locals: { message: message } %>
+        <% end %>
+      </tbody>
+    </table>
+  <% else %>
+    <div class="text-center py-8 text-gray-500">
+      <%= t('community_admin.dashboard.message_approval.no_messages') %>
+    </div>
+  <% end %>
+</div>

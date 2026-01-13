@@ -1,0 +1,60 @@
+<%= form_with(model: selection) do |form| %>
+  <%= render "shared/error_messages", resource: form.object %>
+
+  <div class="form-group">
+    <%= form.label :name %>
+    <%= form.text_field :name, class: "form-control" %>
+  </div>
+
+  <div class="form-group">
+    <%= form.label :purpose %>
+    <%= form.text_field :purpose, class: "form-control" %>
+  </div>
+
+ <% if @rows.any? %>
+    <div class="bg-white rounded shadow table-responsive">
+      <table class="table">
+        <thead>
+          <tr>
+            <th class="p-3 text-xs text-left uppercase">Relation</th>
+            <th class="p-3 text-xs text-left uppercase">Is Selected</th>
+            <th class="w-20 p-3 text-xs text-left text-gray-700 uppercase"><%= t("shared.scaffold.actions") %></th>
+          </tr>
+        </thead>
+
+        <tbody>
+        <% @rows.each do |row| %>
+          <tr class="border-t border-gray-400 group hover:bg-gray-100">
+            <td class="p-3"><%= "(#{row.relation_id}) - " + row.sentence %></td>
+            <td class="p-3"><%= check_box_tag 'relation_ids[]', row.relation_id -%></td>
+
+            <td>
+              <%= link_to t("shared.scaffold.view"), selection, class: "btn btn-link no-underline" %>
+            </td>
+          </tr>
+        <% end %>
+        </tbody>
+      </table>
+    </div>
+
+  <% else %>
+    <div class="flex flex-col items-center justify-between p-8 bg-white rounded shadow lg:flex-row">
+      <%= image_tag "empty.svg", class: "mb-4 lg:w-1/2" %>
+      <div class="flex-1 text-center">
+        <p class="mb-4 h3">No relations found</p>
+
+      </div>
+    </div>
+  <% end %>
+
+
+
+
+  <div class="flex justify-between form-group">
+    <%= form.button class: "btn btn-primary" %>
+
+    <% if form.object.persisted? %>
+      <%= button_to t("delete"), form.object, class: "btn btn-danger outline", method: :delete, data: { confirm: t("are_you_sure") } %>
+    <% end %>
+  </div>
+<% end %>

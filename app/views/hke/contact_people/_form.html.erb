@@ -1,0 +1,31 @@
+<%= form_with(model: contact_person) do |form| %>
+  <%= render "shared/error_messages", resource: form.object %>
+  <%= render "contact_person_fields", form: form %>
+
+
+  <div data-controller="nested-forms" >
+    <h4 class="mb-3"><%= contact_person.relations.empty? ? t("no_deceased_people_for_contact") : t("deceased_people_details") %></h4>
+    <div class="mb-3">
+        <%= link_to t("add_deceased_person"), "#", class: "btn btn-primary", data: { action: "click->nested-forms#add_association"} %>
+    </div>
+
+      <template data-nested-forms-target="template">
+        <%= form.fields_for :relations, Hke::Relation.new(contact_person: contact_person, deceased_person: Hke::DeceasedPerson.new), child_index: "NEW_RECORD" do |rel_form| %>
+          <%= render "hke/relations/relation_fields", rel_form: rel_form, rel_class: Hke::DeceasedPerson %>
+        <% end %>
+      </template>
+
+      <%= form.fields_for :relations do |rel_form| %>
+        <%= render "hke/relations/relation_fields", rel_form: rel_form, rel_class: Hke::DeceasedPerson %>
+      <% end %>
+      <div class="mb-3" data-nested-forms-target="links"></div>
+  </div>
+
+  <div class="flex justify-between form-group">
+    <%= form.button t('save_contact'), class: "btn btn-primary" %>
+    <% if form.object.persisted? %>
+      <%= link_to t("delete"), form.object, class: "btn btn-danger outline", data: { turbo_method: :delete, turbo_confirm: t("are_you_sure") } %>
+    <% end %>
+  </div>
+
+<% end %>

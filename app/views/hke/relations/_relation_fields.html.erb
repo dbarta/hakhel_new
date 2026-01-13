@@ -1,0 +1,27 @@
+<%  table_name = rel_class.table_name
+    if table_name.include?("deceased")
+      singular_name = "deceased_person"
+      symbol_name = :deceased_person
+      partial_name = "hke/deceased_people/deceased_person_fields"
+    else
+      singular_name = "contact_person"
+      symbol_name = :contact_person
+      partial_name = "hke/contact_people/contact_person_fields"
+    end
+
+    puts "@@@@@@@@@@@@@@@@@@@@@@@@ #{table_name} | #{singular_name} | #{symbol_name}"
+%>
+
+<%= content_tag :div, class: "border-2 p-1 nested-fields mt-3", data: { new_record: rel_form.object.new_record? } do %>
+  <div class="flex gap-10 p-3">
+    <%= select_fld rel_form, :relation_of_deceased_to_contact, relations_select %>&nbsp;&nbsp;
+    <%= link_to t("remove_#{singular_name}"), "#", data: {action: "click->nested-forms#remove_association"}  %>&nbsp;&nbsp;
+    <%= link_to t("landing_page_validation"), landing_page_path(id: 1, token: rel_form.object.token) %>&nbsp;&nbsp;
+  </div>
+
+  <%= rel_form.fields_for symbol_name do |internal_form| %>
+
+    <%= render partial_name, form: internal_form %>
+  <% end %>
+  <%= rel_form.hidden_field :_destroy %>
+<% end %>

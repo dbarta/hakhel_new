@@ -1,0 +1,61 @@
+<tr id="message_<%= message.id %>" class="hover:bg-gray-50">
+  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 text-right">
+    <%= message.send_date.strftime("%b %d, %Y") %>
+  </td>
+  <td class="px-6 py-4 text-sm text-gray-900 text-right">
+    <div class="max-w-xs space-y-2">
+      <% preview_limit = 150 %>
+      <% reference_date = Time.zone.today %>
+      <% preview_text = message.message_preview(length: preview_limit, reference_date: reference_date) %>
+      <% full_text = message.rendered_full_message(reference_date: reference_date).to_s.strip %>
+      <% show_toggle = full_text.present? && full_text.length > preview_text.length %>
+
+      <div id="message_preview_<%= message.id %>" data-message-preview="<%= message.id %>">
+        <%= preview_text %>
+      </div>
+
+      <% if show_toggle %>
+        <div id="message_full_<%= message.id %>" data-message-full="<%= message.id %>" class="text-gray-800 space-y-2" hidden>
+          <%= simple_format(full_text, {}, wrapper_tag: nil) %>
+        </div>
+        <button type="button"
+                class="text-sm text-blue-600 hover:text-blue-800 focus:outline-none"
+                data-message-toggle="true"
+                data-message-id="<%= message.id %>"
+                data-show-more-text="<%= t('community_admin.dashboard.message_approval.toggle.show_all') %>"
+                data-show-less-text="<%= t('community_admin.dashboard.message_approval.toggle.show_less') %>"
+                aria-expanded="false">
+          <%= t('community_admin.dashboard.message_approval.toggle.show_all') %>
+        </button>
+      <% end %>
+    </div>
+  </td>
+  <td class="px-6 py-4 whitespace-nowrap text-center">
+    <!-- Approval toggle button -->
+    <div class="flex items-center justify-center">
+      <%= form_with url: toggle_approval_future_message_path(message, time_filter: (local_assigns[:time_filter] || params[:time_filter] || 'one_week')),
+          method: :post,
+          class: "inline" do |form| %>
+        <%= form.button type: :submit,
+            class: "flex items-center gap-2 px-3 py-1 rounded-md transition-colors #{message.approved? ? 'bg-green-100 text-green-800 hover:bg-green-200' : 'bg-yellow-100 text-yellow-800 hover:bg-yellow-200'}" do %>
+        <% if message.approved? %>
+          <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+          </svg>
+          <span class="font-medium"><%= t('community_admin.dashboard.message_approval.status.approved') %></span>
+        <% elsif message.rejected? %>
+          <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+          </svg>
+          <span class="font-medium"><%= t('community_admin.dashboard.message_approval.status.rejected') %></span>
+        <% else %>
+          <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd"></path>
+          </svg>
+          <span class="font-medium"><%= t('community_admin.dashboard.message_approval.status.pending') %></span>
+        <% end %>
+        <% end %>
+      <% end %>
+    </div>
+  </td>
+</tr>

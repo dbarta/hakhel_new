@@ -1,0 +1,46 @@
+<div class="container mx-auto my-8">
+  <div class="flex items-center justify-between mb-8">
+    <h4 class="h4"><%= t('admin.communities.index.title') %></h4>
+    <div class="flex items-center">
+      <%= link_to t('admin.communities.index.create_new'), new_hke_admin_community_path, class: "btn btn-small btn-primary" %>
+    </div>
+  </div>
+
+  <div class="bg-white rounded shadow">
+    <table class="min-w-full">
+      <thead class="bg-gray-50">
+        <tr>
+          <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider"><%= t('name') %></th>
+          <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider"><%= t('community_type') %></th>
+          <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider"><%= t('admin.communities.index.account') %></th>
+          <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider"><%= t('created_at') %></th>
+          <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider"><%= t('actions') %></th>
+        </tr>
+      </thead>
+      <tbody class="bg-white divide-y divide-gray-200">
+        <% @communities.each do |community| %>
+          <tr>
+            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 text-right">
+              <%= link_to community.name, hke_admin_community_path(community), class: "text-blue-600 hover:text-blue-900" %>
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-right">
+              <%= community.community_type&.humanize %>
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-right">
+              <%= community.account&.name %>
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-right">
+              <%= community.created_at.strftime("%b %d, %Y") %>
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-right">
+              <%= link_to t('edit'), edit_hke_admin_community_path(community), class: "text-blue-600 hover:text-blue-900 ml-4" %>
+              <%= link_to t('delete'), hke_admin_community_path(community),
+                  data: { turbo_method: :delete, turbo_confirm: t('admin.communities.index.confirm_delete') },
+                  class: "text-red-600 hover:text-red-900 ml-4" %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>

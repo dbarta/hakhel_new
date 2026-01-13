@@ -1,0 +1,635 @@
+Routes for application:
+                                   Prefix Verb   URI Pattern                                                                                       Controller#Action
+                                jumpstart        /jumpstart                                                                                        Jumpstart::Engine
+                                  mailbin        /mailbin                                                                                          Mailbin::Engine
+                       madmin_sidekiq_web        /admin/sidekiq                                                                                    Sidekiq::Web
+                     madmin_announcements GET    /admin/announcements(.:format)                                                                    madmin/announcements#index
+                                          POST   /admin/announcements(.:format)                                                                    madmin/announcements#create
+                  new_madmin_announcement GET    /admin/announcements/new(.:format)                                                                madmin/announcements#new
+                 edit_madmin_announcement GET    /admin/announcements/:id/edit(.:format)                                                           madmin/announcements#edit
+                      madmin_announcement GET    /admin/announcements/:id(.:format)                                                                madmin/announcements#show
+                                          PATCH  /admin/announcements/:id(.:format)                                                                madmin/announcements#update
+                                          PUT    /admin/announcements/:id(.:format)                                                                madmin/announcements#update
+                                          DELETE /admin/announcements/:id(.:format)                                                                madmin/announcements#destroy
+        madmin_active_storage_attachments GET    /admin/active_storage/attachments(.:format)                                                       madmin/active_storage/attachments#index
+                                          POST   /admin/active_storage/attachments(.:format)                                                       madmin/active_storage/attachments#create
+     new_madmin_active_storage_attachment GET    /admin/active_storage/attachments/new(.:format)                                                   madmin/active_storage/attachments#new
+    edit_madmin_active_storage_attachment GET    /admin/active_storage/attachments/:id/edit(.:format)                                              madmin/active_storage/attachments#edit
+         madmin_active_storage_attachment GET    /admin/active_storage/attachments/:id(.:format)                                                   madmin/active_storage/attachments#show
+                                          PATCH  /admin/active_storage/attachments/:id(.:format)                                                   madmin/active_storage/attachments#update
+                                          PUT    /admin/active_storage/attachments/:id(.:format)                                                   madmin/active_storage/attachments#update
+                                          DELETE /admin/active_storage/attachments/:id(.:format)                                                   madmin/active_storage/attachments#destroy
+              madmin_active_storage_blobs GET    /admin/active_storage/blobs(.:format)                                                             madmin/active_storage/blobs#index
+                                          POST   /admin/active_storage/blobs(.:format)                                                             madmin/active_storage/blobs#create
+           new_madmin_active_storage_blob GET    /admin/active_storage/blobs/new(.:format)                                                         madmin/active_storage/blobs#new
+          edit_madmin_active_storage_blob GET    /admin/active_storage/blobs/:id/edit(.:format)                                                    madmin/active_storage/blobs#edit
+               madmin_active_storage_blob GET    /admin/active_storage/blobs/:id(.:format)                                                         madmin/active_storage/blobs#show
+                                          PATCH  /admin/active_storage/blobs/:id(.:format)                                                         madmin/active_storage/blobs#update
+                                          PUT    /admin/active_storage/blobs/:id(.:format)                                                         madmin/active_storage/blobs#update
+                                          DELETE /admin/active_storage/blobs/:id(.:format)                                                         madmin/active_storage/blobs#destroy
+    madmin_active_storage_variant_records GET    /admin/active_storage/variant_records(.:format)                                                   madmin/active_storage/variant_records#index
+                                          POST   /admin/active_storage/variant_records(.:format)                                                   madmin/active_storage/variant_records#create
+ new_madmin_active_storage_variant_record GET    /admin/active_storage/variant_records/new(.:format)                                               madmin/active_storage/variant_records#new
+edit_madmin_active_storage_variant_record GET    /admin/active_storage/variant_records/:id/edit(.:format)                                          madmin/active_storage/variant_records#edit
+     madmin_active_storage_variant_record GET    /admin/active_storage/variant_records/:id(.:format)                                               madmin/active_storage/variant_records#show
+                                          PATCH  /admin/active_storage/variant_records/:id(.:format)                                               madmin/active_storage/variant_records#update
+                                          PUT    /admin/active_storage/variant_records/:id(.:format)                                               madmin/active_storage/variant_records#update
+                                          DELETE /admin/active_storage/variant_records/:id(.:format)                                               madmin/active_storage/variant_records#destroy
+              new_madmin_user_impersonate GET    /admin/users/:user_id/impersonate/new(.:format)                                                   madmin/user/impersonates#new
+             edit_madmin_user_impersonate GET    /admin/users/:user_id/impersonate/edit(.:format)                                                  madmin/user/impersonates#edit
+                  madmin_user_impersonate GET    /admin/users/:user_id/impersonate(.:format)                                                       madmin/user/impersonates#show
+                                          PATCH  /admin/users/:user_id/impersonate(.:format)                                                       madmin/user/impersonates#update
+                                          PUT    /admin/users/:user_id/impersonate(.:format)                                                       madmin/user/impersonates#update
+                                          DELETE /admin/users/:user_id/impersonate(.:format)                                                       madmin/user/impersonates#destroy
+                                          POST   /admin/users/:user_id/impersonate(.:format)                                                       madmin/user/impersonates#create
+                             madmin_users GET    /admin/users(.:format)                                                                            madmin/users#index
+                                          POST   /admin/users(.:format)                                                                            madmin/users#create
+                          new_madmin_user GET    /admin/users/new(.:format)                                                                        madmin/users#new
+                         edit_madmin_user GET    /admin/users/:id/edit(.:format)                                                                   madmin/users#edit
+                              madmin_user GET    /admin/users/:id(.:format)                                                                        madmin/users#show
+                                          PATCH  /admin/users/:id(.:format)                                                                        madmin/users#update
+                                          PUT    /admin/users/:id(.:format)                                                                        madmin/users#update
+                                          DELETE /admin/users/:id(.:format)                                                                        madmin/users#destroy
+                madmin_connected_accounts GET    /admin/connected_accounts(.:format)                                                               madmin/connected_accounts#index
+                                          POST   /admin/connected_accounts(.:format)                                                               madmin/connected_accounts#create
+             new_madmin_connected_account GET    /admin/connected_accounts/new(.:format)                                                           madmin/connected_accounts#new
+            edit_madmin_connected_account GET    /admin/connected_accounts/:id/edit(.:format)                                                      madmin/connected_accounts#edit
+                 madmin_connected_account GET    /admin/connected_accounts/:id(.:format)                                                           madmin/connected_accounts#show
+                                          PATCH  /admin/connected_accounts/:id(.:format)                                                           madmin/connected_accounts#update
+                                          PUT    /admin/connected_accounts/:id(.:format)                                                           madmin/connected_accounts#update
+                                          DELETE /admin/connected_accounts/:id(.:format)                                                           madmin/connected_accounts#destroy
+                          madmin_accounts GET    /admin/accounts(.:format)                                                                         madmin/accounts#index
+                                          POST   /admin/accounts(.:format)                                                                         madmin/accounts#create
+                       new_madmin_account GET    /admin/accounts/new(.:format)                                                                     madmin/accounts#new
+                      edit_madmin_account GET    /admin/accounts/:id/edit(.:format)                                                                madmin/accounts#edit
+                           madmin_account GET    /admin/accounts/:id(.:format)                                                                     madmin/accounts#show
+                                          PATCH  /admin/accounts/:id(.:format)                                                                     madmin/accounts#update
+                                          PUT    /admin/accounts/:id(.:format)                                                                     madmin/accounts#update
+                                          DELETE /admin/accounts/:id(.:format)                                                                     madmin/accounts#destroy
+                     madmin_account_users GET    /admin/account_users(.:format)                                                                    madmin/account_users#index
+                                          POST   /admin/account_users(.:format)                                                                    madmin/account_users#create
+                  new_madmin_account_user GET    /admin/account_users/new(.:format)                                                                madmin/account_users#new
+                 edit_madmin_account_user GET    /admin/account_users/:id/edit(.:format)                                                           madmin/account_users#edit
+                      madmin_account_user GET    /admin/account_users/:id(.:format)                                                                madmin/account_users#show
+                                          PATCH  /admin/account_users/:id(.:format)                                                                madmin/account_users#update
+                                          PUT    /admin/account_users/:id(.:format)                                                                madmin/account_users#update
+                                          DELETE /admin/account_users/:id(.:format)                                                                madmin/account_users#destroy
+               madmin_account_invitations GET    /admin/account_invitations(.:format)                                                              madmin/account_invitations#index
+                                          POST   /admin/account_invitations(.:format)                                                              madmin/account_invitations#create
+            new_madmin_account_invitation GET    /admin/account_invitations/new(.:format)                                                          madmin/account_invitations#new
+           edit_madmin_account_invitation GET    /admin/account_invitations/:id/edit(.:format)                                                     madmin/account_invitations#edit
+                madmin_account_invitation GET    /admin/account_invitations/:id(.:format)                                                          madmin/account_invitations#show
+                                          PATCH  /admin/account_invitations/:id(.:format)                                                          madmin/account_invitations#update
+                                          PUT    /admin/account_invitations/:id(.:format)                                                          madmin/account_invitations#update
+                                          DELETE /admin/account_invitations/:id(.:format)                                                          madmin/account_invitations#destroy
+                             madmin_plans GET    /admin/plans(.:format)                                                                            madmin/plans#index
+                                          POST   /admin/plans(.:format)                                                                            madmin/plans#create
+                          new_madmin_plan GET    /admin/plans/new(.:format)                                                                        madmin/plans#new
+                         edit_madmin_plan GET    /admin/plans/:id/edit(.:format)                                                                   madmin/plans#edit
+                              madmin_plan GET    /admin/plans/:id(.:format)                                                                        madmin/plans#show
+                                          PATCH  /admin/plans/:id(.:format)                                                                        madmin/plans#update
+                                          PUT    /admin/plans/:id(.:format)                                                                        madmin/plans#update
+                                          DELETE /admin/plans/:id(.:format)                                                                        madmin/plans#destroy
+                     madmin_pay_customers GET    /admin/pay/customers(.:format)                                                                    madmin/pay/customers#index
+                                          POST   /admin/pay/customers(.:format)                                                                    madmin/pay/customers#create
+                  new_madmin_pay_customer GET    /admin/pay/customers/new(.:format)                                                                madmin/pay/customers#new
+                 edit_madmin_pay_customer GET    /admin/pay/customers/:id/edit(.:format)                                                           madmin/pay/customers#edit
+                      madmin_pay_customer GET    /admin/pay/customers/:id(.:format)                                                                madmin/pay/customers#show
+                                          PATCH  /admin/pay/customers/:id(.:format)                                                                madmin/pay/customers#update
+                                          PUT    /admin/pay/customers/:id(.:format)                                                                madmin/pay/customers#update
+                                          DELETE /admin/pay/customers/:id(.:format)                                                                madmin/pay/customers#destroy
+                       madmin_pay_charges GET    /admin/pay/charges(.:format)                                                                      madmin/pay/charges#index
+                                          POST   /admin/pay/charges(.:format)                                                                      madmin/pay/charges#create
+                    new_madmin_pay_charge GET    /admin/pay/charges/new(.:format)                                                                  madmin/pay/charges#new
+                   edit_madmin_pay_charge GET    /admin/pay/charges/:id/edit(.:format)                                                             madmin/pay/charges#edit
+                        madmin_pay_charge GET    /admin/pay/charges/:id(.:format)                                                                  madmin/pay/charges#show
+                                          PATCH  /admin/pay/charges/:id(.:format)                                                                  madmin/pay/charges#update
+                                          PUT    /admin/pay/charges/:id(.:format)                                                                  madmin/pay/charges#update
+                                          DELETE /admin/pay/charges/:id(.:format)                                                                  madmin/pay/charges#destroy
+               madmin_pay_payment_methods GET    /admin/pay/payment_methods(.:format)                                                              madmin/pay/payment_methods#index
+                                          POST   /admin/pay/payment_methods(.:format)                                                              madmin/pay/payment_methods#create
+            new_madmin_pay_payment_method GET    /admin/pay/payment_methods/new(.:format)                                                          madmin/pay/payment_methods#new
+           edit_madmin_pay_payment_method GET    /admin/pay/payment_methods/:id/edit(.:format)                                                     madmin/pay/payment_methods#edit
+                madmin_pay_payment_method GET    /admin/pay/payment_methods/:id(.:format)                                                          madmin/pay/payment_methods#show
+                                          PATCH  /admin/pay/payment_methods/:id(.:format)                                                          madmin/pay/payment_methods#update
+                                          PUT    /admin/pay/payment_methods/:id(.:format)                                                          madmin/pay/payment_methods#update
+                                          DELETE /admin/pay/payment_methods/:id(.:format)                                                          madmin/pay/payment_methods#destroy
+                 madmin_pay_subscriptions GET    /admin/pay/subscriptions(.:format)                                                                madmin/pay/subscriptions#index
+                                          POST   /admin/pay/subscriptions(.:format)                                                                madmin/pay/subscriptions#create
+              new_madmin_pay_subscription GET    /admin/pay/subscriptions/new(.:format)                                                            madmin/pay/subscriptions#new
+             edit_madmin_pay_subscription GET    /admin/pay/subscriptions/:id/edit(.:format)                                                       madmin/pay/subscriptions#edit
+                  madmin_pay_subscription GET    /admin/pay/subscriptions/:id(.:format)                                                            madmin/pay/subscriptions#show
+                                          PATCH  /admin/pay/subscriptions/:id(.:format)                                                            madmin/pay/subscriptions#update
+                                          PUT    /admin/pay/subscriptions/:id(.:format)                                                            madmin/pay/subscriptions#update
+                                          DELETE /admin/pay/subscriptions/:id(.:format)                                                            madmin/pay/subscriptions#destroy
+                              madmin_root GET    /admin(.:format)                                                                                  madmin/dashboard#show
+                           switch_account PATCH  /accounts/:id/switch(.:format)                                                                    accounts#switch
+                     new_account_transfer GET    /accounts/:account_id/transfer/new(.:format)                                                      accounts/transfers#new
+                    edit_account_transfer GET    /accounts/:account_id/transfer/edit(.:format)                                                     accounts/transfers#edit
+                         account_transfer GET    /accounts/:account_id/transfer(.:format)                                                          accounts/transfers#show
+                                          PATCH  /accounts/:account_id/transfer(.:format)                                                          accounts/transfers#update
+                                          PUT    /accounts/:account_id/transfer(.:format)                                                          accounts/transfers#update
+                                          DELETE /accounts/:account_id/transfer(.:format)                                                          accounts/transfers#destroy
+                                          POST   /accounts/:account_id/transfer(.:format)                                                          accounts/transfers#create
+                    account_account_users GET    /accounts/:account_id/members(.:format)                                                           account_users#index
+                                          POST   /accounts/:account_id/members(.:format)                                                           account_users#create
+                 new_account_account_user GET    /accounts/:account_id/members/new(.:format)                                                       account_users#new
+                edit_account_account_user GET    /accounts/:account_id/members/:id/edit(.:format)                                                  account_users#edit
+                     account_account_user GET    /accounts/:account_id/members/:id(.:format)                                                       account_users#show
+                                          PATCH  /accounts/:account_id/members/:id(.:format)                                                       account_users#update
+                                          PUT    /accounts/:account_id/members/:id(.:format)                                                       account_users#update
+                                          DELETE /accounts/:account_id/members/:id(.:format)                                                       account_users#destroy
+        resend_account_account_invitation POST   /accounts/:account_id/invitations/:id/resend(.:format)                                            accounts/account_invitations#resend
+              account_account_invitations GET    /accounts/:account_id/invitations(.:format)                                                       accounts/account_invitations#index
+                                          POST   /accounts/:account_id/invitations(.:format)                                                       accounts/account_invitations#create
+           new_account_account_invitation GET    /accounts/:account_id/invitations/new(.:format)                                                   accounts/account_invitations#new
+          edit_account_account_invitation GET    /accounts/:account_id/invitations/:id/edit(.:format)                                              accounts/account_invitations#edit
+               account_account_invitation GET    /accounts/:account_id/invitations/:id(.:format)                                                   accounts/account_invitations#show
+                                          PATCH  /accounts/:account_id/invitations/:id(.:format)                                                   accounts/account_invitations#update
+                                          PUT    /accounts/:account_id/invitations/:id(.:format)                                                   accounts/account_invitations#update
+                                          DELETE /accounts/:account_id/invitations/:id(.:format)                                                   accounts/account_invitations#destroy
+                                 accounts GET    /accounts(.:format)                                                                               accounts#index
+                                          POST   /accounts(.:format)                                                                               accounts#create
+                              new_account GET    /accounts/new(.:format)                                                                           accounts#new
+                             edit_account GET    /accounts/:id/edit(.:format)                                                                      accounts#edit
+                                  account GET    /accounts/:id(.:format)                                                                           accounts#show
+                                          PATCH  /accounts/:id(.:format)                                                                           accounts#update
+                                          PUT    /accounts/:id(.:format)                                                                           accounts#update
+                                          DELETE /accounts/:id(.:format)                                                                           accounts#destroy
+                      account_invitations GET    /account_invitations(.:format)                                                                    account_invitations#index
+                                          POST   /account_invitations(.:format)                                                                    account_invitations#create
+                   new_account_invitation GET    /account_invitations/new(.:format)                                                                account_invitations#new
+                  edit_account_invitation GET    /account_invitations/:id/edit(.:format)                                                           account_invitations#edit
+                       account_invitation GET    /account_invitations/:id(.:format)                                                                account_invitations#show
+                                          PATCH  /account_invitations/:id(.:format)                                                                account_invitations#update
+                                          PUT    /account_invitations/:id(.:format)                                                                account_invitations#update
+                                          DELETE /account_invitations/:id(.:format)                                                                account_invitations#destroy
+                          new_api_v1_auth GET    /api/v1/auth/new(.:format)                                                                        api/v1/auths#new {format: :json}
+                         edit_api_v1_auth GET    /api/v1/auth/edit(.:format)                                                                       api/v1/auths#edit {format: :json}
+                              api_v1_auth GET    /api/v1/auth(.:format)                                                                            api/v1/auths#show {format: :json}
+                                          PATCH  /api/v1/auth(.:format)                                                                            api/v1/auths#update {format: :json}
+                                          PUT    /api/v1/auth(.:format)                                                                            api/v1/auths#update {format: :json}
+                                          DELETE /api/v1/auth(.:format)                                                                            api/v1/auths#destroy {format: :json}
+                                          POST   /api/v1/auth(.:format)                                                                            api/v1/auths#create {format: :json}
+                            new_api_v1_me GET    /api/v1/me/new(.:format)                                                                          api/v1/me#new {format: :json}
+                           edit_api_v1_me GET    /api/v1/me/edit(.:format)                                                                         api/v1/me#edit {format: :json}
+                                api_v1_me GET    /api/v1/me(.:format)                                                                              api/v1/me#show {format: :json}
+                                          PATCH  /api/v1/me(.:format)                                                                              api/v1/me#update {format: :json}
+                                          PUT    /api/v1/me(.:format)                                                                              api/v1/me#update {format: :json}
+                                          DELETE /api/v1/me(.:format)                                                                              api/v1/me#destroy {format: :json}
+                                          POST   /api/v1/me(.:format)                                                                              api/v1/me#create {format: :json}
+                      new_api_v1_password GET    /api/v1/password/new(.:format)                                                                    api/v1/passwords#new {format: :json}
+                     edit_api_v1_password GET    /api/v1/password/edit(.:format)                                                                   api/v1/passwords#edit {format: :json}
+                          api_v1_password GET    /api/v1/password(.:format)                                                                        api/v1/passwords#show {format: :json}
+                                          PATCH  /api/v1/password(.:format)                                                                        api/v1/passwords#update {format: :json}
+                                          PUT    /api/v1/password(.:format)                                                                        api/v1/passwords#update {format: :json}
+                                          DELETE /api/v1/password(.:format)                                                                        api/v1/passwords#destroy {format: :json}
+                                          POST   /api/v1/password(.:format)                                                                        api/v1/passwords#create {format: :json}
+                          api_v1_accounts GET    /api/v1/accounts(.:format)                                                                        api/v1/accounts#index {format: :json}
+                                          POST   /api/v1/accounts(.:format)                                                                        api/v1/accounts#create {format: :json}
+                       new_api_v1_account GET    /api/v1/accounts/new(.:format)                                                                    api/v1/accounts#new {format: :json}
+                      edit_api_v1_account GET    /api/v1/accounts/:id/edit(.:format)                                                               api/v1/accounts#edit {format: :json}
+                           api_v1_account GET    /api/v1/accounts/:id(.:format)                                                                    api/v1/accounts#show {format: :json}
+                                          PATCH  /api/v1/accounts/:id(.:format)                                                                    api/v1/accounts#update {format: :json}
+                                          PUT    /api/v1/accounts/:id(.:format)                                                                    api/v1/accounts#update {format: :json}
+                                          DELETE /api/v1/accounts/:id(.:format)                                                                    api/v1/accounts#destroy {format: :json}
+                             api_v1_users GET    /api/v1/users(.:format)                                                                           api/v1/users#index {format: :json}
+                                          POST   /api/v1/users(.:format)                                                                           api/v1/users#create {format: :json}
+                          new_api_v1_user GET    /api/v1/users/new(.:format)                                                                       api/v1/users#new {format: :json}
+                         edit_api_v1_user GET    /api/v1/users/:id/edit(.:format)                                                                  api/v1/users#edit {format: :json}
+                              api_v1_user GET    /api/v1/users/:id(.:format)                                                                       api/v1/users#show {format: :json}
+                                          PATCH  /api/v1/users/:id(.:format)                                                                       api/v1/users#update {format: :json}
+                                          PUT    /api/v1/users/:id(.:format)                                                                       api/v1/users#update {format: :json}
+                                          DELETE /api/v1/users/:id(.:format)                                                                       api/v1/users#destroy {format: :json}
+               api_v1_notification_tokens POST   /api/v1/notification_tokens(.:format)                                                             api/v1/notification_tokens#create {format: :json}
+                api_v1_notification_token DELETE /api/v1/notification_tokens/:token(.:format)                                                      api/v1/notification_tokens#destroy {format: :json}
+                               api_tokens GET    /api_tokens(.:format)                                                                             api_tokens#index
+                                          POST   /api_tokens(.:format)                                                                             api_tokens#create
+                            new_api_token GET    /api_tokens/new(.:format)                                                                         api_tokens#new
+                           edit_api_token GET    /api_tokens/:id/edit(.:format)                                                                    api_tokens#edit
+                                api_token GET    /api_tokens/:id(.:format)                                                                         api_tokens#show
+                                          PATCH  /api_tokens/:id(.:format)                                                                         api_tokens#update
+                                          PUT    /api_tokens/:id(.:format)                                                                         api_tokens#update
+                                          DELETE /api_tokens/:id(.:format)                                                                         api_tokens#destroy
+                              new_pricing GET    /pricing/new(.:format)                                                                            pricing#new
+                             edit_pricing GET    /pricing/edit(.:format)                                                                           pricing#edit
+                                  pricing GET    /pricing(.:format)                                                                                pricing#show
+                                          PATCH  /pricing(.:format)                                                                                pricing#update
+                                          PUT    /pricing(.:format)                                                                                pricing#update
+                                          DELETE /pricing(.:format)                                                                                pricing#destroy
+                                          POST   /pricing(.:format)                                                                                pricing#create
+                          checkout_return GET    /checkout/return(.:format)                                                                        checkout/returns#show
+                             new_checkout GET    /checkout/new(.:format)                                                                           checkouts#new
+                            edit_checkout GET    /checkout/edit(.:format)                                                                          checkouts#edit
+                                 checkout GET    /checkout(.:format)                                                                               checkouts#show
+                                          PATCH  /checkout(.:format)                                                                               checkouts#update
+                                          PUT    /checkout(.:format)                                                                               checkouts#update
+                                          DELETE /checkout(.:format)                                                                               checkouts#destroy
+                                          POST   /checkout(.:format)                                                                               checkouts#create
+                              new_billing GET    /billing/new(.:format)                                                                            billing#new
+                             edit_billing GET    /billing/edit(.:format)                                                                           billing#edit
+                                  billing GET    /billing(.:format)                                                                                billing#show
+                                          PATCH  /billing(.:format)                                                                                billing#update
+                                          PUT    /billing(.:format)                                                                                billing#update
+                                          DELETE /billing(.:format)                                                                                billing#destroy
+                                          POST   /billing(.:format)                                                                                billing#create
+                         new_billing_info GET    /billing/info/new(.:format)                                                                       billing/infos#new
+                        edit_billing_info GET    /billing/info/edit(.:format)                                                                      billing/infos#edit
+                             billing_info GET    /billing/info(.:format)                                                                           billing/infos#show
+                                          PATCH  /billing/info(.:format)                                                                           billing/infos#update
+                                          PUT    /billing/info(.:format)                                                                           billing/infos#update
+                                          DELETE /billing/info(.:format)                                                                           billing/infos#destroy
+                                          POST   /billing/info(.:format)                                                                           billing/infos#create
+edit_billing_subscriptions_paddle_billing GET    /billing/subscriptions/paddle_billing/edit(.:format)                                              billing/subscriptions/paddle_billing#edit
+     billing_subscriptions_paddle_billing GET    /billing/subscriptions/paddle_billing(.:format)                                                   billing/subscriptions/paddle_billing#show
+     billing_subscriptions_paddle_classic GET    /billing/subscriptions/paddle_classic(.:format)                                                   billing/subscriptions/paddle_classic#show
+  new_billing_subscription_payment_method GET    /billing/subscriptions/:subscription_id/payment_method/new(.:format)                              billing/subscriptions/payment_methods#new
+ edit_billing_subscription_payment_method GET    /billing/subscriptions/:subscription_id/payment_method/edit(.:format)                             billing/subscriptions/payment_methods#edit
+      billing_subscription_payment_method GET    /billing/subscriptions/:subscription_id/payment_method(.:format)                                  billing/subscriptions/payment_methods#show
+                                          PATCH  /billing/subscriptions/:subscription_id/payment_method(.:format)                                  billing/subscriptions/payment_methods#update
+                                          PUT    /billing/subscriptions/:subscription_id/payment_method(.:format)                                  billing/subscriptions/payment_methods#update
+                                          DELETE /billing/subscriptions/:subscription_id/payment_method(.:format)                                  billing/subscriptions/payment_methods#destroy
+                                          POST   /billing/subscriptions/:subscription_id/payment_method(.:format)                                  billing/subscriptions/payment_methods#create
+          new_billing_subscription_cancel GET    /billing/subscriptions/:subscription_id/cancel/new(.:format)                                      billing/subscriptions/cancels#new
+         edit_billing_subscription_cancel GET    /billing/subscriptions/:subscription_id/cancel/edit(.:format)                                     billing/subscriptions/cancels#edit
+              billing_subscription_cancel GET    /billing/subscriptions/:subscription_id/cancel(.:format)                                          billing/subscriptions/cancels#show
+                                          PATCH  /billing/subscriptions/:subscription_id/cancel(.:format)                                          billing/subscriptions/cancels#update
+                                          PUT    /billing/subscriptions/:subscription_id/cancel(.:format)                                          billing/subscriptions/cancels#update
+                                          DELETE /billing/subscriptions/:subscription_id/cancel(.:format)                                          billing/subscriptions/cancels#destroy
+                                          POST   /billing/subscriptions/:subscription_id/cancel(.:format)                                          billing/subscriptions/cancels#create
+           new_billing_subscription_pause GET    /billing/subscriptions/:subscription_id/pause/new(.:format)                                       billing/subscriptions/pauses#new
+          edit_billing_subscription_pause GET    /billing/subscriptions/:subscription_id/pause/edit(.:format)                                      billing/subscriptions/pauses#edit
+               billing_subscription_pause GET    /billing/subscriptions/:subscription_id/pause(.:format)                                           billing/subscriptions/pauses#show
+                                          PATCH  /billing/subscriptions/:subscription_id/pause(.:format)                                           billing/subscriptions/pauses#update
+                                          PUT    /billing/subscriptions/:subscription_id/pause(.:format)                                           billing/subscriptions/pauses#update
+                                          DELETE /billing/subscriptions/:subscription_id/pause(.:format)                                           billing/subscriptions/pauses#destroy
+                                          POST   /billing/subscriptions/:subscription_id/pause(.:format)                                           billing/subscriptions/pauses#create
+          new_billing_subscription_resume GET    /billing/subscriptions/:subscription_id/resume/new(.:format)                                      billing/subscriptions/resumes#new
+         edit_billing_subscription_resume GET    /billing/subscriptions/:subscription_id/resume/edit(.:format)                                     billing/subscriptions/resumes#edit
+              billing_subscription_resume GET    /billing/subscriptions/:subscription_id/resume(.:format)                                          billing/subscriptions/resumes#show
+                                          PATCH  /billing/subscriptions/:subscription_id/resume(.:format)                                          billing/subscriptions/resumes#update
+                                          PUT    /billing/subscriptions/:subscription_id/resume(.:format)                                          billing/subscriptions/resumes#update
+                                          DELETE /billing/subscriptions/:subscription_id/resume(.:format)                                          billing/subscriptions/resumes#destroy
+                                          POST   /billing/subscriptions/:subscription_id/resume(.:format)                                          billing/subscriptions/resumes#create
+        new_billing_subscription_upcoming GET    /billing/subscriptions/:subscription_id/upcoming/new(.:format)                                    billing/subscriptions/upcomings#new
+       edit_billing_subscription_upcoming GET    /billing/subscriptions/:subscription_id/upcoming/edit(.:format)                                   billing/subscriptions/upcomings#edit
+            billing_subscription_upcoming GET    /billing/subscriptions/:subscription_id/upcoming(.:format)                                        billing/subscriptions/upcomings#show
+                                          PATCH  /billing/subscriptions/:subscription_id/upcoming(.:format)                                        billing/subscriptions/upcomings#update
+                                          PUT    /billing/subscriptions/:subscription_id/upcoming(.:format)                                        billing/subscriptions/upcomings#update
+                                          DELETE /billing/subscriptions/:subscription_id/upcoming(.:format)                                        billing/subscriptions/upcomings#destroy
+                                          POST   /billing/subscriptions/:subscription_id/upcoming(.:format)                                        billing/subscriptions/upcomings#create
+                    billing_subscriptions GET    /billing/subscriptions(.:format)                                                                  billing/subscriptions#index
+                edit_billing_subscription GET    /billing/subscriptions/:id/edit(.:format)                                                         billing/subscriptions#edit
+                     billing_subscription PATCH  /billing/subscriptions/:id(.:format)                                                              billing/subscriptions#update
+                                          PUT    /billing/subscriptions/:id(.:format)                                                              billing/subscriptions#update
+                   invoice_billing_charge GET    /billing/charges/:id/invoice(.:format)                                                            billing/charges#invoice
+                          billing_charges GET    /billing/charges(.:format)                                                                        billing/charges#index
+                                          POST   /billing/charges(.:format)                                                                        billing/charges#create
+                       new_billing_charge GET    /billing/charges/new(.:format)                                                                    billing/charges#new
+                      edit_billing_charge GET    /billing/charges/:id/edit(.:format)                                                               billing/charges#edit
+                           billing_charge GET    /billing/charges/:id(.:format)                                                                    billing/charges#show
+                                          PATCH  /billing/charges/:id(.:format)                                                                    billing/charges#update
+                                          PUT    /billing/charges/:id(.:format)                                                                    billing/charges#update
+                                          DELETE /billing/charges/:id(.:format)                                                                    billing/charges#destroy
+       hotwire_android_path_configuration GET    /hotwire/android/path_configuration(.:format)                                                     hotwire/android/path_configurations#show
+           hotwire_ios_path_configuration GET    /hotwire/ios/path_configuration(.:format)                                                         hotwire/ios/path_configurations#show
+                         new_user_session GET    /users/sign_in(.:format)                                                                          users/sessions#new
+                             user_session POST   /users/sign_in(.:format)                                                                          users/sessions#create
+                     destroy_user_session DELETE /users/sign_out(.:format)                                                                         users/sessions#destroy
+                        new_user_password GET    /users/password/new(.:format)                                                                     users/passwords#new
+                       edit_user_password GET    /users/password/edit(.:format)                                                                    users/passwords#edit
+                            user_password PATCH  /users/password(.:format)                                                                         users/passwords#update
+                                          PUT    /users/password(.:format)                                                                         users/passwords#update
+                                          POST   /users/password(.:format)                                                                         users/passwords#create
+                 cancel_user_registration GET    /users/cancel(.:format)                                                                           users/registrations#cancel
+                    new_user_registration GET    /users/sign_up(.:format)                                                                          users/registrations#new
+                   edit_user_registration GET    /users/edit(.:format)                                                                             users/registrations#edit
+                        user_registration PATCH  /users(.:format)                                                                                  users/registrations#update
+                                          PUT    /users(.:format)                                                                                  users/registrations#update
+                                          DELETE /users(.:format)                                                                                  users/registrations#destroy
+                                          POST   /users(.:format)                                                                                  users/registrations#create
+                              session_otp GET    /session/otp(.:format)                                                                            sessions#otp
+                     new_account_password GET    /account/password/new(.:format)                                                                   account/passwords#new
+                    edit_account_password GET    /account/password/edit(.:format)                                                                  account/passwords#edit
+                         account_password GET    /account/password(.:format)                                                                       account/passwords#show
+                                          PATCH  /account/password(.:format)                                                                       account/passwords#update
+                                          PUT    /account/password(.:format)                                                                       account/passwords#update
+                                          DELETE /account/password(.:format)                                                                       account/passwords#destroy
+                                          POST   /account/password(.:format)                                                                       account/passwords#create
+                           users_mentions GET    /users/mentions(.:format)                                                                         users/mentions#index
+             backup_codes_user_two_factor GET    /user/two_factor/backup_codes(.:format)                                                           users/two_factor#backup_codes
+                   verify_user_two_factor GET    /user/two_factor/verify(.:format)                                                                 users/two_factor#verify
+                      new_user_two_factor GET    /user/two_factor/new(.:format)                                                                    users/two_factor#new
+                     edit_user_two_factor GET    /user/two_factor/edit(.:format)                                                                   users/two_factor#edit
+                          user_two_factor GET    /user/two_factor(.:format)                                                                        users/two_factor#show
+                                          PATCH  /user/two_factor(.:format)                                                                        users/two_factor#update
+                                          PUT    /user/two_factor(.:format)                                                                        users/two_factor#update
+                                          DELETE /user/two_factor(.:format)                                                                        users/two_factor#destroy
+                                          POST   /user/two_factor(.:format)                                                                        users/two_factor#create
+                  user_connected_accounts GET    /user/connected_accounts(.:format)                                                                users/connected_accounts#index
+                                          POST   /user/connected_accounts(.:format)                                                                users/connected_accounts#create
+               new_user_connected_account GET    /user/connected_accounts/new(.:format)                                                            users/connected_accounts#new
+              edit_user_connected_account GET    /user/connected_accounts/:id/edit(.:format)                                                       users/connected_accounts#edit
+                   user_connected_account GET    /user/connected_accounts/:id(.:format)                                                            users/connected_accounts#show
+                                          PATCH  /user/connected_accounts/:id(.:format)                                                            users/connected_accounts#update
+                                          PUT    /user/connected_accounts/:id(.:format)                                                            users/connected_accounts#update
+                                          DELETE /user/connected_accounts/:id(.:format)                                                            users/connected_accounts#destroy
+                               agreements GET    /agreements(.:format)                                                                             users/agreements#index
+                                          POST   /agreements(.:format)                                                                             users/agreements#create
+                            new_agreement GET    /agreements/new(.:format)                                                                         users/agreements#new
+                           edit_agreement GET    /agreements/:id/edit(.:format)                                                                    users/agreements#edit
+                                agreement GET    /agreements/:id(.:format)                                                                         users/agreements#show
+                                          PATCH  /agreements/:id(.:format)                                                                         users/agreements#update
+                                          PUT    /agreements/:id(.:format)                                                                         users/agreements#update
+                                          DELETE /agreements/:id(.:format)                                                                         users/agreements#destroy
+                        nav_notifications GET    /notifications/nav(.:format)                                                                      notifications#nav
+               mark_as_read_notifications PATCH  /notifications/mark_as_read(.:format)                                                             notifications#mark_as_read
+                            notifications GET    /notifications(.:format)                                                                          notifications#index
+                             notification GET    /notifications/:id(.:format)                                                                      notifications#show
+                                     sudo POST   /sudo(.:format)                                                                                   users/sudo#create
+                            announcements GET    /announcements(.:format)                                                                          announcements#index
+                             announcement GET    /announcements/:id(.:format)                                                                      announcements#show
+                       action_text_embeds POST   /action_text/embeds(.:format)                                                                     action_text/embeds#create
+                                    about GET    /about(.:format)                                                                                  public#about
+                                    terms GET    /terms(.:format)                                                                                  public#terms
+                                  privacy GET    /privacy(.:format)                                                                                public#privacy
+                                reset_app GET    /reset_app(.:format)                                                                              public#reset_app
+                                                 /404(.:format)                                                                                    errors#not_found
+                                                 /500(.:format)                                                                                    errors#internal_server_error
+                       rails_health_check GET    /up(.:format)                                                                                     rails/health#show
+                                user_root GET    /                                                                                                 hke/welcome#index
+                                     root GET    /                                                                                                 hke/welcome#index
+                hke_admin_community_users GET    /hke/admin/communities/:community_id/users(.:format)                                              hke/admin/community_users#index
+                                          POST   /hke/admin/communities/:community_id/users(.:format)                                              hke/admin/community_users#create
+             new_hke_admin_community_user GET    /hke/admin/communities/:community_id/users/new(.:format)                                          hke/admin/community_users#new
+            edit_hke_admin_community_user GET    /hke/admin/communities/:community_id/users/:id/edit(.:format)                                     hke/admin/community_users#edit
+                 hke_admin_community_user GET    /hke/admin/communities/:community_id/users/:id(.:format)                                          hke/admin/community_users#show
+                                          PATCH  /hke/admin/communities/:community_id/users/:id(.:format)                                          hke/admin/community_users#update
+                                          PUT    /hke/admin/communities/:community_id/users/:id(.:format)                                          hke/admin/community_users#update
+                                          DELETE /hke/admin/communities/:community_id/users/:id(.:format)                                          hke/admin/community_users#destroy
+                    hke_admin_communities GET    /hke/admin/communities(.:format)                                                                  hke/admin/communities#index
+                                          POST   /hke/admin/communities(.:format)                                                                  hke/admin/communities#create
+                  new_hke_admin_community GET    /hke/admin/communities/new(.:format)                                                              hke/admin/communities#new
+                 edit_hke_admin_community GET    /hke/admin/communities/:id/edit(.:format)                                                         hke/admin/communities#edit
+                      hke_admin_community GET    /hke/admin/communities/:id(.:format)                                                              hke/admin/communities#show
+                                          PATCH  /hke/admin/communities/:id(.:format)                                                              hke/admin/communities#update
+                                          PUT    /hke/admin/communities/:id(.:format)                                                              hke/admin/communities#update
+                                          DELETE /hke/admin/communities/:id(.:format)                                                              hke/admin/communities#destroy
+        edit_hke_admin_system_preferences GET    /hke/admin/system_preferences/edit(.:format)                                                      hke/admin/system_preferences#edit
+             hke_admin_system_preferences GET    /hke/admin/system_preferences(.:format)                                                           hke/admin/system_preferences#show
+                                          PATCH  /hke/admin/system_preferences(.:format)                                                           hke/admin/system_preferences#update
+                                          PUT    /hke/admin/system_preferences(.:format)                                                           hke/admin/system_preferences#update
+            hke_admin_switch_to_community POST   /hke/admin/switch_to_community(.:format)                                                          hke/admin/dashboard#switch_to_community
+                           hke_admin_root GET    /hke/admin(.:format)                                                                              hke/admin/dashboard#show
+                                 hke_logs GET    /hke/logs(.:format)                                                                               hke/logs#index
+                           hke_cemeteries GET    /hke/cemeteries(.:format)                                                                         hke/cemeteries#index
+                                          POST   /hke/cemeteries(.:format)                                                                         hke/cemeteries#create
+                         new_hke_cemetery GET    /hke/cemeteries/new(.:format)                                                                     hke/cemeteries#new
+                        edit_hke_cemetery GET    /hke/cemeteries/:id/edit(.:format)                                                                hke/cemeteries#edit
+                             hke_cemetery GET    /hke/cemeteries/:id(.:format)                                                                     hke/cemeteries#show
+                                          PATCH  /hke/cemeteries/:id(.:format)                                                                     hke/cemeteries#update
+                                          PUT    /hke/cemeteries/:id(.:format)                                                                     hke/cemeteries#update
+                                          DELETE /hke/cemeteries/:id(.:format)                                                                     hke/cemeteries#destroy
+                       edit_hke_community GET    /hke/communities/:id/edit(.:format)                                                               hke/communities#edit
+                            hke_community GET    /hke/communities/:id(.:format)                                                                    hke/communities#show
+                                          PATCH  /hke/communities/:id(.:format)                                                                    hke/communities#update
+                                          PUT    /hke/communities/:id(.:format)                                                                    hke/communities#update
+                 blast_hke_future_message POST   /hke/future_messages/:id/blast(.:format)                                                          hke/future_messages#blast
+       toggle_approval_hke_future_message POST   /hke/future_messages/:id/toggle_approval(.:format)                                                hke/future_messages#toggle_approval
+              approve_hke_future_messages GET    /hke/future_messages/approve(.:format)                                                            hke/future_messages#approve
+         bulk_approve_hke_future_messages POST   /hke/future_messages/bulk_approve(.:format)                                                       hke/future_messages#bulk_approve
+          approve_all_hke_future_messages POST   /hke/future_messages/approve_all(.:format)                                                        hke/future_messages#approve_all
+       disapprove_all_hke_future_messages POST   /hke/future_messages/disapprove_all(.:format)                                                     hke/future_messages#disapprove_all
+                      hke_future_messages GET    /hke/future_messages(.:format)                                                                    hke/future_messages#index
+                                          POST   /hke/future_messages(.:format)                                                                    hke/future_messages#create
+                   new_hke_future_message GET    /hke/future_messages/new(.:format)                                                                hke/future_messages#new
+                  edit_hke_future_message GET    /hke/future_messages/:id/edit(.:format)                                                           hke/future_messages#edit
+                       hke_future_message GET    /hke/future_messages/:id(.:format)                                                                hke/future_messages#show
+                                          PATCH  /hke/future_messages/:id(.:format)                                                                hke/future_messages#update
+                                          PUT    /hke/future_messages/:id(.:format)                                                                hke/future_messages#update
+                                          DELETE /hke/future_messages/:id(.:format)                                                                hke/future_messages#destroy
+              destroy_all_hke_csv_imports DELETE /hke/csv_imports/destroy_all(.:format)                                                            hke/csv_imports#destroy_all
+                          hke_csv_imports GET    /hke/csv_imports(.:format)                                                                        hke/csv_imports#index
+                                          POST   /hke/csv_imports(.:format)                                                                        hke/csv_imports#create
+                       new_hke_csv_import GET    /hke/csv_imports/new(.:format)                                                                    hke/csv_imports#new
+                           hke_csv_import GET    /hke/csv_imports/:id(.:format)                                                                    hke/csv_imports#show
+                                          DELETE /hke/csv_imports/:id(.:format)                                                                    hke/csv_imports#destroy
+             hke_message_management_index GET    /hke/message_management(.:format)                                                                 hke/message_management#index
+                   hke_message_management GET    /hke/message_management/:id(.:format)                                                             hke/message_management#show
+                        hke_landing_pages GET    /hke/landing_pages(.:format)                                                                      hke/landing_pages#index
+                                          POST   /hke/landing_pages(.:format)                                                                      hke/landing_pages#create
+                     new_hke_landing_page GET    /hke/landing_pages/new(.:format)                                                                  hke/landing_pages#new
+                    edit_hke_landing_page GET    /hke/landing_pages/:id/edit(.:format)                                                             hke/landing_pages#edit
+                         hke_landing_page GET    /hke/landing_pages/:id(.:format)                                                                  hke/landing_pages#show
+                                          PATCH  /hke/landing_pages/:id(.:format)                                                                  hke/landing_pages#update
+                                          PUT    /hke/landing_pages/:id(.:format)                                                                  hke/landing_pages#update
+                                          DELETE /hke/landing_pages/:id(.:format)                                                                  hke/landing_pages#destroy
+                       hke_contact_people POST   /hke/contact_people(.:format)                                                                     hke/contact_people#index
+            import_csv_hke_contact_people POST   /hke/contact_people/import_csv(.:format)                                                          hke/contact_people#import_csv
+                                          GET    /hke/contact_people(.:format)                                                                     hke/contact_people#index
+                                          POST   /hke/contact_people(.:format)                                                                     hke/contact_people#create
+                   new_hke_contact_person GET    /hke/contact_people/new(.:format)                                                                 hke/contact_people#new
+                  edit_hke_contact_person GET    /hke/contact_people/:id/edit(.:format)                                                            hke/contact_people#edit
+                       hke_contact_person GET    /hke/contact_people/:id(.:format)                                                                 hke/contact_people#show
+                                          PATCH  /hke/contact_people/:id(.:format)                                                                 hke/contact_people#update
+                                          PUT    /hke/contact_people/:id(.:format)                                                                 hke/contact_people#update
+                                          DELETE /hke/contact_people/:id(.:format)                                                                 hke/contact_people#destroy
+                      hke_deceased_people POST   /hke/deceased_people(.:format)                                                                    hke/deceased_people#index
+           import_csv_hke_deceased_people POST   /hke/deceased_people/import_csv(.:format)                                                         hke/deceased_people#import_csv
+                                          GET    /hke/deceased_people(.:format)                                                                    hke/deceased_people#index
+                                          POST   /hke/deceased_people(.:format)                                                                    hke/deceased_people#create
+                  new_hke_deceased_person GET    /hke/deceased_people/new(.:format)                                                                hke/deceased_people#new
+                 edit_hke_deceased_person GET    /hke/deceased_people/:id/edit(.:format)                                                           hke/deceased_people#edit
+                      hke_deceased_person GET    /hke/deceased_people/:id(.:format)                                                                hke/deceased_people#show
+                                          PATCH  /hke/deceased_people/:id(.:format)                                                                hke/deceased_people#update
+                                          PUT    /hke/deceased_people/:id(.:format)                                                                hke/deceased_people#update
+                                          DELETE /hke/deceased_people/:id(.:format)                                                                hke/deceased_people#destroy
+                hke_community_preferences GET    /hke/community_preferences(.:format)                                                              hke/community_preferences#index
+                                          POST   /hke/community_preferences(.:format)                                                              hke/community_preferences#create
+             new_hke_community_preference GET    /hke/community_preferences/new(.:format)                                                          hke/community_preferences#new
+            edit_hke_community_preference GET    /hke/community_preferences/:id/edit(.:format)                                                     hke/community_preferences#edit
+                 hke_community_preference GET    /hke/community_preferences/:id(.:format)                                                          hke/community_preferences#show
+                                          PATCH  /hke/community_preferences/:id(.:format)                                                          hke/community_preferences#update
+                                          PUT    /hke/community_preferences/:id(.:format)                                                          hke/community_preferences#update
+                                          DELETE /hke/community_preferences/:id(.:format)                                                          hke/community_preferences#destroy
+             hke_api_v1_twilio_sms_status POST   /hke/api/v1/twilio/sms/status(.:format)                                                           hke/api/v1/twilio_callback#sms_status {format: :json}
+                   edit_hke_api_v1_system GET    /hke/api/v1/system/edit(.:format)                                                                 hke/api/v1/systems#edit {format: :json}
+                        hke_api_v1_system GET    /hke/api/v1/system(.:format)                                                                      hke/api/v1/systems#show {format: :json}
+                                          PATCH  /hke/api/v1/system(.:format)                                                                      hke/api/v1/systems#update {format: :json}
+                                          PUT    /hke/api/v1/system(.:format)                                                                      hke/api/v1/systems#update {format: :json}
+                                          POST   /hke/api/v1/system(.:format)                                                                      hke/api/v1/systems#create {format: :json}
+                    hke_api_v1_cemeteries GET    /hke/api/v1/cemeteries(.:format)                                                                  hke/api/v1/cemeteries#index {format: :json}
+                                          POST   /hke/api/v1/cemeteries(.:format)                                                                  hke/api/v1/cemeteries#create {format: :json}
+                  new_hke_api_v1_cemetery GET    /hke/api/v1/cemeteries/new(.:format)                                                              hke/api/v1/cemeteries#new {format: :json}
+                 edit_hke_api_v1_cemetery GET    /hke/api/v1/cemeteries/:id/edit(.:format)                                                         hke/api/v1/cemeteries#edit {format: :json}
+                      hke_api_v1_cemetery GET    /hke/api/v1/cemeteries/:id(.:format)                                                              hke/api/v1/cemeteries#show {format: :json}
+                                          PATCH  /hke/api/v1/cemeteries/:id(.:format)                                                              hke/api/v1/cemeteries#update {format: :json}
+                                          PUT    /hke/api/v1/cemeteries/:id(.:format)                                                              hke/api/v1/cemeteries#update {format: :json}
+                                          DELETE /hke/api/v1/cemeteries/:id(.:format)                                                              hke/api/v1/cemeteries#destroy {format: :json}
+                   hke_api_v1_communities GET    /hke/api/v1/communities(.:format)                                                                 hke/api/v1/communities#index {format: :json}
+                                          POST   /hke/api/v1/communities(.:format)                                                                 hke/api/v1/communities#create {format: :json}
+                 new_hke_api_v1_community GET    /hke/api/v1/communities/new(.:format)                                                             hke/api/v1/communities#new {format: :json}
+                edit_hke_api_v1_community GET    /hke/api/v1/communities/:id/edit(.:format)                                                        hke/api/v1/communities#edit {format: :json}
+                     hke_api_v1_community GET    /hke/api/v1/communities/:id(.:format)                                                             hke/api/v1/communities#show {format: :json}
+                                          PATCH  /hke/api/v1/communities/:id(.:format)                                                             hke/api/v1/communities#update {format: :json}
+                                          PUT    /hke/api/v1/communities/:id(.:format)                                                             hke/api/v1/communities#update {format: :json}
+                                          DELETE /hke/api/v1/communities/:id(.:format)                                                             hke/api/v1/communities#destroy {format: :json}
+          blast_hke_api_v1_future_message POST   /hke/api/v1/future_messages/:id/blast(.:format)                                                   hke/api/v1/future_messages#blast {format: :json}
+               hke_api_v1_future_messages GET    /hke/api/v1/future_messages(.:format)                                                             hke/api/v1/future_messages#index {format: :json}
+                                          POST   /hke/api/v1/future_messages(.:format)                                                             hke/api/v1/future_messages#create {format: :json}
+            new_hke_api_v1_future_message GET    /hke/api/v1/future_messages/new(.:format)                                                         hke/api/v1/future_messages#new {format: :json}
+           edit_hke_api_v1_future_message GET    /hke/api/v1/future_messages/:id/edit(.:format)                                                    hke/api/v1/future_messages#edit {format: :json}
+                hke_api_v1_future_message GET    /hke/api/v1/future_messages/:id(.:format)                                                         hke/api/v1/future_messages#show {format: :json}
+                                          PATCH  /hke/api/v1/future_messages/:id(.:format)                                                         hke/api/v1/future_messages#update {format: :json}
+                                          PUT    /hke/api/v1/future_messages/:id(.:format)                                                         hke/api/v1/future_messages#update {format: :json}
+                                          DELETE /hke/api/v1/future_messages/:id(.:format)                                                         hke/api/v1/future_messages#destroy {format: :json}
+               hke_api_v1_deceased_people GET    /hke/api/v1/deceased_people(.:format)                                                             hke/api/v1/deceased_people#index {format: :json}
+                                          POST   /hke/api/v1/deceased_people(.:format)                                                             hke/api/v1/deceased_people#create {format: :json}
+           new_hke_api_v1_deceased_person GET    /hke/api/v1/deceased_people/new(.:format)                                                         hke/api/v1/deceased_people#new {format: :json}
+          edit_hke_api_v1_deceased_person GET    /hke/api/v1/deceased_people/:id/edit(.:format)                                                    hke/api/v1/deceased_people#edit {format: :json}
+               hke_api_v1_deceased_person GET    /hke/api/v1/deceased_people/:id(.:format)                                                         hke/api/v1/deceased_people#show {format: :json}
+                                          PATCH  /hke/api/v1/deceased_people/:id(.:format)                                                         hke/api/v1/deceased_people#update {format: :json}
+                                          PUT    /hke/api/v1/deceased_people/:id(.:format)                                                         hke/api/v1/deceased_people#update {format: :json}
+                                          DELETE /hke/api/v1/deceased_people/:id(.:format)                                                         hke/api/v1/deceased_people#destroy {format: :json}
+                hke_api_v1_contact_people GET    /hke/api/v1/contact_people(.:format)                                                              hke/api/v1/contact_people#index {format: :json}
+                                          POST   /hke/api/v1/contact_people(.:format)                                                              hke/api/v1/contact_people#create {format: :json}
+            new_hke_api_v1_contact_person GET    /hke/api/v1/contact_people/new(.:format)                                                          hke/api/v1/contact_people#new {format: :json}
+           edit_hke_api_v1_contact_person GET    /hke/api/v1/contact_people/:id/edit(.:format)                                                     hke/api/v1/contact_people#edit {format: :json}
+                hke_api_v1_contact_person GET    /hke/api/v1/contact_people/:id(.:format)                                                          hke/api/v1/contact_people#show {format: :json}
+                                          PATCH  /hke/api/v1/contact_people/:id(.:format)                                                          hke/api/v1/contact_people#update {format: :json}
+                                          PUT    /hke/api/v1/contact_people/:id(.:format)                                                          hke/api/v1/contact_people#update {format: :json}
+                                          DELETE /hke/api/v1/contact_people/:id(.:format)                                                          hke/api/v1/contact_people#destroy {format: :json}
+                     hke_api_v1_relations GET    /hke/api/v1/relations(.:format)                                                                   hke/api/v1/relations#index {format: :json}
+                                          POST   /hke/api/v1/relations(.:format)                                                                   hke/api/v1/relations#create {format: :json}
+                  new_hke_api_v1_relation GET    /hke/api/v1/relations/new(.:format)                                                               hke/api/v1/relations#new {format: :json}
+                 edit_hke_api_v1_relation GET    /hke/api/v1/relations/:id/edit(.:format)                                                          hke/api/v1/relations#edit {format: :json}
+                      hke_api_v1_relation GET    /hke/api/v1/relations/:id(.:format)                                                               hke/api/v1/relations#show {format: :json}
+                                          PATCH  /hke/api/v1/relations/:id(.:format)                                                               hke/api/v1/relations#update {format: :json}
+                                          PUT    /hke/api/v1/relations/:id(.:format)                                                               hke/api/v1/relations#update {format: :json}
+                                          DELETE /hke/api/v1/relations/:id(.:format)                                                               hke/api/v1/relations#destroy {format: :json}
+                   hke_api_v1_csv_imports GET    /hke/api/v1/csv_imports(.:format)                                                                 hke/api/v1/csv_imports#index {format: :json}
+                                          POST   /hke/api/v1/csv_imports(.:format)                                                                 hke/api/v1/csv_imports#create {format: :json}
+                    hke_api_v1_csv_import GET    /hke/api/v1/csv_imports/:id(.:format)                                                             hke/api/v1/csv_imports#show {format: :json}
+                                          PATCH  /hke/api/v1/csv_imports/:id(.:format)                                                             hke/api/v1/csv_imports#update {format: :json}
+                                          PUT    /hke/api/v1/csv_imports/:id(.:format)                                                             hke/api/v1/csv_imports#update {format: :json}
+               hke_api_v1_csv_import_logs POST   /hke/api/v1/csv_import_logs(.:format)                                                             hke/api/v1/csv_import_logs#create {format: :json}
+                                 hke_root GET    /hke(.:format)                                                                                    hke/dashboard#show
+                 hke_contact_people_index GET    /hke/contact_people/index(.:format)                                                               hke/contact_people#index
+                  hke_contact_people_edit GET    /hke/contact_people/edit(.:format)                                                                hke/contact_people#edit
+                  hke_contact_people_show GET    /hke/contact_people/show(.:format)                                                                hke/contact_people#show
+         turbo_recede_historical_location GET    /recede_historical_location(.:format)                                                             turbo/native/navigation#recede
+         turbo_resume_historical_location GET    /resume_historical_location(.:format)                                                             turbo/native/navigation#resume
+        turbo_refresh_historical_location GET    /refresh_historical_location(.:format)                                                            turbo/native/navigation#refresh
+            rails_postmark_inbound_emails POST   /rails/action_mailbox/postmark/inbound_emails(.:format)                                           action_mailbox/ingresses/postmark/inbound_emails#create
+               rails_relay_inbound_emails POST   /rails/action_mailbox/relay/inbound_emails(.:format)                                              action_mailbox/ingresses/relay/inbound_emails#create
+            rails_sendgrid_inbound_emails POST   /rails/action_mailbox/sendgrid/inbound_emails(.:format)                                           action_mailbox/ingresses/sendgrid/inbound_emails#create
+      rails_mandrill_inbound_health_check GET    /rails/action_mailbox/mandrill/inbound_emails(.:format)                                           action_mailbox/ingresses/mandrill/inbound_emails#health_check
+            rails_mandrill_inbound_emails POST   /rails/action_mailbox/mandrill/inbound_emails(.:format)                                           action_mailbox/ingresses/mandrill/inbound_emails#create
+             rails_mailgun_inbound_emails POST   /rails/action_mailbox/mailgun/inbound_emails/mime(.:format)                                       action_mailbox/ingresses/mailgun/inbound_emails#create
+           rails_conductor_inbound_emails GET    /rails/conductor/action_mailbox/inbound_emails(.:format)                                          rails/conductor/action_mailbox/inbound_emails#index
+                                          POST   /rails/conductor/action_mailbox/inbound_emails(.:format)                                          rails/conductor/action_mailbox/inbound_emails#create
+        new_rails_conductor_inbound_email GET    /rails/conductor/action_mailbox/inbound_emails/new(.:format)                                      rails/conductor/action_mailbox/inbound_emails#new
+            rails_conductor_inbound_email GET    /rails/conductor/action_mailbox/inbound_emails/:id(.:format)                                      rails/conductor/action_mailbox/inbound_emails#show
+ new_rails_conductor_inbound_email_source GET    /rails/conductor/action_mailbox/inbound_emails/sources/new(.:format)                              rails/conductor/action_mailbox/inbound_emails/sources#new
+    rails_conductor_inbound_email_sources POST   /rails/conductor/action_mailbox/inbound_emails/sources(.:format)                                  rails/conductor/action_mailbox/inbound_emails/sources#create
+    rails_conductor_inbound_email_reroute POST   /rails/conductor/action_mailbox/:inbound_email_id/reroute(.:format)                               rails/conductor/action_mailbox/reroutes#create
+ rails_conductor_inbound_email_incinerate POST   /rails/conductor/action_mailbox/:inbound_email_id/incinerate(.:format)                            rails/conductor/action_mailbox/incinerates#create
+                       rails_service_blob GET    /rails/active_storage/blobs/redirect/:signed_id/*filename(.:format)                               active_storage/blobs/redirect#show
+                 rails_service_blob_proxy GET    /rails/active_storage/blobs/proxy/:signed_id/*filename(.:format)                                  active_storage/blobs/proxy#show
+                                          GET    /rails/active_storage/blobs/:signed_id/*filename(.:format)                                        active_storage/blobs/redirect#show
+                rails_blob_representation GET    /rails/active_storage/representations/redirect/:signed_blob_id/:variation_key/*filename(.:format) active_storage/representations/redirect#show
+          rails_blob_representation_proxy GET    /rails/active_storage/representations/proxy/:signed_blob_id/:variation_key/*filename(.:format)    active_storage/representations/proxy#show
+                                          GET    /rails/active_storage/representations/:signed_blob_id/:variation_key/*filename(.:format)          active_storage/representations/redirect#show
+                       rails_disk_service GET    /rails/active_storage/disk/:encoded_key/*filename(.:format)                                       active_storage/disk#show
+                update_rails_disk_service PUT    /rails/active_storage/disk/:encoded_token(.:format)                                               active_storage/disk#update
+                     rails_direct_uploads POST   /rails/active_storage/direct_uploads(.:format)                                                    active_storage/direct_uploads#create
+                                      pay        /                                                                                                 Pay::Engine
+
+Routes for Jumpstart::Engine:
+                 Prefix Verb   URI Pattern                        Controller#Action
+                 config GET    /config(.:format)                  jumpstart/configs#show
+                        POST   /config(.:format)                  jumpstart/configs#create
+                  users GET    /users(.:format)                   jumpstart/users#index
+                        POST   /users(.:format)                   jumpstart/users#create
+      installation_docs GET    /docs/installation(.:format)       jumpstart/docs#installation
+     configuration_docs GET    /docs/configuration(.:format)      jumpstart/docs#configuration
+         upgrading_docs GET    /docs/upgrading(.:format)          jumpstart/docs#upgrading
+         deploying_docs GET    /docs/deploying(.:format)          jumpstart/docs#deploying
+       screencasts_docs GET    /docs/screencasts(.:format)        jumpstart/docs#screencasts
+    authentication_docs GET    /docs/authentication(.:format)     jumpstart/docs#authentication
+          accounts_docs GET    /docs/accounts(.:format)           jumpstart/docs#accounts
+             roles_docs GET    /docs/roles(.:format)              jumpstart/docs#roles
+           billing_docs GET    /docs/billing(.:format)            jumpstart/docs#billing
+      multitenancy_docs GET    /docs/multitenancy(.:format)       jumpstart/docs#multitenancy
+     subscriptions_docs GET    /docs/subscriptions(.:format)      jumpstart/docs#subscriptions
+ one_time_payments_docs GET    /docs/one_time_payments(.:format)  jumpstart/docs#one_time_payments
+      action_cable_docs GET    /docs/action_cable(.:format)       jumpstart/docs#action_cable
+    action_mailbox_docs GET    /docs/action_mailbox(.:format)     jumpstart/docs#action_mailbox
+       action_text_docs GET    /docs/action_text(.:format)        jumpstart/docs#action_text
+    active_storage_docs GET    /docs/active_storage(.:format)     jumpstart/docs#active_storage
+             admin_docs GET    /docs/admin(.:format)              jumpstart/docs#admin
+     announcements_docs GET    /docs/announcements(.:format)      jumpstart/docs#announcements
+               api_docs GET    /docs/api(.:format)                jumpstart/docs#api
+       api_clients_docs GET    /docs/api_clients(.:format)        jumpstart/docs#api_clients
+background_workers_docs GET    /docs/background_workers(.:format) jumpstart/docs#background_workers
+       credentials_docs GET    /docs/credentials(.:format)        jumpstart/docs#credentials
+              cron_docs GET    /docs/cron(.:format)               jumpstart/docs#cron
+         databases_docs GET    /docs/databases(.:format)          jumpstart/docs#databases
+             email_docs GET    /docs/email(.:format)              jumpstart/docs#email
+              i18n_docs GET    /docs/i18n(.:format)               jumpstart/docs#i18n
+     notifications_docs GET    /docs/notifications(.:format)      jumpstart/docs#notifications
+             oauth_docs GET    /docs/oauth(.:format)              jumpstart/docs#oauth
+         scaffolds_docs GET    /docs/scaffolds(.:format)          jumpstart/docs#scaffolds
+          branding_docs GET    /docs/branding(.:format)           jumpstart/docs#branding
+        javascript_docs GET    /docs/javascript(.:format)         jumpstart/docs#javascript
+          tailwind_docs GET    /docs/tailwind(.:format)           jumpstart/docs#tailwind
+            themes_docs GET    /docs/themes(.:format)             jumpstart/docs#themes
+        typography_docs GET    /docs/typography(.:format)         jumpstart/docs#typography
+            alerts_docs GET    /docs/alerts(.:format)             jumpstart/docs#alerts
+           buttons_docs GET    /docs/buttons(.:format)            jumpstart/docs#buttons
+             cards_docs GET    /docs/cards(.:format)              jumpstart/docs#cards
+         clipboard_docs GET    /docs/clipboard(.:format)          jumpstart/docs#clipboard
+             forms_docs GET    /docs/forms(.:format)              jumpstart/docs#forms
+             icons_docs GET    /docs/icons(.:format)              jumpstart/docs#icons
+            modals_docs GET    /docs/modals(.:format)             jumpstart/docs#modals
+        navigation_docs GET    /docs/navigation(.:format)         jumpstart/docs#navigation
+        pagination_docs GET    /docs/pagination(.:format)         jumpstart/docs#pagination
+             pills_docs GET    /docs/pills(.:format)              jumpstart/docs#pills
+              tabs_docs GET    /docs/tabs(.:format)               jumpstart/docs#tabs
+          tooltips_docs GET    /docs/tooltips(.:format)           jumpstart/docs#tooltips
+         slideover_docs GET    /docs/slideover(.:format)          jumpstart/docs#slideover
+             wells_docs GET    /docs/wells(.:format)              jumpstart/docs#wells
+          business_docs GET    /docs/business(.:format)           jumpstart/docs#business
+     existing_apps_docs GET    /docs/existing_apps(.:format)      jumpstart/docs#existing_apps
+      integrations_docs GET    /docs/integrations(.:format)       jumpstart/docs#integrations
+               new_docs GET    /docs/new(.:format)                jumpstart/docs#new
+              edit_docs GET    /docs/edit(.:format)               jumpstart/docs#edit
+                   docs GET    /docs(.:format)                    jumpstart/docs#show
+                        PATCH  /docs(.:format)                    jumpstart/docs#update
+                        PUT    /docs(.:format)                    jumpstart/docs#update
+                        DELETE /docs(.:format)                    jumpstart/docs#destroy
+                        POST   /docs(.:format)                    jumpstart/docs#create
+                   root GET    /                                  jumpstart/configs#show
+
+Routes for Mailbin::Engine:
+      Prefix Verb   URI Pattern                    Controller#Action
+   new_clear GET    /messages/clear/new(.:format)  mailbin/clears#new
+  edit_clear GET    /messages/clear/edit(.:format) mailbin/clears#edit
+       clear GET    /messages/clear(.:format)      mailbin/clears#show
+             PATCH  /messages/clear(.:format)      mailbin/clears#update
+             PUT    /messages/clear(.:format)      mailbin/clears#update
+             DELETE /messages/clear(.:format)      mailbin/clears#destroy
+             POST   /messages/clear(.:format)      mailbin/clears#create
+    messages GET    /messages(.:format)            mailbin/messages#index
+             POST   /messages(.:format)            mailbin/messages#create
+ new_message GET    /messages/new(.:format)        mailbin/messages#new
+edit_message GET    /messages/:id/edit(.:format)   mailbin/messages#edit
+     message GET    /messages/:id(.:format)        mailbin/messages#show
+             PATCH  /messages/:id(.:format)        mailbin/messages#update
+             PUT    /messages/:id(.:format)        mailbin/messages#update
+             DELETE /messages/:id(.:format)        mailbin/messages#destroy
+        root GET    /                              mailbin/messages#index
+
+Routes for Pay::Engine:
+ Prefix Verb URI Pattern             Controller#Action
+payment GET  /payments/:id(.:format) pay/payments#show

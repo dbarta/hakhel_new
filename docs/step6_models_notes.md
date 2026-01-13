@@ -13,7 +13,7 @@
 ## Zeitwerk/autoload fixes
 - Removed engine-relative requires; placed shared modules in app autoload paths.
 - Converted enums to Rails 8 syntax: `enum :field, { ... }` in `community`, `csv_import`, `csv_import_log`, `future_message`, `sent_message`.
-- Wrapped Hebrew date utilities as `Hke::Heb` and extended into `Hke` to satisfy constant expectations.
+- Hebrew date utilities now live as `Hke::Heb` (module methods only; no `Hke` forwarding/extend).
 - Added `Hke::LogHelper` and `Hke::Logger` under app/models; `Hke::Loggable` now lives in model concerns.
 - Copied Addressable/Preferring concerns into model concerns (used by models but originally under controller concerns).
 

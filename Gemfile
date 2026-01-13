@@ -35,6 +35,12 @@ gem "solid_cable"
 
 # Reduces boot times through caching; required in config/boot.rb
 gem "bootsnap", ">= 1.4.2", require: false
+# Messaging/rendering dependencies for HKE
+gem "twilio-ruby"
+gem "sendgrid-ruby"
+gem "liquid"
+gem "sidekiq-cron"
+gem "devise-i18n"
 
 # Deploy this application anywhere as a Docker container [https://kamal-deploy.org]
 gem "kamal", ">= 2.0.0.rc2", require: false

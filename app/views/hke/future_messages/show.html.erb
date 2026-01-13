@@ -1,0 +1,67 @@
+<div class="container px-4 mx-auto my-8">
+  <div class="mx-auto">
+    <div class="flex items-center justify-between mb-4">
+      <h1 class="h3"><%= link_to t("deceased_people"), deceased_people_path %> </h1>
+      <%= link_to t("edit"), edit_deceased_person_path(@deceased_person), class: "btn btn-link" %>
+    </div>
+
+    <div class="p-8 bg-white rounded shadow">
+    <div class="grid grid-cols-8">
+      <div class="mb-4">
+          <h5 class=""><%= t("name") %></h5>
+          <%= @deceased_person.name %>
+      </div>
+
+      <div class="mb-4">
+        <h5><%= t("gender") %></h5>
+        <%= @deceased_person.gender %>
+      </div>
+
+      <div class="mb-4">
+        <h5><%= t("occupation") %></h5>
+        <%= @deceased_person.occupation %>
+      </div>
+      <div class="mb-4">
+        <h5><%= t("organization") %></h5>
+        <%= @deceased_person.organization %>
+      </div>
+      <div class="mb-4">
+        <h5><%= t("religion") %></h5>
+        <%= @deceased_person.religion %>
+      </div>
+      <div class="mb-4">
+        <h5><%= t("father_first_name") %></h5>
+        <%= @deceased_person.father_first_name %>
+      </div>
+      <div class="mb-4">
+        <h5><%= t("mother_first_name") %></h5>
+        <%= @deceased_person.mother_first_name %>
+      </div>
+      <div class="mb-4">
+        <h5><%= t("hebrew_year_of_death") %></h5>
+        <%= @deceased_person.hebrew_year_of_death %>
+      </div>
+      <div class="mb-4">
+        <h5><%= t("hebrew_month_of_death") %></h5>
+        <%= @deceased_person.hebrew_month_of_death %>
+      </div>
+      <div class="mb-4">
+        <h5><%= t("hebrew_day_of_death") %></h5>
+        <%= @deceased_person.hebrew_day_of_death %>
+      </div>
+      <div class="mb-4">
+        <h5><%= t("date_of_death") %></h5>
+        <%= @deceased_person.date_of_death %>
+      </div>
+      <div class="mb-4">
+        <h5><%= t("time_of_death") %></h5>
+        <%= @deceased_person.time_of_death %>
+      </div>
+      <div class="mb-4">
+        <h5><%= t("location_of_death") %></h5>
+        <%= @deceased_person.location_of_death %>
+      </div>
+    </div>
+    </div>
+  </div>
+</div>

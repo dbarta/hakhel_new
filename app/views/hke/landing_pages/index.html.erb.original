@@ -1,0 +1,53 @@
+<div class="container px-4 mx-auto my-8">
+  <div class="flex items-center justify-between mb-4">
+    <h1 class="h3">Landing Pages</h1>
+
+    <% if @landing_pages.any? %>
+      <%= link_to t("shared.scaffold.new.title", model: "Landing Page"), new_landing_page_path, class: "btn btn-primary" %>
+    <% end %>
+  </div>
+
+  <% if @landing_pages.any? %>
+    <div class="bg-white rounded shadow table-responsive">
+      <table class="table">
+        <thead>
+          <tr>
+            <th class="p-3 text-xs text-left uppercase"><%= sortable @landing_pages, :name, "Name", class: "text-gray-700" %></th>
+            <th class="p-3 text-xs text-left uppercase"><%= sortable @landing_pages, :body, "Body", class: "text-gray-700" %></th>
+            <th class="p-3 text-xs text-left uppercase"><%= sortable @landing_pages, :user_id, "User", class: "text-gray-700" %></th>
+            <th class="w-20 p-3 text-xs text-left text-gray-700 uppercase"><%= t("shared.scaffold.actions") %></th>
+          </tr>
+        </thead>
+
+        <tbody>
+        <% @landing_pages.each do |landing_page| %>
+          <tr class="border-t border-gray-400 group hover:bg-gray-100">
+            <td class="p-3"><%= landing_page.name %></td>
+            <td class="p-3"><%= landing_page.body %></td>
+            <td class="p-3"><%= landing_page.user_id %></td>
+
+            <td>
+              <%= link_to t("shared.scaffold.view"), landing_page, class: "btn btn-link no-underline" %>
+            </td>
+          </tr>
+        <% end %>
+        </tbody>
+      </table>
+    </div>
+
+    <% if @pagy.pages > 1 %>
+      <div class="my-6 text-center">
+        <%== pagy_nav(@pagy) %>
+      </div>
+    <% end %>
+
+  <% else %>
+    <div class="flex flex-col items-center justify-between p-8 bg-white rounded shadow lg:flex-row">
+      <%= image_tag "empty.svg", class: "mb-4 lg:w-1/2" %>
+      <div class="flex-1 text-center">
+        <p class="mb-4 h3">Create your first Landing Page</p>
+        <%= link_to t("shared.scaffold.new.title", model: "Landing Page"), new_landing_page_path, class: "btn btn-primary" %>
+      </div>
+    </div>
+  <% end %>
+</div>

@@ -48,4 +48,14 @@ class Users::SessionsController < Devise::SessionsController
   def clear_otp_user_from_session
     session.delete(:otp_user_id)
   end
+
+  # Avoid polymorphic redirects to user_url (route missing); always redirect to after_sign_in_path
+  def respond_with(resource, _opts = {})
+    location = after_sign_in_path_for(resource)
+    respond_to do |format|
+      format.turbo_stream { redirect_to location }
+      format.html { super(resource, location: location) }
+      format.any { super(resource, location: location) }
+    end
+  end
 end

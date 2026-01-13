@@ -1,0 +1,32 @@
+<div class="py-32 max-w-2xl m-auto text-right flex flex-col items-right justify-right">
+  <% if @token %>
+    <p class="mb-6 text-gray-700 leading-normal text-xl">דף נחיתה עבור: <%= @contact_name %></p>
+    <div class="font-serif text-lg">
+      <p><%= @salutation %> <%= @contact_name %> שלום וברכה,</p>
+      <p> <%= @welcome %> לאתר יזכור של בית הכנסת בכפר  ורדים.</p>
+      <p>לפניך מספר אפשרויות לציון יום הפטירה של <%= @conjugated_relationship %> <%= @deceased_salutation %> <%= @deceased_name %>  <%= @alav_hashalom %> :</p>
+      <ul>
+        <li>אמירת קדיש בבית הכנסת על ידי אחד המתפללים.</li>
+        <li>עליה לקבר, הדלקת נר נשמה ואמירת תהילים לזכר <%= @conjugated_relationship %>.</li>
+        <li>קידוש לשבת בבית הכנסת.</li>
+        <li>תרומת סעודה שלישית בבית הכנסת.</li>
+        <li>סעודת מצוה ביום חול עם דרשה לזכר <%= @conjugated_relationship %>.</li>
+      </ul>
+      <p>
+        <% num_days=7; reltype="בן" ; hebrew_date="י׳ חשוון תשס״א" %>
+        מר <%= @deceased_name %>, תאריך פטירה <%= hebrew_date %>, איש קשר: יוסי אמסלם (<%= reltype %>) עוד <%= num_days %> ימים
+      </p>
+    </div>
+    <div>
+      Landing Page Preview
+      <%=  @landing_page_preview %>
+    </div>
+    <div>
+      SMS Preview
+      <%=  @sms_preview %>
+    </div>
+  <% else %>
+    <p class="mb-6 text-gray-700 leading-normal text-xl">איש קשר לא נמצא. אנא בצע שמירה ונסה שנית.</p>
+  <% end %>
+
+</div>

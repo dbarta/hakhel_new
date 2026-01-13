@@ -1,0 +1,12 @@
+<div class="container px-4 mx-auto my-8">
+  <div class="mx-auto">
+    <div class="flex items-center justify-between mb-4">
+      <h1 class="h3"><%= t("shared.scaffold.new.title", model: t("admin.users.index.title")) %></h1>
+      <%= link_to t("cancel"), madmin_users_path, class: "btn btn-link" %>
+    </div>
+
+    <div class="p-8 bg-white rounded shadow">
+      <%= render "form", user: @user %>
+    </div>
+  </div>
+</div>

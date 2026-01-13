@@ -7,7 +7,6 @@ module Hke
     # Enable Turbo Stream broadcasting
     broadcasts
 
-
     enum :status, {
       pending: 0,
       processing: 1,
@@ -52,7 +51,7 @@ module Hke
 
     def add_error(row_number, error_message)
       errors = errors_list
-      errors << { row: row_number, message: error_message }
+      errors << {row: row_number, message: error_message}
       self.errors_data = errors.to_json
     end
 
@@ -62,7 +61,7 @@ module Hke
     end
 
     def can_retry?
-      completed? && failed_rows > 0
+      failed? && failed_rows > 0
     end
 
     private
@@ -70,8 +69,8 @@ module Hke
     def file_is_csv
       return unless file.attached?
 
-      unless file.content_type == 'text/csv' || file.filename.extension.downcase == 'csv'
-        errors.add(:file, 'must be a CSV file')
+      unless file.content_type == "text/csv" || file.filename.extension.downcase == "csv"
+        errors.add(:file, "must be a CSV file")
       end
     end
   end

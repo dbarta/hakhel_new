@@ -1,0 +1,102 @@
+<%= render 'hke/shared/community_admin_navbar' %>
+
+<div class="container mx-auto p-4" style="direction: rtl;">
+  <div class="max-w-7xl mx-auto">
+    <!-- Header -->
+    <div class="flex items-center justify-between mb-6">
+      <h1 class="text-2xl font-bold"><%= t('message_management.index.title') %></h1>
+      <%= link_to t('message_management.index.back_to_dashboard'), root_path,
+          class: "px-4 py-2 border border-gray-300 rounded text-sm hover:bg-gray-50" %>
+    </div>
+
+    <!-- Statistics Dashboard -->
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+      <div class="bg-green-100 p-6 rounded-lg">
+        <h3 class="text-lg font-semibold text-green-800"><%= t('message_management.stats.total_sent') %></h3>
+        <p class="text-3xl font-bold text-green-600"><%= @stats[:total_sent] %></p>
+      </div>
+      <div class="bg-red-100 p-6 rounded-lg">
+        <h3 class="text-lg font-semibold text-red-800"><%= t('message_management.stats.total_failed') %></h3>
+        <p class="text-3xl font-bold text-red-600"><%= @stats[:total_failed] %></p>
+      </div>
+      <div class="bg-blue-100 p-6 rounded-lg">
+        <h3 class="text-lg font-semibold text-blue-800"><%= t('message_management.stats.success_rate') %></h3>
+        <p class="text-3xl font-bold text-blue-600"><%= @stats[:success_rate] %>%</p>
+      </div>
+      <div class="bg-yellow-100 p-6 rounded-lg">
+        <h3 class="text-lg font-semibold text-yellow-800"><%= t('message_management.stats.pending_approval') %></h3>
+        <p class="text-3xl font-bold text-yellow-600"><%= @future_stats[:pending_approval] %></p>
+      </div>
+    </div>
+
+    <!-- Filters -->
+    <div class="bg-white rounded-lg shadow-sm p-6 mb-6">
+      <div class="flex items-center justify-between">
+        <h2 class="text-lg font-semibold"><%= t('message_management.index.filters') %></h2>
+
+        <div class="flex space-x-4 space-x-reverse">
+          <!-- Time Filter -->
+          <%= form_with url: message_management_index_path, method: :get, local: false,
+              data: { turbo_stream: true }, class: "inline flex items-center space-x-2 space-x-reverse" do |form| %>
+            <%= hidden_field_tag :status_filter, @status_filter %>
+            <label class="text-sm font-medium text-gray-700"><%= t('message_management.filters.time_period') %>:</label>
+            <%= form.select :time_filter,
+                options_for_select([
+                  [t('message_management.filters.last_7_days'), 'last_7_days'],
+                  [t('message_management.filters.last_30_days'), 'last_30_days'],
+                  [t('message_management.filters.last_90_days'), 'last_90_days'],
+                  [t('message_management.filters.this_year'), 'this_year']
+                ], @time_filter),
+                {},
+                { class: "rounded border-gray-300 text-sm", onchange: "this.form.submit();" } %>
+          <% end %>
+
+          <!-- Status Filter -->
+          <%= form_with url: message_management_index_path, method: :get, local: false,
+              data: { turbo_stream: true }, class: "inline flex items-center space-x-2 space-x-reverse" do |form| %>
+            <%= hidden_field_tag :time_filter, @time_filter %>
+            <label class="text-sm font-medium text-gray-700"><%= t('message_management.filters.status') %>:</label>
+            <%= form.select :status_filter,
+                options_for_select([
+                  [t('message_management.filters.all_messages'), 'all'],
+                  [t('message_management.filters.successful_only'), 'successful'],
+                  [t('message_management.filters.failed_only'), 'failed']
+                ], @status_filter),
+                {},
+                { class: "rounded border-gray-300 text-sm", onchange: "this.form.submit();" } %>
+          <% end %>
+        </div>
+      </div>
+    </div>
+
+    <!-- Messages Table -->
+    <div class="bg-white rounded-lg shadow-sm">
+      <div class="px-6 py-4 border-b border-gray-200">
+        <h3 class="text-lg font-medium"><%= t('message_management.index.messages_history') %></h3>
+      </div>
+
+      <div id="messages_table">
+        <%= render partial: "messages_table", locals: { messages: @sent_messages } %>
+      </div>
+    </div>
+
+    <!-- Common Errors Section -->
+    <% if @stats[:most_common_errors].any? %>
+      <div class="mt-8 bg-red-50 rounded-lg p-6">
+        <h3 class="text-lg font-semibold text-red-800 mb-4">
+          <%= t('message_management.index.common_errors') %>
+        </h3>
+        <div class="space-y-2">
+          <% @stats[:most_common_errors].each do |error_data| %>
+            <div class="flex justify-between items-center p-3 bg-white rounded border-r-4 border-red-400">
+              <span class="text-sm text-gray-900"><%= error_data[:error] %></span>
+              <span class="text-xs text-red-600 font-medium">
+                <%= t('message_management.index.error_count', count: error_data[:count]) %>
+              </span>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>

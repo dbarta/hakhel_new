@@ -1,0 +1,20 @@
+en:
+  welcome:
+    index:
+      title: "Hakehel"
+      subtitle: "Community Memory Management"
+      welcome_title: "Welcome to the Hakehel system"
+      description: "Manage memorial data and send automated remembrance messages to families."
+      description_details: "Keep records for deceased, contacts, and schedule memorial notifications."
+      login_button: "Sign in"
+      no_account: "Don’t have an account?"
+      register_link: "Register"
+      features_title: "Features:"
+      features:
+        deceased_management: "Manage deceased records and contacts"
+        automatic_messages: "Schedule automated memorial notifications"
+        multi_community: "Support for multiple communities"
+        csv_import: "Import data from CSV files"
+        message_tracking: "Track messages that were sent"
+      help_text: "For more information or assistance, please contact your administrator."
+      copyright: "Hakehel © %{year}"

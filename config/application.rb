@@ -32,13 +32,13 @@ module JumpstartApp
     config.i18n.load_path += Dir[Rails.root.join("config/locales/**/*.{rb,yml}")]
 
     # Permitted locales available for the application
-    config.i18n.available_locales = [:en]
+    config.i18n.available_locales = [:en, :he]
 
     # Set default locale
-    config.i18n.default_locale = :en
+    config.i18n.default_locale = :he
 
-    # Use default language as fallback if translation is missing
-    config.i18n.fallbacks = true
+    # Use fallbacks (Hebrew falls back to English)
+    config.i18n.fallbacks = {he: [:he, :en], en: [:en]}
 
     # Ensure Jumpstart is higher priority than other gems for overrides
     config.railties_order = [:main_app, Jumpstart::Engine, :all]

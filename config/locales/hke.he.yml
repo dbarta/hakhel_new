@@ -71,6 +71,10 @@ he:
   time_of_death: "שעת פטירה"
   location_of_death: "מקום פטירה"
   contact_person_details: "פרטי איש קשר"
+  application:
+    navbar:
+      admin: "מנהל מערכת"
+      dashboard: "דשבורד"
   contact_people_details: "פרטי אנשי הקשר"
   deceased_people_details: "פרטי נפטרים"
   deceased_person_details: "פרטי נפטר/ת"

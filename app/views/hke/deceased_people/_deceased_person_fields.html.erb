@@ -1,0 +1,24 @@
+<div  data-controller="visibility">
+  <div class="flex gap-4">
+    <%= toggle_visibility_button %>
+    <div class="grid grid-cols-7 gap-2">
+      <%= text_fld    form, :first_name %>
+      <%= text_fld    form, :last_name %>
+      <%#= select_fld  form, :gender, gender_select %>
+      <%= select_fld form, :gender, [ [ "זכר" , "זכר" ],  [ "נקבה" , "נקבה" ] ] %>
+     
+      <%= text_fld    form, :hebrew_year_of_death %>
+      <%= select_fld  form, :hebrew_month_of_death, hebrew_month_select %>
+      <%= select_fld  form, :hebrew_day_of_death, hebrew_day_select %>
+      <%= text_fld    form, :date_of_death %>
+
+      <%= text_fld_optional form, :occupation %>
+      <%= text_fld_optional form, :organization %>
+      <%= text_fld_optional form, :religion %>
+      <%= text_fld_optional form, :father_first_name %>
+      <%= text_fld_optional form, :mother_first_name %>
+      <%= text_fld_optional form, :time_of_death %>
+      <%= text_fld_optional form, :location_of_death %>
+    </div>
+  </div>
+</div>

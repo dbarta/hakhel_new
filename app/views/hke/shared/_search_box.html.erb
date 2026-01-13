@@ -1,0 +1,7 @@
+<div >
+      <%= form_with url: url, method: :post do |form| %>
+
+        <span class="text-base"><%= t('search_by_first_or_last_name') %>:</span>
+        <%=form.search_field :name_search, class: "border-1 border-neutral-300 border-solid rounded-md ", oninput: "this.form.requestSubmit()" %>
+      <% end %>
+  </div>

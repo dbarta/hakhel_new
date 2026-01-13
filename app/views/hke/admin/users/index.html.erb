@@ -1,0 +1,43 @@
+<div class="container mx-auto my-8" style="direction: rtl;">
+  <div class="flex items-center mb-8">
+    <h4 class="h4 ml-10">
+      <span id="users_count"><%= @users.count %></span>
+      <%= " #{t('admin.users.index.title')}" %>
+    </h4>
+    <div class="mr-auto flex items-center">
+      <%= render partial: "hke/shared/search_box", locals: {url: madmin_users_path} if defined?(render) %>
+      <%= link_to t('admin.users.index.create_new'), new_madmin_user_path, class: "btn btn-small btn-primary mr-10" %>
+    </div>
+  </div>
+
+  <!-- Role Summary Cards -->
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+    <div class="bg-blue-100 p-4 rounded-lg">
+      <h3 class="text-lg font-semibold text-blue-800"><%= t('admin.users.index.role_summary.system_admins') %></h3>
+      <p class="text-2xl font-bold text-blue-600"><%= @system_admins.count %></p>
+    </div>
+    <div class="bg-green-100 p-4 rounded-lg">
+      <h3 class="text-lg font-semibold text-green-800"><%= t('admin.users.index.role_summary.community_admins') %></h3>
+      <p class="text-2xl font-bold text-green-600"><%= @community_admins.count %></p>
+    </div>
+    <div class="bg-purple-100 p-4 rounded-lg">
+      <h3 class="text-lg font-semibold text-purple-800"><%= t('admin.users.index.role_summary.community_users') %></h3>
+      <p class="text-2xl font-bold text-purple-600"><%= @community_users.count %></p>
+    </div>
+  </div>
+
+  <div id="search_results">
+      <%= render partial: "hke/shared/search_results",
+      locals: {       items: @users,
+                      fields: [ :name, :email, :created_at],
+                other_fields: [
+                  {header: t('admin.users.index.roles'), data: "role_summary"},
+                  {header: t('admin.users.index.community'), data: "community_name"}
+                ],
+                actions: [
+                  {name: "action_edit", path: :edit_madmin_user_path},
+                  {name: "action_delete", path: :madmin_user_path, method: :delete, confirm: true}
+                ]
+              } %>
+  </div>
+</div>

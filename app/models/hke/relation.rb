@@ -84,9 +84,9 @@ module Hke
     end
 
     def calculate_yahrzeit_date(name, hm, hd)
-      # puts "@@@ before calling Hke.yahrzeit_date"
-      Hke.yahrzeit_date(name, hm, hd)
-      # puts "@@@ after calling Hke.yahrzeit_date: #{result}"
+      # puts "@@@ before calling Hke::Heb.yahrzeit_date"
+      Hke::Heb.yahrzeit_date(name, hm, hd)
+      # puts "@@@ after calling Hke::Heb.yahrzeit_date: #{result}"
     end
 
     def calculate_delivery_method
