@@ -44,12 +44,12 @@
           <%= render "shared/notifications" rescue nil %>
         </div>
 
-        <details class="relative inline-block text-left">
+        <details class="relative inline-block text-left" data-controller="details-close">
           <summary class="flex flex-row-reverse items-center gap-2 cursor-pointer list-none">
             <%= image_tag AvatarHelper.avatar_url_for(current_user, size: 48), alt: current_user.name || current_user.email, class: "h-8 w-8 rounded-full ring-2 ring-gray-200" %>
             <span class="text-sm font-medium text-gray-800 dark:text-gray-100"><%= current_user.name.presence || current_user.email %></span>
           </summary>
-          <div class="absolute right-0 z-30 mt-2 w-48 rounded-md shadow-lg bg-white dark:bg-gray-800 ring-1 ring-black ring-opacity-5 focus:outline-none">
+          <div class="absolute end-0 z-50 mt-2 w-48 rounded-md shadow-lg bg-white dark:bg-gray-800 ring-1 ring-black ring-opacity-5 focus:outline-none">
             <div class="py-1">
               <%= link_to t(".profile", default: "Profile"), main_app.edit_user_registration_path, class: "block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-50 dark:hover:bg-gray-700" %>
               <%= button_to t(".sign_out", default: "Log out"),
