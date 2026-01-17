@@ -1,19 +1,20 @@
 <!DOCTYPE html>
 <html class="<%= class_names(dark: current_user&.dark_theme?, "hotwire-native": hotwire_native_app?) %>" lang="<%= I18n.locale %>">
   <head>
-    <%= render "head" %>
+
+    <%= render "application/head" %>
   </head>
-  <body data-controller="theme bridge--menu-button <%= "bridge--notification-token" if user_signed_in? %>" data-theme-preference-value="<%= current_user&.theme %>">
+	<body dir="<%= I18n.locale == :he ? 'rtl' : 'ltr' %>" data-controller="theme bridge--menu-button <%= "bridge--notification-token" if user_signed_in? %>" data-theme-preference-value="<%= current_user&.theme %>">
     <header>
-      <%= impersonation_banner %>
-      <%= render "flash" %>
-      <%= render "navbar" %>
+      <%= impersonation_banner if respond_to?(:impersonation_banner) %>
+      <%= render "shared/flash" %>
+      <%= render "application/navbar" %>
     </header>
 
     <main>
       <%= content_for?(:content) ? yield(:content) : yield %>
     </main>
 
-    <%= render "footer" unless hotwire_native_app? %>
+    <%= render "application/footer" unless hotwire_native_app? %>
   </body>
 </html>

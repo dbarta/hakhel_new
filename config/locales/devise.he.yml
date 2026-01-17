@@ -1,0 +1,47 @@
+he:
+  devise:
+    sessions:
+      new:
+        title: "כניסה"
+        heading: "התחברות למערכת"
+        email_label: "אימייל"
+        email_placeholder: "name@example.com"
+        password_label: "סיסמה"
+        password_placeholder: "••••••••"
+        remember_me: "זכור אותי"
+        forgot_password: "?שכחת סיסמה"
+        submit: "התחברות"
+        sign_up_prompt_html: "עוד אין לך חשבון? %{link}"
+        sign_up_link: "להרשמה"
+
+    registrations:
+      new:
+        title: "יצירת חשבון"
+        heading: "הרשמה למערכת"
+        subheading: "מלאו את הפרטים ליצירת חשבון"
+        password_confirmation: "אישור סיסמה"
+        password_placeholder: "••••••••"
+        role_label: "תפקיד"
+        roles:
+          system_admin: "מנהל מערכת"
+          community_admin: "מנהל קהילה"
+          community_user: "משתמש קהילה"
+        community_label: "קהילה"
+        community_prompt: "בחר קהילה"
+        submit: "יצירת חשבון"
+        sign_in_prompt_html: "כבר יש לך חשבון? %{link}"
+        sign_in_link: "להתחברות"
+        name_label: "שם"
+        name_placeholder: "הקלד שם"
+        terms_label: "אני מאשר/ת את תנאי השימוש"
+
+    passwords:
+      new:
+        title: "שכחת סיסמה?"
+        heading: "שכחת סיסמה?"
+        subheading: "הזן/י את האימייל שלך ונשלח אליך הוראות לאיפוס הסיסמה"
+        email_label: "אימייל"
+        email_placeholder: "name@example.com"
+        submit: "שלחו לי הוראות לאיפוס סיסמה"
+        sign_in_prompt_html: "נזכרת בסיסמה? %{link}"
+        sign_in_link: "להתחברות"

@@ -8,9 +8,9 @@
       <h2 class="text-xl font-semibold"><%= t('community_admin.dashboard.message_approval.title') %></h2>
 
       <!-- Time Filter Dropdown -->
-      <div class="flex items-center space-x-4 space-x-reverse">
+	      <div class="flex items-center space-x-4 space-x-reverse">
         <label class="text-sm font-medium text-gray-700">תקופת זמן:</label>
-        <%= form_with url: hke.root_path, method: :get, local: false, data: { turbo_stream: true }, class: "inline" do |form| %>
+	        <%= form_with url: hke_root_path, method: :get, local: false, data: { turbo_stream: true }, class: "inline" do |form| %>
           <%= form.select :time_filter,
               options_for_select([
                 [t('community_admin.dashboard.message_approval.time_filters.one_week'), 'one_week'],
@@ -30,14 +30,14 @@
     </div>
 
     <!-- Bulk Actions -->
-    <div class="flex gap-4 mb-4 p-4 bg-gray-50 rounded-lg border">
+	    <div class="flex gap-4 mb-4 p-4 bg-gray-50 rounded-lg border">
       <%= button_to t('community_admin.dashboard.message_approval.bulk_actions.approve_all'),
-          approve_all_future_messages_path(time_filter: @time_filter),
+	          approve_all_hke_future_messages_path(time_filter: @time_filter),
           method: :post,
           form: { data: { turbo: true }, class: "inline" },
           class: "btn btn-secondary" %>
       <%= button_to t('community_admin.dashboard.message_approval.bulk_actions.disapprove_all'),
-          disapprove_all_future_messages_path(time_filter: @time_filter),
+	          disapprove_all_hke_future_messages_path(time_filter: @time_filter),
           method: :post,
           form: { data: { turbo: true }, class: "inline" },
           class: "btn btn-danger" %>
@@ -63,7 +63,7 @@
       </div>
       <h3 class="text-lg font-semibold text-gray-900 mb-2">יבוא נתונים מ-CSV</h3>
       <p class="text-sm text-gray-600 mb-4">העלה קובץ CSV עם נתוני נפטרים ואנשי קשר</p>
-      <%= link_to hke.new_csv_import_path, class: "inline-flex items-center text-sm font-medium text-blue-600 hover:text-blue-800" do %>
+	      <%= link_to new_hke_csv_import_path, class: "inline-flex items-center text-sm font-medium text-blue-600 hover:text-blue-800" do %>
         התחל יבוא
         <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
@@ -83,7 +83,7 @@
       </div>
       <h3 class="text-lg font-semibold text-gray-900 mb-2">ניהול נפטרים</h3>
       <p class="text-sm text-gray-600 mb-4">צפה וערוך את רשימת הנפטרים בקהילה</p>
-      <%= link_to hke.deceased_people_path, class: "inline-flex items-center text-sm font-medium text-gray-700 hover:text-gray-900" do %>
+	      <%= link_to hke_deceased_people_path, class: "inline-flex items-center text-sm font-medium text-gray-700 hover:text-gray-900" do %>
         צפה ברשימה
         <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
@@ -103,7 +103,7 @@
       </div>
       <h3 class="text-lg font-semibold text-gray-900 mb-2">ניהול אנשי קשר</h3>
       <p class="text-sm text-gray-600 mb-4">צפה וערוך את רשימת אנשי הקשר בקהילה</p>
-      <%= link_to hke.contact_people_path, class: "inline-flex items-center text-sm font-medium text-green-600 hover:text-green-800" do %>
+	      <%= link_to hke_contact_people_path, class: "inline-flex items-center text-sm font-medium text-green-600 hover:text-green-800" do %>
         צפה ברשימה
         <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />

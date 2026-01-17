@@ -1,5 +1,7 @@
 module Hke
   class WelcomeController < ApplicationController
+    skip_after_action :verify_policy_scoped, only: :index
+    skip_after_action :verify_authorized, only: :index
     def index
       if user_signed_in?
         if current_user.system_admin?

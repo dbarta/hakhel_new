@@ -5,19 +5,19 @@
   <div class="px-6 py-4">
     <div class="flex items-center justify-between">
       <!-- Right side: Navigation menu -->
-      <div class="flex space-x-4 space-x-reverse">
-        <%= link_to t('community_admin.navbar.message_approval'), hke.root_path,
+	      <div class="flex space-x-4 space-x-reverse">
+	        <%= link_to t('community_admin.navbar.message_approval'), hke_root_path,
             class: "px-4 py-2 text-blue-600 hover:text-blue-800 font-medium" %>
-        <%= link_to t('community_admin.navbar.deceased_people'), hke.deceased_people_path,
+	        <%= link_to t('community_admin.navbar.deceased_people'), hke_deceased_people_path,
             class: "px-4 py-2 text-blue-600 hover:text-blue-800 font-medium" %>
-        <%= link_to t('community_admin.navbar.contact_people'), hke.contact_people_path,
+	        <%= link_to t('community_admin.navbar.contact_people'), hke_contact_people_path,
             class: "px-4 py-2 text-blue-600 hover:text-blue-800 font-medium" %>
         <%# TODO: Add community users management route %>
         <%# link_to t('community_admin.navbar.users'), hke.community_users_path,
             class: "px-4 py-2 text-blue-600 hover:text-blue-800 font-medium" %>
-        <%= link_to t('community_admin.navbar.import_csv'), hke.csv_imports_path,
+	        <%= link_to t('community_admin.navbar.import_csv'), hke_csv_imports_path,
             class: "px-4 py-2 text-blue-600 hover:text-blue-800 font-medium" %>
-        <%= link_to t('community_admin.navbar.message_management'), hke.message_management_index_path,
+	        <%= link_to t('community_admin.navbar.message_management'), hke_message_management_index_path,
             class: "px-4 py-2 text-blue-600 hover:text-blue-800 font-medium" %>
         <%= link_to t('community_admin.navbar.logs', default: '\u05dc\u05d5\u05d2\u05d9\u05dd'), hke_logs_path,
             class: "px-4 py-2 text-blue-600 hover:text-blue-800 font-medium" %>

@@ -34,18 +34,18 @@ Rails.application.routes.draw do
     resources :cemeteries
     resources :communities, only: [:show, :edit, :update]
 
-    resources :future_messages do
-      member do
-        post :blast
-        post :toggle_approval
-      end
-      collection do
-        get :approve
-        post :bulk_approve
-        post :approve_all
-        post :disapprove_all
-      end
-    end
+	    resources :future_messages do
+	      member do
+	        post :blast
+	        post :toggle_approval
+	      end
+	      collection do
+	        get :approve
+	        post :bulk_approve
+	        post :approve_all
+	        post :disapprove_all
+	      end
+	    end
 
     resources :csv_imports, only: [:new, :create, :show, :index, :destroy] do
       collection do
@@ -58,17 +58,15 @@ Rails.application.routes.draw do
 
     resources :contact_people do
       collection do
-        post :index
-        post :import_csv
-      end
-    end
+	        post :import_csv
+	      end
+	    end
 
     resources :deceased_people do
       collection do
-        post :index
-        post :import_csv
-      end
-    end
+	        post :import_csv
+	      end
+	    end
 
     resources :community_preferences
 

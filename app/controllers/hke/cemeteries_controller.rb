@@ -36,7 +36,7 @@ module Hke
 
       respond_to do |format|
         if @cemetery.save
-          format.html { redirect_to @cemetery, notice: "Cemetery was successfully created." }
+	          format.html { redirect_to hke_cemetery_path(@cemetery), notice: "Cemetery was successfully created." }
           format.json { render :show, status: :created, location: @cemetery }
         else
           format.html { render :new, status: :unprocessable_entity }
@@ -50,7 +50,7 @@ module Hke
       authorize @cemetery
       respond_to do |format|
         if @cemetery.update(cemetery_params)
-          format.html { redirect_to @cemetery, notice: "Cemetery was successfully updated." }
+	          format.html { redirect_to hke_cemetery_path(@cemetery), notice: "Cemetery was successfully updated." }
           format.json { render :show, status: :ok, location: @cemetery }
         else
           format.html { render :edit, status: :unprocessable_entity }
@@ -64,8 +64,8 @@ module Hke
       authorize @cemetery
       @cemetery.destroy
       respond_to do |format|
-        format.turbo_stream { redirect_to cemeteries_url, notice: "Cemetery was successfully destroyed.", status: :see_other }
-        format.html { redirect_to cemeteries_url, notice: "Cemetery was successfully destroyed.", status: :see_other }
+	        format.turbo_stream { redirect_to hke_cemeteries_path, notice: "Cemetery was successfully destroyed.", status: :see_other }
+	        format.html { redirect_to hke_cemeteries_path, notice: "Cemetery was successfully destroyed.", status: :see_other }
         format.json { head :no_content }
       end
     end

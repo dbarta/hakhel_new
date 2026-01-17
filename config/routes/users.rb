@@ -6,10 +6,6 @@ devise_for :users,
     sessions: "users/sessions"
   }.compact
 
-devise_scope :user do
-  get "session/otp", to: "sessions#otp"
-end
-
 namespace :account do
   resource :password
 end

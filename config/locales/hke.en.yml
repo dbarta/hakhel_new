@@ -41,6 +41,8 @@ en:
   male: "male"
   female: "female"
   are_you_sure: "Are you sure?"
+  profile: "Profile"
+  logout: "Sign Out"
   back: "Back"
   cancel: "Cancel"
   create_an_account_first: "Please create an account first."
@@ -132,8 +134,34 @@ en:
       warn: "Warning"
       error: "Error"
 
+
   community_admin:
+    dashboard:
+      message_approval:
+        title: "Message Approval"
+        status:
+          approved: "Approved"
+          rejected: "Rejected"
+          pending: "Pending"
+        time_filters:
+          one_week: "One week"
+          two_weeks: "Two weeks"
+          one_month: "One month"
+          all: "All"
+        table_headers:
+          send_date: "Send date"
+          message_preview: "Message"
+          approve: "Approval"
+        bulk_actions:
+          approve_all: "Approve all"
+          disapprove_all: "Disapprove all"
+          submit: "Submit"
+        no_messages: "No messages to approve for this time period"
+        toggle:
+          show_all: "Show all..."
+          show_less: "Show less"
     navbar:
+      message_approval: "Message Approval"
       deceased_people: "Deceased People"
       contact_people: "Contact People"
       import_csv: "CSV Import"

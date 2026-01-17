@@ -34,7 +34,7 @@ module Hke
                   { header: t('hebrew_day_of_death'), data: :hebrew_day_of_death }
                 ],
                 actions: [
-                  { name: "send_individual_message", path: :blast_future_message_path, method: :post }
+	                  { name: "send_individual_message", path: :blast_hke_future_message_path, method: :post }
                 ]
               }
             ),
@@ -48,7 +48,7 @@ module Hke
     def blast
       if @future_message.blast
         respond_to do |format|
-          format.html { redirect_to future_messages_url, notice: "Future Message was successfully sent." }
+	          format.html { redirect_to hke_future_messages_path, notice: "Future Message was successfully sent." }
          # format.json { status: :ok, location: @future_message }
         end
         # render json: @future_message, status: :ok, location: @future_message
@@ -65,8 +65,8 @@ module Hke
     def destroy
       @future_message.destroy
       respond_to do |format|
-        format.turbo_stream { redirect_to future_messages_url, notice: "Future Message was successfully destroyed.", status: :see_other }
-        format.html { redirect_to future_messages_url, notice: "Future Message was successfully destroyed.", status: :see_other }
+	        format.turbo_stream { redirect_to hke_future_messages_path, notice: "Future Message was successfully destroyed.", status: :see_other }
+	        format.html { redirect_to hke_future_messages_path, notice: "Future Message was successfully destroyed.", status: :see_other }
         format.json { head :no_content }
       end
     end

@@ -1,0 +1,52 @@
+<% Current.meta_tags.set(title: t("devise.registrations.new.title", default: "יצירת חשבון")) if defined?(Current) && Current.respond_to?(:meta_tags) %>
+
+<div class="bg-white shadow-lg rounded-2xl p-8 space-y-6">
+  <div class="text-center space-y-2">
+    <h1 class="text-2xl font-bold text-gray-900"><%= t("devise.registrations.new.heading", default: "הרשמה למערכת") %></h1>
+    <p class="text-sm text-gray-600"><%= t("devise.registrations.new.subheading", default: "מלאו את הפרטים ליצירת חשבון") %></p>
+  </div>
+
+  <%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { class: "space-y-4", data: { turbo: false } }, local: true) do |f| %>
+    <div class="space-y-1 text-right">
+      <%= f.label :name, t("devise.registrations.new.name_label", default: "שם"), class: "block text-sm font-medium text-gray-700" %>
+      <%= f.text_field :name, dir: "rtl", autocomplete: "name", placeholder: t("devise.registrations.new.name_placeholder", default: "הקלד שם"), class: "block w-full rounded-md border border-gray-300 bg-white text-right px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" %>
+    </div>
+    <div class="space-y-1 text-right">
+      <%= f.label :email, t("devise.sessions.new.email_label"), class: "block text-sm font-medium text-gray-700" %>
+      <%= f.email_field :email, autofocus: true, autocomplete: "email", dir: "ltr", placeholder: t("devise.sessions.new.email_placeholder"), class: "block w-full rounded-md border border-gray-300 bg-white text-left px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" %>
+    </div>
+
+    <div class="space-y-1 text-right">
+      <%= f.label :password, t("devise.sessions.new.password_label"), class: "block text-sm font-medium text-gray-700" %>
+      <%= f.password_field :password, autocomplete: "new-password", dir: "rtl", placeholder: t("devise.sessions.new.password_placeholder"), class: "block w-full rounded-md border border-gray-300 bg-white text-right px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" %>
+    </div>
+
+    <div class="space-y-1 text-right">
+      <%= f.label :password_confirmation, t("devise.registrations.new.password_confirmation", default: "אישור סיסמה"), class: "block text-sm font-medium text-gray-700" %>
+      <%= f.password_field :password_confirmation, autocomplete: "new-password", dir: "rtl", placeholder: t("devise.registrations.new.password_placeholder", default: "••••••••"), class: "block w-full rounded-md border border-gray-300 bg-white text-right px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" %>
+    </div>
+
+    <div class="space-y-1 text-right">
+      <%= label_tag :role, t("devise.registrations.new.role_label", default: "תפקיד"), class: "block text-sm font-medium text-gray-700" %>
+      <%= select_tag "user[role]", options_for_select(@roles.map { |r| [t("devise.registrations.new.roles.#{r}", default: r.humanize), r] }, params.dig(:user, :role)), class: "block w-full rounded-md border border-gray-300 bg-white text-right px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" %>
+    </div>
+
+    <div class="space-y-1 text-right">
+      <%= f.label :community_id, t("devise.registrations.new.community_label", default: "קהילה"), class: "block text-sm font-medium text-gray-700" %>
+      <%= f.collection_select :community_id, @communities, :id, :name, { prompt: t("devise.registrations.new.community_prompt", default: "בחר קהילה") }, class: "block w-full rounded-md border border-gray-300 bg-white text-right px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" %>
+    </div>
+
+    <div class="flex items-center justify-end space-x-2 space-x-reverse text-sm text-gray-700">
+      <%= f.check_box :terms_of_service, class: "h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500" %>
+      <%= f.label :terms_of_service, t("devise.registrations.new.terms_label", default: "אני מאשר/ת את תנאי השימוש"), class: "cursor-pointer" %>
+    </div>
+
+    <div>
+      <%= f.submit t("devise.registrations.new.submit", default: "יצירת חשבון"), class: "w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-semibold text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-150 ease-in-out" %>
+    </div>
+  <% end %>
+
+  <div class="text-center text-sm text-gray-600">
+    <%= t("devise.registrations.new.sign_in_prompt_html", default: "כבר יש לך חשבון? %{link}".html_safe, link: link_to(t("devise.registrations.new.sign_in_link", default: "להתחברות"), new_session_path(resource_name), class: "text-indigo-600 hover:text-indigo-500 font-semibold")) %>
+  </div>
+</div>

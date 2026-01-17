@@ -41,7 +41,7 @@
             </td>
             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 text-right">
               <% if message.respond_to?(:delivery_method) %>
-                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium 
+                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium
                   <%= message.delivery_method == 'sms' ? 'bg-blue-100 text-blue-800' : 'bg-green-100 text-green-800' %>">
                   <%= message.delivery_method&.upcase %>
                 </span>
@@ -85,13 +85,13 @@
               </div>
             </td>
             <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-right">
-              <% if message.respond_to?(:status) && message.status == 'failed' %>
-                <%= link_to t('message_management.table.view_error'), 
-                    message_management_path(message), 
+	              <% if message.respond_to?(:status) && message.status == 'failed' %>
+	                <%= link_to t('message_management.table.view_error'),
+	                    hke_message_management_path(message),
                     class: "text-red-600 hover:text-red-900" %>
               <% else %>
-                <%= link_to t('show'), 
-                    message_management_path(message), 
+	                <%= link_to t('show'),
+	                    hke_message_management_path(message),
                     class: "text-blue-600 hover:text-blue-900" %>
               <% end %>
             </td>

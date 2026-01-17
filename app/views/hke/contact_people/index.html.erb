@@ -8,8 +8,8 @@
     </h4>
 
     <div class="mr-auto flex items-center">
-      <%= render partial: "hke/shared/search_box", locals: {url: contact_people_path} %>
-      <%= link_to t("shared.scaffold.new.title", model: t("contact_person")), new_contact_person_path, class: "btn btn-small btn-primary mr-10" %>
+		      <%= render partial: "hke/shared/search_box", locals: {url: hke_contact_people_path} %>
+	      <%= link_to t("shared.scaffold.new.title", model: t("contact_person")), new_hke_contact_person_path, class: "btn btn-small btn-primary mr-10" %>
     </div>
   </div>
   <div id="search_results">
@@ -17,10 +17,10 @@
         locals: {       items: @contact_people,
                         fields: [ :first_name, :last_name, :email, :phone, :gender],
                         other_fields: [],
-                        actions:     [
-                                      {name: "action_edit", path: :edit_contact_person_path},
-                                      {name: "action_delete", path: :contact_person_path, method: :delete, confirm: true}
-                                    ]
+	                        actions:     [
+	                                      {name: "action_edit", path: :edit_hke_contact_person_path},
+	                                      {name: "action_delete", path: :hke_contact_person_path, method: :delete, confirm: true}
+	                                    ]
                 } %>
   </div>
 </div>

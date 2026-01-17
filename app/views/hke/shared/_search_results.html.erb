@@ -23,9 +23,9 @@
             <%
               edit_item_path = case item.class.name
                 when 'Hke::DeceasedPerson'
-                  edit_deceased_person_path(item)
+	                  edit_hke_deceased_person_path(item)
                 when 'Hke::ContactPerson'
-                  edit_contact_person_path(item)
+	                  edit_hke_contact_person_path(item)
                 when 'Hke::Community'
                   edit_hke_admin_community_path(item)
                 when 'User'

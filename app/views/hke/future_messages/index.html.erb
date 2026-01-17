@@ -5,8 +5,8 @@
       <%= " #{t('future_messages')} " %>
     </div>
     <div class="flex items-center gap-4">
-      <%= render partial: "hke/shared/search_box", locals: {url: future_messages_path} %>
-      <%= link_to t("new_future_message"), new_future_message_path, class: "btn btn-small btn-primary mr-10" %>
+		      <%= render partial: "hke/shared/search_box", locals: {url: search_hke_future_messages_path} %>
+	      <%= link_to t("new_future_message"), new_hke_future_message_path, class: "btn btn-small btn-primary mr-10" %>
     </div>
   </div>
   <div id="search_results">
@@ -18,7 +18,7 @@
       {header: t('hebrew_month_of_death'), data: :hebrew_month_of_death},
       {header: t('hebrew_day_of_death'), data: :hebrew_day_of_death}
         ],
-        actions: [{name: "send_individual_message", path: :blast_future_message_path, method: :post}]
+	      actions: [{name: "send_individual_message", path: :blast_hke_future_message_path, method: :post}]
       } %>
   </div>
 </div>

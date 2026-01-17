@@ -49,29 +49,39 @@ module Hke
 
     private
 
+    # Single source of truth for tenant scoping across all HKE controllers
     def set_community_as_current_tenant
-      if current_user&.system_admin?
-        # System admin: use selected community or global access
-        community = selected_community_for_system_admin
-        ActsAsTenant.current_tenant = community
-      elsif current_user&.community_admin? || current_user&.community_user?
-        # Community users: scope to their assigned community
-        ActsAsTenant.current_tenant = current_user.community
-      else
-        # Fallback to hardcoded community (temporary)
-        community = Community.find_by(name: "Kfar Vradim Synagogue")
-        ActsAsTenant.current_tenant = community if community
-      end
+      return unless user_signed_in?
+      ActsAsTenant.current_tenant = hardwired_community if defined?(ActsAsTenant)
     end
 
-    def selected_community_for_system_admin
-      # Check if system admin has selected a specific community
-      if session[:selected_community_id].present?
-        Community.find_by(id: session[:selected_community_id])
-      else
-        nil # Global access
-      end
+    def hardwired_community
+      @hardwired_community ||= Hke::Community.find_by!(name: "Kfar Vradim Synagogue")
     end
+
+    # def set_community_as_current_tenant
+    #   if current_user&.system_admin?
+    #     # System admin: use selected community or global access
+    #     community = selected_community_for_system_admin
+    #     ActsAsTenant.current_tenant = community
+    #   elsif current_user&.community_admin? || current_user&.community_user?
+    #     # Community users: scope to their assigned community
+    #     ActsAsTenant.current_tenant = current_user.community
+    #   else
+    #     # Fallback to hardcoded community (temporary)
+    #     community = Community.find_by(name: "Kfar Vradim Synagogue")
+    #     ActsAsTenant.current_tenant = community if community
+    #   end
+    # end
+
+    # def selected_community_for_system_admin
+    #   # Check if system admin has selected a specific community
+    #   if session[:selected_community_id].present?
+    #     Community.find_by(id: session[:selected_community_id])
+    #   else
+    #     nil # Global access
+    #   end
+    # end
 
     def authenticate_admin
       puts "in  authenticate_admin, #{true_user}"

@@ -48,6 +48,8 @@ he:
   delete: "מחק"
   edit: "עריכה"
   are_you_sure: "האם אתה בטוח?"
+  profile: "פרופיל"
+  logout: "התנתקות"
   first_name: "שם פרטי"
   last_name: "שם משפחה"
   product_name: "שם המוצר"
@@ -316,6 +318,8 @@ he:
         switch_to_community: "עבור לניהול קהילה"
         select_community: "בחר קהילה"
         back_to_system_admin: "חזור למנהל מערכת"
+        switched_to_community: "עברת לניהול הקהילה %{community}"
+        returned_to_system_admin: "חזרת לניהול מערכת"
     communities:
       index:
         title: "ניהול קהילות"
@@ -346,6 +350,10 @@ he:
       title: "לוח בקרה מנהל קהילה"
       message_approval:
         title: "אישור הודעות"
+        status:
+          approved: "מאושר"
+          rejected: "נדחה"
+          pending: "ממתין לאישור"
         time_filters:
           one_week: "שבוע אחד"
           two_weeks: "שבועיים"
@@ -364,6 +372,7 @@ he:
           show_all: "הראה הכל..."
           show_less: "הראה פחות"
     navbar:
+      message_approval: "אישור הודעות"
       deceased_people: "נפטרים"
       contact_people: "אנשי קשר"
       import_csv: "יבוא CSV"

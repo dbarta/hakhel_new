@@ -7,8 +7,8 @@
       <%= " #{t('deceased_people')}" %>
     </h4>
     <div class="mr-auto flex items-center">
-      <%= render partial: "hke/shared/search_box", locals: {url: deceased_people_path} %>
-      <%= link_to t("shared.scaffold.new.title", model: t("deceased_person")), new_deceased_person_path, class: "btn btn-small btn-primary mr-10" %>
+		      <%= render partial: "hke/shared/search_box", locals: {url: hke_deceased_people_path} %>
+	      <%= link_to t("shared.scaffold.new.title", model: t("deceased_person")), new_hke_deceased_person_path, class: "btn btn-small btn-primary mr-10" %>
     </div>
   </div>
   <div id="search_results">
@@ -18,10 +18,10 @@
                                 :hebrew_year_of_death, :hebrew_month_of_death, :hebrew_day_of_death,
                                 :date_of_death, :gender],
                 other_fields: [{header: t('contact_people'), data: "contact_name"}],
-                actions: [
-                  {name: "action_edit", path: :edit_deceased_person_path},
-                  {name: "action_delete", path: :deceased_person_path, method: :delete, confirm: true}
-                ]
+	                actions: [
+	                  {name: "action_edit", path: :edit_hke_deceased_person_path},
+	                  {name: "action_delete", path: :hke_deceased_person_path, method: :delete, confirm: true}
+	                ]
               } %>
   </div>
 </div>

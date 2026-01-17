@@ -99,7 +99,7 @@ module Hke
 
     def authorize_community_admin!
       unless current_user.community_admin? || current_user.system_admin?
-        redirect_to hke.root_path, alert: t('admin.dashboard.access_denied')
+	        redirect_to hke_root_path, alert: t('admin.dashboard.access_denied')
       end
     end
   end

@@ -30,8 +30,8 @@ module Hke
                          :date_of_death, :gender],
                 other_fields: [{ header: t('contact_people'), data: "contact_name" }],
                 actions: [
-                  { name: "action_edit", path: :edit_deceased_person_path },
-                  { name: "action_delete", path: :deceased_person_path, method: :delete, confirm: true }
+	                  { name: "action_edit", path: :edit_hke_deceased_person_path },
+	                  { name: "action_delete", path: :hke_deceased_person_path, method: :delete, confirm: true }
                 ]
               }
             ),
@@ -66,7 +66,7 @@ module Hke
 
       respond_to do |format|
         if @deceased_person.save
-          format.html { redirect_to @deceased_person, notice: "Deceased person was successfully created." }
+	          format.html { redirect_to hke_deceased_person_path(@deceased_person), notice: "Deceased person was successfully created." }
           format.json { render :show, status: :created, location: @deceased_person }
         else
           format.html { render :new, status: :unprocessable_entity }
@@ -81,7 +81,7 @@ module Hke
       remove_empty_relations_from "deceased_person", "contact_person"
       respond_to do |format|
         if @deceased_person.update(deceased_person_params)
-          format.html { redirect_to @deceased_person, notice: "Deceased person was successfully updated." }
+	          format.html { redirect_to hke_deceased_person_path(@deceased_person), notice: "Deceased person was successfully updated." }
           format.json { render :show, status: :ok, location: @deceased_person }
         else
           format.html { render :edit, status: :unprocessable_entity }
@@ -95,8 +95,8 @@ module Hke
       authorize @deceased_person
       @deceased_person.destroy
       respond_to do |format|
-        format.turbo_stream { redirect_to deceased_people_url, notice: "Deceased person was successfully destroyed.", status: :see_other }
-        format.html { redirect_to deceased_people_url, notice: "Deceased person was successfully destroyed.", status: :see_other }
+	        format.turbo_stream { redirect_to hke_deceased_people_path, notice: "Deceased person was successfully destroyed.", status: :see_other }
+	        format.html { redirect_to hke_deceased_people_path, notice: "Deceased person was successfully destroyed.", status: :see_other }
         format.json { head :no_content }
       end
     end

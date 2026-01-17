@@ -33,7 +33,7 @@
   <td class="px-6 py-4 whitespace-nowrap text-center">
     <!-- Approval toggle button -->
     <div class="flex items-center justify-center">
-      <%= form_with url: toggle_approval_future_message_path(message, time_filter: (local_assigns[:time_filter] || params[:time_filter] || 'one_week')),
+	      <%= form_with url: toggle_approval_hke_future_message_path(message, time_filter: (local_assigns[:time_filter] || params[:time_filter] || 'one_week')),
           method: :post,
           class: "inline" do |form| %>
         <%= form.button type: :submit,

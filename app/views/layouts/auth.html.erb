@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html dir="rtl" class="h-full antialiased" lang="<%= I18n.locale %>">
+  <head>
+    <%= render "application/head" %>
+  </head>
+	<body dir="<%= I18n.locale == :he ? 'rtl' : 'ltr' %>" class="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 text-gray-900 antialiased">
+    <div class="min-h-screen flex items-center justify-center px-4 py-10">
+      <div class="w-full max-w-md space-y-6">
+        <%= render "shared/flash" %>
+        <%= yield %>
+      </div>
+    </div>
+  </body>
+</html>

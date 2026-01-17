@@ -5,15 +5,15 @@
     <div class="bg-white rounded-lg shadow-sm p-6">
       <div class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between mb-6">
         <h1 class="text-2xl font-bold text-right flex-1"><%= t('csv_imports.index.title', default: 'פעולות העלאת נתונים') %></h1>
-        <% if @csv_imports.any? %>
+	        <% if @csv_imports.any? %>
           <div class="flex flex-row gap-3" style="direction: ltr;">
-            <%= link_to t('csv_imports.index.clear_all', default: 'מחק את כל הלוגים'), hke.destroy_all_csv_imports_path,
+	            <%= link_to t('csv_imports.index.clear_all', default: 'מחק את כל הלוגים'), destroy_all_hke_csv_imports_path,
                 class: "px-4 py-2 bg-blue-600 text-white rounded-md text-sm font-medium hover:bg-blue-700 whitespace-nowrap",
                 data: {
                   turbo_method: :delete,
                   turbo_confirm: t('csv_imports.index.clear_all_confirm', default: 'למחוק את כל הלוגים?')
                 } %>
-            <%= link_to t('csv_imports.index.new_import', default: 'יבוא חדש'), hke.new_csv_import_path,
+	            <%= link_to t('csv_imports.index.new_import', default: 'יבוא חדש'), new_hke_csv_import_path,
                 class: "px-4 py-2 bg-blue-600 text-white rounded-md text-sm font-medium hover:bg-blue-700 whitespace-nowrap ml-2" %>
           </div>
         <% end %>
@@ -128,9 +128,9 @@
                   </td>
                   <td class="px-6 py-4 text-sm text-right">
                     <div class="flex items-center justify-end gap-4">
-                      <%= link_to t('csv_imports.index.view', default: 'צפה'), hke.csv_import_path(import),
+	                      <%= link_to t('csv_imports.index.view', default: 'צפה'), hke_csv_import_path(import),
                           class: "text-blue-600 hover:text-blue-800 font-medium" %>
-                      <%= link_to t('csv_imports.index.delete', default: 'מחק'), hke.csv_import_path(import),
+	                      <%= link_to t('csv_imports.index.delete', default: 'מחק'), hke_csv_import_path(import),
                           class: "text-red-600 hover:text-red-800 font-medium",
                           data: {
                             turbo_method: :delete,
@@ -146,7 +146,7 @@
       <% else %>
         <div class="text-center py-12">
           <p class="text-gray-500 mb-4"><%= t('csv_imports.index.no_imports', default: 'אין יבואים עדיין') %></p>
-          <%= link_to t('csv_imports.index.create_first', default: 'צור יבוא ראשון'), hke.new_csv_import_path,
+	          <%= link_to t('csv_imports.index.create_first', default: 'צור יבוא ראשון'), new_hke_csv_import_path,
               class: "inline-block px-4 py-2 bg-blue-600 text-white rounded-md text-sm font-medium hover:bg-blue-700" %>
         </div>
       <% end %>

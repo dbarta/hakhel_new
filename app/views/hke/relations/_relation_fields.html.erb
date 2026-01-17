@@ -16,7 +16,7 @@
   <div class="flex gap-10 p-3">
     <%= select_fld rel_form, :relation_of_deceased_to_contact, relations_select %>&nbsp;&nbsp;
     <%= link_to t("remove_#{singular_name}"), "#", data: {action: "click->nested-forms#remove_association"}  %>&nbsp;&nbsp;
-    <%= link_to t("landing_page_validation"), landing_page_path(id: 1, token: rel_form.object.token) %>&nbsp;&nbsp;
+	    <%= link_to t("landing_page_validation"), hke_landing_page_path(id: 1, token: rel_form.object.token) %>&nbsp;&nbsp;
   </div>
 
   <%= rel_form.fields_for symbol_name do |internal_form| %>

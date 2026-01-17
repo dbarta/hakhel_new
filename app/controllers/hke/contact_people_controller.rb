@@ -29,8 +29,8 @@ module Hke
                 fields: [:first_name, :last_name, :email, :phone, :gender],
                 other_fields: [],
                 actions: [
-                  { name: "action_edit", path: :edit_contact_person_path },
-                  { name: "action_delete", path: :contact_person_path, method: :delete, confirm: true }
+	                  { name: "action_edit", path: :edit_hke_contact_person_path },
+	                  { name: "action_delete", path: :hke_contact_person_path, method: :delete, confirm: true }
                 ]
               }
             ),
@@ -65,7 +65,7 @@ module Hke
 
       respond_to do |format|
         if @contact_person.save
-          format.html { redirect_to @contact_person, notice: "Contact person was successfully created." }
+	          format.html { redirect_to hke_contact_person_path(@contact_person), notice: "Contact person was successfully created." }
           format.json { render :show, status: :created, location: @contact_person }
         else
           format.html { render :new, status: :unprocessable_entity }
@@ -80,7 +80,7 @@ module Hke
       remove_empty_relations_from "contact_person", "deceased_person"
       respond_to do |format|
         if @contact_person.update(contact_person_params)
-          format.html { redirect_to @contact_person, notice: "Contact person was successfully updated." }
+	          format.html { redirect_to hke_contact_person_path(@contact_person), notice: "Contact person was successfully updated." }
           format.json { render :show, status: :ok, location: @contact_person }
         else
           format.html { render :edit, status: :unprocessable_entity }
@@ -94,8 +94,8 @@ module Hke
       authorize @contact_person
       @contact_person.destroy
       respond_to do |format|
-        format.turbo_stream { redirect_to contact_people_url, notice: "Contact person was successfully destroyed.", status: :see_other }
-        format.html { redirect_to contact_people_url, notice: "Contact person was successfully destroyed.", status: :see_other }
+	        format.turbo_stream { redirect_to hke_contact_people_path, notice: "Contact person was successfully destroyed.", status: :see_other }
+	        format.html { redirect_to hke_contact_people_path, notice: "Contact person was successfully destroyed.", status: :see_other }
         format.json { head :no_content }
       end
     end

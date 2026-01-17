@@ -1,3 +1,4 @@
+
 module Hke
   module SetCommunityAsTenant
     extend ActiveSupport::Concern
@@ -6,15 +7,16 @@ module Hke
       before_action :set_community_as_current_tenant
     end
 
+    private
+
+    # Single source of truth for tenant scoping across all HKE controllers
     def set_community_as_current_tenant
-      # Temporarily setting the tenant to the "Kfar Vradim Synagogue" community
-      community = Hke::Community.find_by(name: "Kfar Vradim Synagogue")
-      if community
-        ActsAsTenant.current_tenant = community
-      else
-        # Handle if the community is not found
-        raise "Community 'Kfar Vradim Synagogue' not found"
-      end
+      return unless user_signed_in?
+      ActsAsTenant.current_tenant = hardwired_community if defined?(ActsAsTenant)
+    end
+
+    def hardwired_community
+      @hardwired_community ||= Hke::Community.find_by!(name: "Kfar Vradim Synagogue")
     end
   end
 end

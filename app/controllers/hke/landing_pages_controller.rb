@@ -54,7 +54,7 @@ module Hke
 
       respond_to do |format|
         if @landing_page.save
-          format.html { redirect_to @landing_page, notice: "Landing page was successfully created." }
+	          format.html { redirect_to hke_landing_page_path(@landing_page), notice: "Landing page was successfully created." }
           format.json { render :show, status: :created, location: @landing_page }
         else
           format.html { render :new, status: :unprocessable_entity }
@@ -67,7 +67,7 @@ module Hke
     def update
       respond_to do |format|
         if @landing_page.update(landing_page_params)
-          format.html { redirect_to @landing_page, notice: "Landing page was successfully updated." }
+	          format.html { redirect_to hke_landing_page_path(@landing_page), notice: "Landing page was successfully updated." }
           format.json { render :show, status: :ok, location: @landing_page }
         else
           format.html { render :edit, status: :unprocessable_entity }
@@ -80,7 +80,7 @@ module Hke
     def destroy
       @landing_page.destroy
       respond_to do |format|
-        format.html { redirect_to landing_pages_url, notice: "Landing page was successfully destroyed." }
+	        format.html { redirect_to hke_landing_pages_path, notice: "Landing page was successfully destroyed." }
         format.json { head :no_content }
       end
     end

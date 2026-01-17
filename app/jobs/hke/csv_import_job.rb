@@ -3,7 +3,8 @@ module Hke
     include Sidekiq::Job
 
     def perform(csv_import_id)
-      csv_import = CsvImport.find(csv_import_id)
+	      csv_import = CsvImport.unscoped.find(csv_import_id)
+	      csv_import.update!(status: :processing) unless csv_import.processing?
 
       csv_import.file.open do |io|
         client = Hke::Import::CsvImportApiClient.new(

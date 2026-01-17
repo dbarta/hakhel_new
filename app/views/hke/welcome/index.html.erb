@@ -6,12 +6,16 @@
 
   <div class="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
     <div class="text-center mb-6">
-      <h3 class="text-lg font-medium text-gray-900 mb-4"><%= t("welcome.index.welcome_title") %></h3>
       <p class="text-sm text-gray-600 mb-6" style="direction: rtl;">
         <%= t("welcome.index.description") %>
-        <br>
-        <%= t("welcome.index.description_details") %>
       </p>
+      <ul class="text-xs text-gray-600 space-y-1 list-none text-right pr-4" style="direction: rtl;">
+        <li>• <%= t("welcome.index.features.deceased_management") %></li>
+        <li>• <%= t("welcome.index.features.automatic_messages") %></li>
+        <li>• <%= t("welcome.index.features.multi_community") %></li>
+        <li>• <%= t("welcome.index.features.csv_import") %></li>
+        <li>• <%= t("welcome.index.features.message_tracking") %></li>
+      </ul>
     </div>
 
     <div class="space-y-4">
@@ -26,24 +30,6 @@
       </div>
     </div>
 
-    <div class="mt-8 pt-6 border-t border-gray-200">
-      <div class="text-center">
-        <h4 class="text-sm font-medium text-gray-900 mb-3"><%= t("welcome.index.features_title") %></h4>
-        <ul class="text-xs text-gray-600 space-y-1" style="direction: rtl;">
-          <li>• <%= t("welcome.index.features.deceased_management") %></li>
-          <li>• <%= t("welcome.index.features.automatic_messages") %></li>
-          <li>• <%= t("welcome.index.features.multi_community") %></li>
-          <li>• <%= t("welcome.index.features.csv_import") %></li>
-          <li>• <%= t("welcome.index.features.message_tracking") %></li>
-        </ul>
-      </div>
-    </div>
-
-    <div class="mt-6 text-center">
-      <p class="text-xs text-gray-500">
-        <%= t("welcome.index.help_text") %>
-      </p>
-    </div>
   </div>
 </div>
 

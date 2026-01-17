@@ -3,7 +3,7 @@
     <h1 class="h3">Cemeteries</h1>
 
     <% if @cemeteries.any? %>
-      <%= link_to t("shared.scaffold.new.title", model: "Cemetery"), new_cemetery_path, class: "btn btn-primary" %>
+	      <%= link_to t("shared.scaffold.new.title", model: "Cemetery"), new_hke_cemetery_path, class: "btn btn-primary" %>
     <% end %>
   </div>
 
@@ -46,7 +46,7 @@
       <%= image_tag "empty.svg", class: "mb-4 lg:w-1/2" %>
       <div class="flex-1 text-center">
         <p class="mb-4 h3">Create your first Cemetery</p>
-        <%= link_to t("shared.scaffold.new.title", model: "Cemetery"), new_cemetery_path, class: "btn btn-primary" %>
+	        <%= link_to t("shared.scaffold.new.title", model: "Cemetery"), new_hke_cemetery_path, class: "btn btn-primary" %>
       </div>
     </div>
   <% end %>

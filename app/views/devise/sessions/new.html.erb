@@ -1,0 +1,37 @@
+<% Current.meta_tags.set(title: t("devise.sessions.new.title")) if defined?(Current) && Current.respond_to?(:meta_tags) %>
+
+<div class="bg-white shadow-lg rounded-2xl p-8 space-y-6">
+  <div class="text-center space-y-2">
+    <h1 class="text-2xl font-bold text-gray-900"><%= t("devise.sessions.new.heading") %></h1>
+  </div>
+
+  <%= form_with scope: resource_name, url: session_path(resource_name), local: true, class: "space-y-4" do |f| %>
+    <div class="space-y-1 text-right">
+      <%= f.label :email, t("devise.sessions.new.email_label"), class: "block text-sm font-medium text-gray-700" %>
+      <%= f.email_field :email, autofocus: true, autocomplete: "email", dir: "ltr", placeholder: t("devise.sessions.new.email_placeholder"), class: "block w-full rounded-md border border-gray-300 bg-white text-left px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" %>
+    </div>
+
+    <div class="space-y-1 text-right">
+        <%= f.label :password, t("devise.sessions.new.password_label"), class: "block text-sm font-medium text-gray-700" %>
+      <%= f.password_field :password, autocomplete: "current-password", dir: "rtl", placeholder: t("devise.sessions.new.password_placeholder"), class: "block w-full rounded-md border border-gray-300 bg-white text-right px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" %>
+        <div class="text-right text-sm">
+	          <%= link_to t("devise.sessions.new.forgot_password"), new_password_path(resource_name), class: "text-indigo-600 hover:text-indigo-500", dir: "ltr" %>
+        </div>
+    </div>
+
+    <% if devise_mapping.rememberable? %>
+	        <div class="flex items-center justify-start gap-2 text-sm text-gray-700 text-right">
+	          <%= f.check_box :remember_me, class: "h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500" %>
+	          <%= f.label :remember_me, t("devise.sessions.new.remember_me"), class: "cursor-pointer" %>
+      </div>
+    <% end %>
+
+    <div>
+      <%= f.submit t("devise.sessions.new.submit"), class: "w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-semibold text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-150 ease-in-out" %>
+    </div>
+  <% end %>
+
+  <div class="text-center text-sm text-gray-600">
+    <%= t("devise.sessions.new.sign_up_prompt_html", default: "עוד אין לך חשבון? %{link}".html_safe, link: link_to(t("devise.sessions.new.sign_up_link"), new_registration_path(resource_name), class: "text-indigo-600 hover:text-indigo-500 font-semibold")) %>
+  </div>
+</div>
