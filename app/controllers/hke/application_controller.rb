@@ -5,6 +5,7 @@ module Hke
     #include JumpstartApp::Application.routes.url_helpers
     #helper Devise::Controllers::Helpers
     impersonates :user
+    include Pagination
     include Sortable
     include SetLocale
     include CurrentHelper
