@@ -1,4 +1,10 @@
 <nav dir="rtl" class="w-full px-4 py-2 bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 text-sm font-medium" data-controller="toggle">
+  <% system_admin_mode = false %>
+  <% community_mode = false %>
+  <% if user_signed_in? %>
+    <% system_admin_mode = current_user.system_admin? && session[:selected_community_id].blank? %>
+    <% community_mode = !current_user.system_admin? || session[:selected_community_id].present? %>
+  <% end %>
   <div class="flex w-full items-center justify-between">
     <div class="flex items-center gap-6">
       <div class="flex items-center flex-shrink-0">
@@ -9,17 +15,18 @@
       </div>
 
       <% if user_signed_in? %>
-        <% if current_user.system_admin? %>
+        <% if system_admin_mode %>
           <%= link_to "מנהל מערכת", hke_admin_root_path, class: "text-blue-600 font-semibold" %>
           <%= link_to "קהילות", hke_admin_communities_path %>
           <%= link_to "משתמשים", madmin_users_path %>
           <%= link_to t('community_admin.navbar.logs', default: '\u05dc\u05d5\u05d2\u05d9\u05dd'), hke_logs_path %>
-        <% elsif current_user.community_admin? %>
-          <%= link_to "Dashboard", hke_root_path, class: "text-green-600 font-semibold" %>
-          <%= link_to "נפטרים", hke_deceased_people_path %>
-          <%= link_to "אנשי קשר", hke_contact_people_path %>
-          <%= link_to "הודעות עתידיות", hke_future_messages_path %>
-          <%= link_to "Logs", hke_logs_path %>
+        <% elsif community_mode %>
+          <%= link_to t('community_admin.navbar.message_approval'), hke_root_path, class: "text-green-600 font-semibold" %>
+          <%= link_to t('community_admin.navbar.deceased_people'), hke_deceased_people_path %>
+          <%= link_to t('community_admin.navbar.contact_people'), hke_contact_people_path %>
+          <%= link_to t('community_admin.navbar.import_csv'), hke_csv_imports_path %>
+          <%= link_to t('community_admin.navbar.message_management'), hke_message_management_index_path %>
+          <%= link_to t('community_admin.navbar.logs', default: '\u05dc\u05d5\u05d2\u05d9\u05dd'), hke_logs_path %>
         <% end %>
       <% end %>
 
@@ -29,7 +36,7 @@
 
     <div class="flex items-center gap-4">
       <% if user_signed_in? %>
-        <% if current_user.system_admin? %>
+        <% if system_admin_mode %>
           <div class="flex items-center space-x-2 space-x-reverse">
             <%= form_with url: hke_admin_switch_to_community_path, method: :post, local: true do |form| %>
               <%= form.select :community_id,
@@ -44,22 +51,29 @@
           <%= render "shared/notifications" rescue nil %>
         </div>
 
-        <details class="relative inline-block text-left" data-controller="details-close">
-          <summary class="flex flex-row-reverse items-center gap-2 cursor-pointer list-none">
-            <%= image_tag AvatarHelper.avatar_url_for(current_user, size: 48), alt: current_user.name || current_user.email, class: "h-8 w-8 rounded-full ring-2 ring-gray-200" %>
-            <span class="text-sm font-medium text-gray-800 dark:text-gray-100"><%= current_user.name.presence || current_user.email %></span>
-          </summary>
-          <div class="absolute end-0 z-50 mt-2 w-48 rounded-md shadow-lg bg-white dark:bg-gray-800 ring-1 ring-black ring-opacity-5 focus:outline-none">
-            <div class="py-1">
-              <%= link_to t(".profile", default: "Profile"), main_app.edit_user_registration_path, class: "block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-50 dark:hover:bg-gray-700" %>
-              <%= button_to t(".sign_out", default: "Log out"),
-                    main_app.destroy_user_session_path,
-                    method: :delete,
-                    form: { data: { turbo: false } },
-                    class: "w-full text-left block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-50 dark:hover:bg-gray-700" %>
-            </div>
+        <% if community_mode && current_user.system_admin? %>
+          <%= link_to t('admin.dashboard.community_switching.back_to_system_admin'),
+              hke_admin_switch_to_community_path,
+              data: { turbo_method: :post },
+              class: "px-4 py-2 text-blue-600 hover:text-blue-800 font-medium" %>
+        <% end %>
+
+        <div class="relative group ml-2">
+          <button class="flex items-center px-4 py-2 text-gray-700 hover:text-gray-900 font-medium">
+            <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+            </svg>
+            <%= image_tag AvatarHelper.avatar_url_for(current_user, size: 48), alt: current_user.name || current_user.email, class: "h-8 w-8 rounded-full ring-2 ring-gray-200 ml-2" %>
+            <%= current_user.name.presence || current_user.email %>
+          </button>
+          <div class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
+            <%= link_to t('profile'), main_app.edit_user_registration_path,
+                class: "block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" %>
+            <%= link_to t('logout'), main_app.destroy_user_session_path,
+                data: { turbo_method: :delete, turbo_confirm: t('are_you_sure') },
+                class: "block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" %>
           </div>
-        </details>
+        </div>
 
         <button type="button" id="sidebar-open" class="flex items-center p-3 text-gray-500 lg:hidden focus:outline-none focus:text-gray-700" data-action="click->toggle#toggle touch->toggle#toggle">
           <svg class="w-5 h-5 fill-current" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><title>Menu</title><path d="M0 3h20v2H0V3zm0 6h20v2H0V9zm0 6h20v2H0v-2z"></path></svg>
