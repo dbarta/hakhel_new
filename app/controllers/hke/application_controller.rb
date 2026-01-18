@@ -7,6 +7,8 @@ module Hke
     impersonates :user
     include Pagination
     include Sortable
+    helper SortHelper
+
     include SetLocale
     include CurrentHelper
     include SetCurrentRequestDetails

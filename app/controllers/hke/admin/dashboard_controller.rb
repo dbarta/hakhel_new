@@ -39,10 +39,10 @@ module Hke
         if community_id.present?
           community = Hke::Community.find(community_id)
           session[:selected_community_id] = community.id
-	          redirect_to hke_root_path, notice: t('admin.dashboard.community_switching.switched_to_community', community: community.name)
+	          redirect_to hke_root_path #, notice: t('admin.dashboard.community_switching.switched_to_community', community: community.name)
         else
           session[:selected_community_id] = nil
-	          redirect_to hke_admin_root_path, notice: t('admin.dashboard.community_switching.returned_to_system_admin')
+	          redirect_to hke_admin_root_path #, notice: t('admin.dashboard.community_switching.returned_to_system_admin')
         end
       end
     end
