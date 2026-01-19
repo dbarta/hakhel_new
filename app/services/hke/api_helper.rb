@@ -173,6 +173,18 @@ module Hke
       system = Hke::System.instance
       system.update!(product_name: "Hakhel", version: "0.1") if system.respond_to?(:product_name)
       log_info "@@@ System record ensured."
+
+      # Ensure system preferences exist
+      system_pref = Hke::Preference.find_or_initialize_by(preferring: system)
+      system_pref.assign_attributes(
+        how_many_days_before_yahrzeit_to_send_message: [7, 1],
+        delivery_priority: ["sms", "whatsapp", "email"],
+        enable_fallback_delivery_method: true,
+        daily_sweep_job_time: Time.parse("03:00"),
+        time_zone: "Asia/Jerusalem"
+      )
+      system_pref.save!
+      log_info "@@@ System preferences ensured with id: #{system_pref.id}."
     end
 
     def create_or_find_cemetery(cemetery_name)

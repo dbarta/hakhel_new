@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_01_11_000000) do
+ActiveRecord::Schema[8.1].define(version: 2026_01_19_080745) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -308,12 +308,13 @@ ActiveRecord::Schema[8.1].define(version: 2026_01_11_000000) do
   create_table "hke_preferences", force: :cascade do |t|
     t.boolean "attempt_to_resend_if_no_sent_on_time"
     t.datetime "created_at", null: false
-    t.boolean "enable_send_email", default: true
-    t.boolean "enable_send_sms", default: true
-    t.boolean "enable_send_whatsapp", default: true
+    t.time "daily_sweep_job_time"
+    t.string "delivery_priority", array: true
+    t.boolean "enable_fallback_delivery_method"
     t.integer "how_many_days_before_yahrzeit_to_send_message", default: [7], array: true
     t.bigint "preferring_id", null: false
     t.string "preferring_type", null: false
+    t.string "time_zone"
     t.datetime "updated_at", null: false
     t.index ["preferring_type", "preferring_id"], name: "index_hke_preferences_on_preferring"
   end
