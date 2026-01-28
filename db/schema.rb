@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_01_19_080745) do
+ActiveRecord::Schema[8.1].define(version: 2026_01_19_145732) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -314,6 +314,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_01_19_080745) do
     t.integer "how_many_days_before_yahrzeit_to_send_message", default: [7], array: true
     t.bigint "preferring_id", null: false
     t.string "preferring_type", null: false
+    t.time "send_window_start_time"
     t.string "time_zone"
     t.datetime "updated_at", null: false
     t.index ["preferring_type", "preferring_id"], name: "index_hke_preferences_on_preferring"

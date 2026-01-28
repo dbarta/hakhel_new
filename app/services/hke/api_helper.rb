@@ -180,8 +180,10 @@ module Hke
         how_many_days_before_yahrzeit_to_send_message: [7, 1],
         delivery_priority: ["sms", "whatsapp", "email"],
         enable_fallback_delivery_method: true,
+        time_zone: "Asia/Jerusalem",
         daily_sweep_job_time: Time.parse("03:00"),
-        time_zone: "Asia/Jerusalem"
+        send_window_start_time: Time.parse("09:00")
+
       )
       system_pref.save!
       log_info "@@@ System preferences ensured with id: #{system_pref.id}."

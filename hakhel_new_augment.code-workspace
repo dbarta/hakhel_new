@@ -2,6 +2,9 @@
 	"folders": [
 		{
 			"path": "."
+		},
+		{
+			"path": "../../rails_scripts"
 		}
 	],
 	"settings": {}

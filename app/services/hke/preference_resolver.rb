@@ -7,9 +7,37 @@ module Hke
       :delivery_priority,
       :enable_fallback_delivery_method,
       :daily_sweep_job_time,
+      :send_window_start_time,
       :time_zone,
       keyword_init: true
-    )
+    ) do
+      DEFAULT_TZ = "Asia/Jerusalem"
+
+      # For this phase: ignore stored time_zone and treat everything as Israel wall-clock.
+      def daily_sweep_wall_clock_hm
+        return nil if daily_sweep_job_time.nil?
+        local = daily_sweep_job_time.in_time_zone(DEFAULT_TZ)
+        [local.hour, local.min]
+      end
+
+      def daily_sweep_wall_clock_str
+        hm = daily_sweep_wall_clock_hm
+        return nil if hm.nil?
+        format("%02d:%02d", hm[0], hm[1])
+      end
+
+      def send_window_start_wall_clock_hm
+        return nil if send_window_start_time.nil?
+        local = send_window_start_time.in_time_zone(DEFAULT_TZ)
+        [local.hour, local.min]
+      end
+
+      def send_window_start_wall_clock_str
+        hm = send_window_start_wall_clock_hm
+        return nil if hm.nil?
+        format("%02d:%02d", hm[0], hm[1])
+      end
+    end
 
     def self.resolve(preferring:)
       new(preferring).resolve
@@ -27,6 +55,7 @@ module Hke
         delivery_priority: pick(prefs, :delivery_priority),
         enable_fallback_delivery_method: pick(prefs, :enable_fallback_delivery_method),
         daily_sweep_job_time: pick(prefs, :daily_sweep_job_time),
+        send_window_start_time: pick(prefs, :send_window_start_time),
         time_zone: pick(prefs, :time_zone)
       )
     end

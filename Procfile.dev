@@ -2,5 +2,5 @@
 
 web: bin/rails server -p ${PORT:-3000}
 css: bin/rails tailwindcss:watch
-
+redis: redis-server
 worker: bundle exec sidekiq
