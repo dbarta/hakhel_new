@@ -35,7 +35,44 @@ module Hke
           community_id: community_id
         })
 
-        Hke::MessageProcessor.new(future_message).call
+        # FutureMessage is delivery intent only; render message text at send time.
+        rendered_text = future_message.rendered_full_message(reference_date: future_message.send_date || Time.zone.today)
+
+        # Idempotency guard (pre-check)
+        if Hke::SentMessage.exists?(token: future_message.token)
+          log_event("Create Job", details: {
+            text: "Skipping send (idempotent): #{future_message.id}",
+            community_id: community_id
+          })
+          return
+        end
+
+        Hke::SentMessage.transaction do
+          # Idempotency guard (in-transaction)
+          if Hke::SentMessage.exists?(token: future_message.token)
+            log_event("Create Job", details: {
+              text: "Skipping send inside transaction (idempotent): #{future_message.id}",
+              community_id: community_id
+            })
+            return
+          end
+
+          Hke::SentMessage.create!(
+            messageable_type: future_message.messageable_type,
+            messageable_id: future_message.messageable_id,
+            send_date: future_message.send_date,
+            full_message: rendered_text,
+            message_type: future_message.message_type,
+            delivery_method: future_message.delivery_method,
+            email: future_message.email,
+            phone: future_message.phone,
+            token: future_message.token,
+            community_id: future_message.community_id
+          )
+
+          # SentMessage is immutable audit log; delete intent only after commit.
+          future_message.destroy!
+        end
 
         log_event("Create Job", details: {
           text: "Send job completed for message: #{future_message.id}",

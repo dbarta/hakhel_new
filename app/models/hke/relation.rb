@@ -37,33 +37,38 @@ module Hke
 
     def process_future_messages
       return if destroyed? || !persisted?
-      future_messages.destroy_all
-      create_future_messages
+    # FutureMessage is delivery intent only; update/create only when intent changes.
+    create_future_messages
     end
 
     def create_future_messages
       dp = deceased_person
       cp = contact_person
       send_date = calculate_reminder_date(dp.name, dp.hebrew_month_of_death, dp.hebrew_day_of_death)
-      snippets = generate_hebrew_snippets(self, [:sms], reference_date: send_date)
-      fm = FutureMessage.create!(
-        messageable: self, # Changed relation to messageable since it is polymorphic
-        send_date: send_date, # Changed send_at to send_date, assuming it matches the column name
-        full_message: snippets[:sms],
-        delivery_method: calculate_delivery_method, # This will set the delivery_method enum
-        email: cp.email,
-        phone: cp.phone,
-        deceased_first_name: dp.first_name,
-        deceased_last_name: dp.last_name,
-        date_of_death: dp.date_of_death,
-        contact_first_name: cp.first_name,
-        contact_last_name: cp.last_name,
-        hebrew_year_of_death: dp.hebrew_year_of_death,
-        hebrew_month_of_death: dp.hebrew_month_of_death,
-        hebrew_day_of_death: dp.hebrew_day_of_death,
-        relation_of_deceased_to_contact: relation_of_deceased_to_contact,
+    delivery_method = calculate_delivery_method
+    email = cp.email
+    phone = cp.phone
+
+    future_message = future_messages.first
+    if future_message
+      changes = {}
+      changes[:send_date] = send_date if future_message.send_date != send_date
+      changes[:delivery_method] = delivery_method if future_message.delivery_method != delivery_method.to_s
+      changes[:email] = email if future_message.email != email
+      changes[:phone] = phone if future_message.phone != phone
+
+      future_message.update!(changes) if changes.any?
+      log_info "Reminder updated for contact: #{contact_person.name} deceased: #{dp.name} date: #{future_message.send_date}"
+    else
+      future_message = FutureMessage.create!(
+        messageable: self,
+        send_date: send_date,
+        delivery_method: delivery_method,
+        email: email,
+        phone: phone
       )
-      log_info "Reminder for contact: #{contact_person.name}  deceased: #{dp.name} date: #{fm.send_date}"
+      log_info "Reminder created for contact: #{contact_person.name} deceased: #{dp.name} date: #{future_message.send_date}"
+    end
     end
 
     def delivery_method_name
