@@ -75,10 +75,17 @@
             </td>
             <td class="px-6 py-4 text-sm text-gray-900 text-right">
               <div class="max-w-xs">
-                <% if message.respond_to?(:full_message) && message.full_message.present? %>
-                  <%= truncate(message.full_message, length: 100) %>
-                <% elsif message.respond_to?(:future_message) && message.future_message&.full_message.present? %>
-                  <%= truncate(message.future_message.full_message, length: 100) %>
+	                <% if message.is_a?(Hke::SentMessage) && message.full_message.present? %>
+	                  <%= truncate(message.full_message, length: 100) %>
+	                <% elsif message.respond_to?(:future_message) && (fm = message.future_message).present? %>
+	                  <%= truncate(
+	                    Hke::MessageRenderer.render(
+	                      relation: fm.messageable,
+	                      delivery_method: fm.delivery_method,
+	                      reference_date: fm.send_date
+	                    ),
+	                    length: 100
+	                  ) %>
                 <% else %>
                   <span class="text-gray-500">-</span>
                 <% end %>

@@ -67,6 +67,6 @@ class Hke::Api::V1::FutureMessagesController < Hke::Api::BaseController
 
   # Only allow a list of trusted parameters through.
   def future_message_params
-    params.require(:future_message).permit(:send_date, :full_message, :message_type, :delivery_method, :email, :phone, :messageable_type, :messageable_id)
+	  params.require(:future_message).permit(:send_date, :message_type, :delivery_method, :email, :phone, :messageable_type, :messageable_id)
   end
 end

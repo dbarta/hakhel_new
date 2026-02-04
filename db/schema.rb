@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_01_19_145732) do
+ActiveRecord::Schema[8.1].define(version: 2026_01_29_153232) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -245,24 +245,13 @@ ActiveRecord::Schema[8.1].define(version: 2026_01_19_145732) do
     t.datetime "approved_at"
     t.bigint "approved_by_id"
     t.bigint "community_id", null: false
-    t.string "contact_first_name"
-    t.string "contact_last_name"
     t.datetime "created_at", null: false
-    t.date "date_of_death"
-    t.string "deceased_first_name"
-    t.string "deceased_last_name"
     t.integer "delivery_method"
     t.string "email"
-    t.text "full_message"
-    t.string "hebrew_day_of_death"
-    t.string "hebrew_month_of_death"
-    t.string "hebrew_year_of_death"
     t.integer "message_type"
     t.bigint "messageable_id", null: false
     t.string "messageable_type", null: false
-    t.json "metadata"
     t.string "phone"
-    t.string "relation_of_deceased_to_contact"
     t.datetime "send_date"
     t.string "token"
     t.datetime "updated_at", null: false

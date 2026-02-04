@@ -53,7 +53,7 @@ module Hke
     if future_message
       changes = {}
       changes[:send_date] = send_date if future_message.send_date != send_date
-      changes[:delivery_method] = delivery_method if future_message.delivery_method != delivery_method.to_s
+      changes[:delivery_method] = delivery_method if future_message.delivery_method.to_s != delivery_method.to_s
       changes[:email] = email if future_message.email != email
       changes[:phone] = phone if future_message.phone != phone
 

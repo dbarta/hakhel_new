@@ -12,7 +12,7 @@
   <div id="search_results">
   <%= render partial: "hke/shared/search_results",
   locals: {       items: @future_messages,
-          fields: [:send_date, :full_message, :message_type, :delivery_method, :email, :phone, :token],
+	          fields: [:send_date, :message_type, :delivery_method, :email, :phone, :token],
         other_fields: [
       {header: t('hebrew_year_of_death'), data: :hebrew_year_of_death},
       {header: t('hebrew_month_of_death'), data: :hebrew_month_of_death},

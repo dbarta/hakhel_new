@@ -5,9 +5,12 @@
   <td class="px-6 py-4 text-sm text-gray-900 text-right">
     <div class="max-w-xs space-y-2">
       <% preview_limit = 150 %>
-      <% reference_date = Time.zone.today %>
-      <% preview_text = message.message_preview(length: preview_limit, reference_date: reference_date) %>
-      <% full_text = message.rendered_full_message(reference_date: reference_date).to_s.strip %>
+	      <% full_text = Hke::MessageRenderer.render(
+	        relation: message.messageable,
+	        delivery_method: message.delivery_method,
+	        reference_date: message.send_date
+	      ).to_s.strip %>
+	      <% preview_text = truncate(full_text, length: preview_limit) %>
       <% show_toggle = full_text.present? && full_text.length > preview_text.length %>
 
       <div id="message_preview_<%= message.id %>" data-message-preview="<%= message.id %>">
