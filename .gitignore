@@ -44,4 +44,5 @@ yarn-debug.log*
 .yarn-integrity
 .DS_Store
 .idea
+dump.rdb
 *~
