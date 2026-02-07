@@ -8,17 +8,21 @@
 
       <!-- Time Filter Dropdown -->
 	      <div class="flex items-center space-x-4 space-x-reverse">
-        <label class="text-sm font-medium text-gray-700">תקופת זמן:</label>
+        <label class="text-sm font-medium text-gray-700">תקופת זמן:&nbsp;&nbsp;</label>
 	        <%= form_with url: hke_root_path, method: :get, local: false, data: { turbo_stream: true }, class: "inline" do |form| %>
           <%= form.select :time_filter,
-              options_for_select([
-                [t('community_admin.dashboard.message_approval.time_filters.one_week'), 'one_week'],
-                [t('community_admin.dashboard.message_approval.time_filters.two_weeks'), 'two_weeks'],
-                [t('community_admin.dashboard.message_approval.time_filters.one_month'), 'one_month'],
-                [t('community_admin.dashboard.message_approval.time_filters.all'), 'all']
-              ], @time_filter),
-              {},
-              { class: "rounded border-gray-300 text-sm", onchange: "this.form.submit();" } %>
+                options_for_select([
+                  [t('community_admin.dashboard.message_approval.time_filters.one_week'), 'one_week'],
+                  [t('community_admin.dashboard.message_approval.time_filters.two_weeks'), 'two_weeks'],
+                  [t('community_admin.dashboard.message_approval.time_filters.one_month'), 'one_month'],
+                  [t('community_admin.dashboard.message_approval.time_filters.all'), 'all']
+                ], @time_filter),
+                {},
+                {
+                  class: "rounded border-gray-300 text-sm",
+                  onchange: "this.form.requestSubmit();"
+                } %>
+
         <% end %>
       </div>
     </div>

@@ -36,9 +36,16 @@
             %>
             <tr class="border-t  border-gray-400 group hover:bg-gray-100" onclick="window.location='<%= edit_item_path %>';">
               <% fields.each do |field| %>
-                <td class="p-2 "><%#= (field != :gender) ? (item.send field) : t((item.send field)) %> <%= item.send field %></td>
+                <% value = item.send(field) %>
+                <td class="p-2 ">
+                  <% if value.is_a?(Date) || value.is_a?(Time) || value.is_a?(ActiveSupport::TimeWithZone) %>
+                    <%= value.strftime("%d-%m-%Y") %>
+                  <% else %>
+                    <%= value %>
+                  <% end %>
                 </td>
               <% end %>
+
               <% other_fields.each do |field| %>
                 <td class="p-2 "><%= item.send field[:data] %></td>
               <% end %>

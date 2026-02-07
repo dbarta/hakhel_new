@@ -19,7 +19,8 @@ module Hke
         deceased.hebrew_month_of_death,
         deceased.hebrew_day_of_death
       )
-      [(gregorian_yahrzeit_date - reference_date).to_i, 0].max
+      ref_date = reference_date.to_date
+      [(gregorian_yahrzeit_date - ref_date).to_i, 0].max
     end
 
     def day_of_week_of_yahrzeit(deceased)

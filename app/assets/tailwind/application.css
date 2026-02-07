@@ -44,3 +44,12 @@
 @import "./components/wells.css" layer(components);
 @import "./components/braintree.css" layer(components);
 @import "./components/lexxy.css";
+
+
+@layer components {
+  [dir="rtl"] select {
+    background-position: left 0.6rem center;
+    padding-left: 2rem;
+    padding-right: 0.5rem;
+  }
+}
