@@ -1,0 +1,100 @@
+<% preference ||= @preference %>
+
+<%= form_with model: preference do |f| %>
+  <% object_name = f.object_name %>
+
+  <div class="space-y-8">
+    <section class="space-y-4">
+      <h2 class="text-lg font-semibold">תזמון כללי</h2>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <%= f.label :daily_sweep_job_time, "שעת ריצת הסריקה היומית", class: "block text-sm font-medium mb-1" %>
+          <%= f.time_field :daily_sweep_job_time, class: "block w-full rounded-md border px-3 py-2" %>
+        </div>
+
+        <div>
+          <%= f.label :send_window_start_time, "תחילת חלון שליחה", class: "block text-sm font-medium mb-1" %>
+          <%= f.time_field :send_window_start_time, class: "block w-full rounded-md border px-3 py-2" %>
+        </div>
+      </div>
+    </section>
+
+    <section class="space-y-4">
+      <h2 class="text-lg font-semibold">כמה ימים לפני היארצייט לשלוח</h2>
+
+      <% days_values = Array(preference.how_many_days_before_yahrzeit_to_send_message).first(4) %>
+      <% days_values += [nil] * (4 - days_values.length) %>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <label class="block text-sm font-medium mb-1">ימים לפני — #1</label>
+          <%= number_field_tag "#{object_name}[how_many_days_before_yahrzeit_to_send_message][]", days_values[0], class: "block w-full rounded-md border px-3 py-2" %>
+        </div>
+        <div>
+          <label class="block text-sm font-medium mb-1">ימים לפני — #2</label>
+          <%= number_field_tag "#{object_name}[how_many_days_before_yahrzeit_to_send_message][]", days_values[1], class: "block w-full rounded-md border px-3 py-2" %>
+        </div>
+        <div>
+          <label class="block text-sm font-medium mb-1">ימים לפני — #3</label>
+          <%= number_field_tag "#{object_name}[how_many_days_before_yahrzeit_to_send_message][]", days_values[2], class: "block w-full rounded-md border px-3 py-2" %>
+        </div>
+        <div>
+          <label class="block text-sm font-medium mb-1">ימים לפני — #4</label>
+          <%= number_field_tag "#{object_name}[how_many_days_before_yahrzeit_to_send_message][]", days_values[3], class: "block w-full rounded-md border px-3 py-2" %>
+        </div>
+      </div>
+
+      <p class="text-sm text-gray-600">ניתן להזין עד 4 ערכים. המערכת תמיין ותסנן אוטומטית.</p>
+    </section>
+
+    <section class="space-y-4">
+      <h2 class="text-lg font-semibold">איך לשלוח את ההודעה</h2>
+      <p class="text-sm text-gray-600">המערכת תשלח הודעה אחת לפי השיטה הראשונה שמצליחה, לפי הסדר</p>
+
+      <% delivery_values = Array(preference.delivery_priority).first(3) %>
+      <% delivery_values += [nil] * (3 - delivery_values.length) %>
+      <% delivery_options = [["", ""], ["SMS", "sms"], ["WhatsApp", "whatsapp"], ["אימייל", "email"]] %>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div>
+          <label class="block text-sm font-medium mb-1">עדיפות 1</label>
+          <%= select_tag "#{object_name}[delivery_priority][]", options_for_select(delivery_options, delivery_values[0]), class: "block w-full rounded-md border px-3 py-2" %>
+        </div>
+        <div>
+          <label class="block text-sm font-medium mb-1">עדיפות 2</label>
+          <%= select_tag "#{object_name}[delivery_priority][]", options_for_select(delivery_options, delivery_values[1]), class: "block w-full rounded-md border px-3 py-2" %>
+        </div>
+        <div>
+          <label class="block text-sm font-medium mb-1">עדיפות 3</label>
+          <%= select_tag "#{object_name}[delivery_priority][]", options_for_select(delivery_options, delivery_values[2]), class: "block w-full rounded-md border px-3 py-2" %>
+        </div>
+      </div>
+
+      <p class="text-sm text-gray-600">אם הוגדרה רק עדיפות אחת — לא תתבצע שליחה חוזרת.</p>
+    </section>
+
+    <section class="space-y-4">
+      <h2 class="text-lg font-semibold">אפשרויות נוספות</h2>
+
+      <div class="space-y-3">
+        <div class="flex items-center gap-2">
+          <%= f.check_box :attempt_to_resend_if_no_sent_on_time, class: "h-4 w-4 rounded border" %>
+          <%= f.label :attempt_to_resend_if_no_sent_on_time, "ניסיון שליחה חוזר אם לא נשלח בזמן", class: "text-sm" %>
+        </div>
+
+        <div class="flex items-center gap-2">
+          <%= f.check_box :enable_fallback_delivery_method, class: "h-4 w-4 rounded border" %>
+          <%= f.label :enable_fallback_delivery_method, "אפשר שליחה חוזרת בשיטה אחרת", class: "text-sm" %>
+        </div>
+      </div>
+    </section>
+
+    <div class="pt-4 border-t">
+      <div class="flex items-center gap-3">
+        <%= f.submit "שמירה", class: "inline-flex items-center rounded-md bg-blue-600 px-4 py-2 text-white hover:bg-blue-700" %>
+        <%= link_to "ביטול", "#", class: "inline-flex items-center rounded-md border px-4 py-2" %>
+      </div>
+    </div>
+  </div>
+<% end %>

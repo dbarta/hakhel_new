@@ -1,0 +1,72 @@
+<% preference = @preference %>
+
+<div dir="rtl" class="max-w-3xl mx-auto px-4 py-6">
+  <div class="rounded-lg border bg-white shadow-sm p-6">
+    <div class="mb-6">
+      <h1 class="text-2xl font-semibold">הגדרות</h1>
+    </div>
+
+    <% yes_no = ->(value) { value ? "כן" : "לא" } %>
+    <% delivery_labels = { "sms" => "SMS", "whatsapp" => "WhatsApp", "email" => "אימייל" } %>
+
+    <div class="space-y-8">
+      <section class="space-y-4">
+        <h2 class="text-lg font-semibold">תזמון כללי</h2>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div class="rounded-md border p-3">
+            <div class="text-sm text-gray-600">שעת ריצת הסריקה היומית</div>
+            <div class="font-medium"><%= preference.daily_sweep_job_time.present? ? l(preference.daily_sweep_job_time) : "" %></div>
+          </div>
+
+          <div class="rounded-md border p-3">
+            <div class="text-sm text-gray-600">תחילת חלון שליחה</div>
+            <div class="font-medium"><%= preference.send_window_start_time.present? ? l(preference.send_window_start_time) : "" %></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="space-y-4">
+        <h2 class="text-lg font-semibold">כמה ימים לפני היארצייט לשלוח</h2>
+        <div class="rounded-md border p-3">
+          <div class="text-sm text-gray-600">ימים לפני</div>
+          <div class="font-medium"><%= Array(preference.how_many_days_before_yahrzeit_to_send_message).compact.join(", ") %></div>
+        </div>
+        <p class="text-sm text-gray-600">ניתן להזין עד 4 ערכים. המערכת תמיין ותסנן אוטומטית.</p>
+      </section>
+
+      <section class="space-y-4">
+        <h2 class="text-lg font-semibold">איך לשלוח את ההודעה</h2>
+        <p class="text-sm text-gray-600">המערכת תשלח הודעה אחת לפי השיטה הראשונה שמצליחה, לפי הסדר</p>
+
+        <% delivery_display = Array(preference.delivery_priority).compact.map { |v| delivery_labels[v] || v }.join(", ") %>
+        <div class="rounded-md border p-3">
+          <div class="text-sm text-gray-600">עדיפויות</div>
+          <div class="font-medium"><%= delivery_display %></div>
+        </div>
+
+        <p class="text-sm text-gray-600">אם הוגדרה רק עדיפות אחת — לא תתבצע שליחה חוזרת.</p>
+      </section>
+
+      <section class="space-y-4">
+        <h2 class="text-lg font-semibold">אפשרויות נוספות</h2>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div class="rounded-md border p-3">
+            <div class="text-sm text-gray-600">ניסיון שליחה חוזר אם לא נשלח בזמן</div>
+            <div class="font-medium"><%= yes_no.call(preference.attempt_to_resend_if_no_sent_on_time) %></div>
+          </div>
+
+          <div class="rounded-md border p-3">
+            <div class="text-sm text-gray-600">אפשר שליחה חוזרת בשיטה אחרת</div>
+            <div class="font-medium"><%= yes_no.call(preference.enable_fallback_delivery_method) %></div>
+          </div>
+        </div>
+      </section>
+
+      <div class="pt-4 border-t">
+        <%= link_to "עריכה", "#", class: "inline-flex items-center rounded-md bg-blue-600 px-4 py-2 text-white hover:bg-blue-700" %>
+      </div>
+    </div>
+  </div>
+</div>
