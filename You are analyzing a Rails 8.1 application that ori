@@ -1,0 +1,145 @@
+You are analyzing a Rails 8.1 application that originated from merging a Rails engine into a Jumpstart Pro template. The app likely contains dead routes, unreachable endpoints, and orphaned UI pieces.
+
+Your task: detect UNUSED ROUTES and related unreachable code, but follow a strict PLAN → REPORT → CONFIRM → EXECUTE workflow.
+
+DO NOT MODIFY FILES YET.
+
+================================
+GOAL
+================================
+
+Find routes and endpoints that are not used anywhere and are safe to remove.
+
+A route is UNUSED only if:
+- No view links to it
+- No controller redirects to it
+- No helper generates it
+- No JS / Stimulus / fetch / Turbo calls it
+- No API client calls it
+- No background job calls it
+- No rake task calls it
+- No tests call it
+- It is not an API endpoint intentionally kept
+
+Prefer false negatives over false positives.
+
+================================
+PHASE 1 — ROUTE MAP
+================================
+
+1. Parse:
+   - config/routes.rb
+   - any mounted engines
+   - namespaced route files
+
+2. Build a full route table:
+   method + path + controller + action + route helper name.
+
+3. Mark routes as USED if controller/action is referenced by filters, callbacks, or internal dispatch.
+
+================================
+PHASE 2 — USAGE SCAN
+================================
+
+Search the entire repo for references to each route using:
+
+VIEW USAGE:
+- link_to
+- button_to
+- form_with / form_for
+- redirect_to
+- url_for
+- polymorphic_url
+- route helper names
+- partials
+
+CONTROLLER USAGE:
+- redirect_to helpers
+- internal controller calls
+
+JS / FRONTEND:
+- fetch(
+- axios
+- Turbo.visit
+- data-url
+- stimulus values
+- hardcoded paths "/hke/..."
+- rails-ujs calls
+
+BACKGROUND:
+- jobs
+- services
+- mailers
+- rake tasks
+- schedulers
+
+TESTS:
+- request specs
+- system specs
+- controller specs
+
+================================
+PHASE 3 — CLASSIFY
+================================
+
+Produce this report:
+
+USED ROUTES:
+- route
+- usage reference(s)
+
+UNUSED ROUTES (SAFE CANDIDATES):
+- route
+- controller#action
+- why unused
+
+POSSIBLY USED ROUTES:
+- route
+- reason uncertain (dynamic usage, API, JS guess, etc.)
+
+================================
+PHASE 4 — ORPHANED FILES LINKED TO ROUTES
+================================
+
+For UNUSED routes, also check and list:
+
+- controller actions only reachable from that route
+- their views
+- related helpers
+- related components
+
+Mark these as ORPHAN CANDIDATES — DO NOT DELETE YET.
+
+================================
+SAFETY RULES
+================================
+
+If a route is:
+- API-like
+- namespaced under /api
+- webhook
+- callback
+- Twilio / external service endpoint
+
+Mark as POSSIBLY USED unless clearly unused.
+
+Detect dynamic dispatch patterns:
+- send(params[:action])
+- constantize
+- public_send
+
+If found — downgrade confidence.
+
+================================
+OUTPUT NOW
+================================
+
+Run ANALYSIS ONLY.
+
+Do NOT edit any files.
+
+Produce a structured report of:
+- unused routes
+- possibly unused routes
+- orphaned controllers/actions/views
+- confidence level per item.

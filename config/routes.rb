@@ -24,7 +24,6 @@ Rails.application.routes.draw do
       resources :communities do
         resources :users, controller: "community_users"
       end
-      resource :system_preferences, only: [:show, :edit, :update]
       post :switch_to_community, to: "dashboard#switch_to_community"
       root to: "dashboard#show"
     end
@@ -65,10 +64,8 @@ Rails.application.routes.draw do
     resources :deceased_people do
       collection do
 	        post :import_csv
-	      end
 	    end
-
-    resources :community_preferences
+	  end
 
     namespace :api, defaults: {format: :json} do
       namespace :v1 do
