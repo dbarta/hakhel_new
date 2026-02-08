@@ -29,6 +29,9 @@ Rails.application.routes.draw do
     end
 
     # Community Admin Routes
+	    resource :system_preferences, only: [:show, :edit, :update, :destroy]
+	    resource :community_preferences, only: [:show, :edit, :update, :destroy]
+
     resources :logs, only: [:index]
     resources :cemeteries
     resources :communities, only: [:show, :edit, :update]
@@ -87,8 +90,5 @@ Rails.application.routes.draw do
     end
 
     root to: "dashboard#show"
-    get "contact_people/index"
-    get "contact_people/edit"
-    get "contact_people/show"
   end
 end
