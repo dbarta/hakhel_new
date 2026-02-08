@@ -914,3 +914,38 @@ he:
   name: "שם"
   description: "תיאור"
   actions: "פעולות"
+
+  hke:
+    preferences:
+      title: "העדפות"
+      sections:
+        schedule: "תזמון כללי"
+        days_before: "כמה ימים לפני היארצייט לשלוח"
+        delivery: "איך לשלוח את ההודעה"
+        options: "אפשרויות נוספות"
+      labels:
+        daily_sweep_job_time: "שעת ריצת הסריקה היומית"
+        send_window_start_time: "תחילת חלון שליחה"
+        days_before: "ימים לפני"
+        days_before_1: "ימים לפני — #1"
+        days_before_2: "ימים לפני — #2"
+        days_before_3: "ימים לפני — #3"
+        days_before_4: "ימים לפני — #4"
+        priority_1: "עדיפות 1"
+        priority_2: "עדיפות 2"
+        priority_3: "עדיפות 3"
+        priorities: "עדיפויות"
+        attempt_resend: "ניסיון שליחה חוזר אם לא נשלח בזמן"
+        fallback: "אפשר שליחה חוזרת בשיטה אחרת"
+        email: "אימייל"
+      help:
+        days_limit: "ניתן להזין עד 4 ערכים. המערכת תמיין ותסנן אוטומטית."
+        delivery_order: "המערכת תשלח הודעה אחת לפי השיטה הראשונה שמצליחה, לפי הסדר"
+        no_fallback_single: "אם הוגדרה רק עדיפות אחת — לא תתבצע שליחה חוזרת."
+      buttons:
+        save: "שמירה"
+        cancel: "ביטול"
+        edit: "עריכה"
+      values:
+        'yes': "כן"
+        'no': "לא"

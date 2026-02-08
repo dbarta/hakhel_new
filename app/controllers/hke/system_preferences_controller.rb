@@ -5,11 +5,11 @@ class Hke::SystemPreferencesController < Hke::PreferencesBaseController
   protected
 
   def after_update_path
-    raise NotImplementedError, "Define #after_update_path once routes/views exist for system preferences"
+		hke_system_preferences_path
   end
 
   def after_destroy_path
-    raise NotImplementedError, "Define #after_destroy_path once routes/views exist for system preferences"
+		hke_system_preferences_path
   end
 
   private

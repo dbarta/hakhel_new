@@ -2,8 +2,6 @@ class Hke::PreferencesBaseController < ApplicationController
   # This controller is not intended to be routed directly.
   # Subclasses must set @preferring.
 
-  self.abstract_class = true
-
   before_action :set_preference
 
   def show
