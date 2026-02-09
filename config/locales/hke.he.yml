@@ -32,6 +32,9 @@
 # https://mikerogers.io/2016/01/10/i18n-rails-internationalisation-i18n-cheatsheet.html
 
 he:
+  time:
+    formats:
+      time: "%H:%M"
   support:
     array:
       words_connector: ", "
@@ -942,6 +945,16 @@ he:
         days_limit: "ניתן להזין עד 4 ערכים. המערכת תמיין ותסנן אוטומטית."
         delivery_order: "המערכת תשלח הודעה אחת לפי השיטה הראשונה שמצליחה, לפי הסדר"
         no_fallback_single: "אם הוגדרה רק עדיפות אחת — לא תתבצע שליחה חוזרת."
+      sentences:
+        days_prefix: "ההודעה תישלח %{count} פעמים לפני היארצייט — %{list}"
+        days_item_one: "יום אחד לפני"
+        days_item_many: "%{days} ימים לפני"
+        list_words_connector: ", "
+        list_two_words_connector: ", ו"
+        list_last_word_connector: ", ו"
+        delivery_one: "ההודעה תישלח ב-%{first}."
+        delivery_two: "המערכת תנסה תחילה לשלוח ב-%{first}. אם השליחה תיכשל — תישלח הודעה ב-%{second}."
+        delivery_three: "המערכת תנסה תחילה לשלוח ב-%{first}. אם השליחה תיכשל, תישלח הודעה ב-%{second}, ואם גם זה ייכשל — תישלח הודעה ב-%{third}."
       buttons:
         save: "שמירה"
         cancel: "ביטול"

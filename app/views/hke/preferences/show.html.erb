@@ -16,12 +16,12 @@
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div class="rounded-md border p-3">
 	            <div class="text-sm text-gray-600"><%= t("hke.preferences.labels.daily_sweep_job_time") %></div>
-            <div class="font-medium"><%= preference.daily_sweep_job_time.present? ? l(preference.daily_sweep_job_time) : "" %></div>
+	            <div class="font-medium"><%= preference.daily_sweep_job_time.present? ? l(preference.daily_sweep_job_time, format: :time) : "" %></div>
           </div>
 
           <div class="rounded-md border p-3">
 	            <div class="text-sm text-gray-600"><%= t("hke.preferences.labels.send_window_start_time") %></div>
-            <div class="font-medium"><%= preference.send_window_start_time.present? ? l(preference.send_window_start_time) : "" %></div>
+	            <div class="font-medium"><%= preference.send_window_start_time.present? ? l(preference.send_window_start_time, format: :time) : "" %></div>
           </div>
         </div>
       </section>
@@ -29,8 +29,18 @@
       <section class="space-y-4">
 	        <h2 class="text-lg font-semibold"><%= t("hke.preferences.sections.days_before") %></h2>
         <div class="rounded-md border p-3">
-	          <div class="text-sm text-gray-600"><%= t("hke.preferences.labels.days_before") %></div>
-          <div class="font-medium"><%= Array(preference.how_many_days_before_yahrzeit_to_send_message).compact.join(", ") %></div>
+
+
+	          <% days_values = Array(preference.how_many_days_before_yahrzeit_to_send_message).compact.map(&:to_i).sort.reverse %>
+	          <% days_items = days_values.map { |v| v == 1 ? t("hke.preferences.sentences.days_item_one") : t("hke.preferences.sentences.days_item_many", days: v) } %>
+	          <% days_list = days_items.to_sentence(
+	            words_connector: t("hke.preferences.sentences.list_words_connector"),
+	            two_words_connector: t("hke.preferences.sentences.list_two_words_connector"),
+	            last_word_connector: t("hke.preferences.sentences.list_last_word_connector")
+	          ) %>
+	          <% days_sentence = days_values.any? ? t("hke.preferences.sentences.days_prefix", count: days_values.length, list: days_list) : "" %>
+
+	          <div class="font-medium"><%= days_sentence %></div>
         </div>
       </section>
 
@@ -38,7 +48,20 @@
 	        <h2 class="text-lg font-semibold"><%= t("hke.preferences.sections.delivery") %></h2>
 	        <p class="text-sm text-gray-600"><%= t("hke.preferences.help.delivery_order") %></p>
 
-        <% delivery_display = Array(preference.delivery_priority).compact.map { |v| delivery_labels[v] || v }.join(", ") %>
+	        <% methods = Array(preference.delivery_priority).compact.reject(&:blank?) %>
+	        <% names = methods.map { |v| delivery_labels[v] || v } %>
+          <% delivery_display =
+            case names.length
+            when 1
+              t("hke.preferences.sentences.delivery_one", first: names[0])
+            when 2
+              t("hke.preferences.sentences.delivery_two", first: names[0], second: names[1])
+            else
+              names.length >= 3 ?
+                t("hke.preferences.sentences.delivery_three", first: names[0], second: names[1], third: names[2]) :
+                ""
+            end %>
+
         <div class="rounded-md border p-3">
 	          <div class="text-sm text-gray-600"><%= t("hke.preferences.labels.priorities") %></div>
           <div class="font-medium"><%= delivery_display %></div>
