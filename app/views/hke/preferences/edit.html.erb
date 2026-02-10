@@ -1,7 +1,19 @@
+<% is_system = controller.is_a?(Hke::SystemPreferencesController) %>
+<% is_community = controller.is_a?(Hke::CommunityPreferencesController) %>
+<% if is_community %>
+  <% community_name = @preference.preferring&.name %>
+<% end %>
+
 <div dir="rtl" class="max-w-3xl mx-auto px-4 py-6">
   <div class="rounded-lg border bg-white shadow-sm p-6">
     <div class="mb-6">
-		      <h1 class="text-2xl font-semibold"><%= t("hke.preferences.title") %></h1>
+			      <h1 class="text-2xl font-semibold">
+			        <% if is_system %>
+			          <%= t("hke.preferences.titles.system_edit") %>
+			        <% elsif is_community %>
+			          <%= t("hke.preferences.titles.community_edit", name: community_name) %>
+			        <% end %>
+			      </h1>
     </div>
 
     <%= render "hke/preferences/form", preference: @preference %>

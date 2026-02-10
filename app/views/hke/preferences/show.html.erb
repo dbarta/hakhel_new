@@ -1,9 +1,25 @@
 <% preference = @preference %>
 
+<% is_system = controller.is_a?(Hke::SystemPreferencesController) %>
+<% is_community = controller.is_a?(Hke::CommunityPreferencesController) %>
+
+
+<% if is_community %>
+  <% community_name = @preference.preferring&.name %>
+  <% system_preferring = Hke::System.first %>
+  <% system_preference = system_preferring&.preference || system_preferring&.build_preference %>
+<% end %>
+
 <div dir="rtl" class="max-w-3xl mx-auto px-4 py-6">
   <div class="rounded-lg border bg-white shadow-sm p-6">
     <div class="mb-6">
-		      <h1 class="text-2xl font-semibold"><%= t("hke.preferences.title") %></h1>
+			      <h1 class="text-2xl font-semibold">
+			        <% if is_system %>
+			          <%= t("hke.preferences.titles.system_show") %>
+			        <% elsif is_community %>
+			          <%= t("hke.preferences.titles.community_show", name: community_name) %>
+			        <% end %>
+			      </h1>
     </div>
 
 	    <% yes_no = ->(value) { value ? t("hke.preferences.values.yes") : t("hke.preferences.values.no") } %>
@@ -16,12 +32,22 @@
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div class="rounded-md border p-3">
 	            <div class="text-sm text-gray-600"><%= t("hke.preferences.labels.daily_sweep_job_time") %></div>
-	            <div class="font-medium"><%= preference.daily_sweep_job_time.present? ? l(preference.daily_sweep_job_time, format: :time) : "" %></div>
+		            <div class="font-medium"><%= preference.daily_sweep_job_time.present? ? l(preference.daily_sweep_job_time, format: :time) : "" %></div>
+		            <% if is_community && system_preference.present? %>
+		              <div class="text-xs text-gray-500">
+		                <%= t("hke.preferences.help.system_default_prefix", value: (system_preference.daily_sweep_job_time.present? ? l(system_preference.daily_sweep_job_time, format: :time) : "")) %>
+		              </div>
+		            <% end %>
           </div>
 
           <div class="rounded-md border p-3">
 	            <div class="text-sm text-gray-600"><%= t("hke.preferences.labels.send_window_start_time") %></div>
-	            <div class="font-medium"><%= preference.send_window_start_time.present? ? l(preference.send_window_start_time, format: :time) : "" %></div>
+		            <div class="font-medium"><%= preference.send_window_start_time.present? ? l(preference.send_window_start_time, format: :time) : "" %></div>
+		            <% if is_community && system_preference.present? %>
+		              <div class="text-xs text-gray-500">
+		                <%= t("hke.preferences.help.system_default_prefix", value: (system_preference.send_window_start_time.present? ? l(system_preference.send_window_start_time, format: :time) : "")) %>
+		              </div>
+		            <% end %>
           </div>
         </div>
       </section>
@@ -32,15 +58,48 @@
 
 
 	          <% days_values = Array(preference.how_many_days_before_yahrzeit_to_send_message).compact.map(&:to_i).sort.reverse %>
-	          <% days_items = days_values.map { |v| v == 1 ? t("hke.preferences.sentences.days_item_one") : t("hke.preferences.sentences.days_item_many", days: v) } %>
-	          <% days_list = days_items.to_sentence(
-	            words_connector: t("hke.preferences.sentences.list_words_connector"),
-	            two_words_connector: t("hke.preferences.sentences.list_two_words_connector"),
-	            last_word_connector: t("hke.preferences.sentences.list_last_word_connector")
-	          ) %>
-	          <% days_sentence = days_values.any? ? t("hke.preferences.sentences.days_prefix", count: days_values.length, list: days_list) : "" %>
 
-	          <div class="font-medium"><%= days_sentence %></div>
+						<% days_items = days_values.map do |v|
+								if v == 0
+									t("hke.preferences.sentences.days_item_same_day")
+								elsif v == 1
+									t("hke.preferences.sentences.days_item_one")
+								elsif v == 2
+									t("hke.preferences.sentences.days_item_two")
+								else
+									t("hke.preferences.sentences.days_item_many", days: v)
+								end
+							end %>
+
+						<% days_list = days_items.to_sentence(
+								words_connector: t("hke.preferences.sentences.list_words_connector"),
+								two_words_connector: t("hke.preferences.sentences.list_two_words_connector"),
+								last_word_connector: t("hke.preferences.sentences.list_last_word_connector")
+							) %>
+
+						<% days_sentence =
+								if days_values.any?
+									t("hke.preferences.sentences.days_prefix", count: days_values.length, list: days_list)
+								else
+									""
+								end %>
+
+						<div class="font-medium"><%= days_sentence %></div>
+
+		          <% if is_community && system_preference.present? %>
+		            <% system_days_values = Array(system_preference.how_many_days_before_yahrzeit_to_send_message).compact.map(&:to_i).sort.reverse %>
+		            <% system_days_items = system_days_values.map { |v| v == 1 ? t("hke.preferences.sentences.days_item_one") : t("hke.preferences.sentences.days_item_many", days: v) } %>
+		            <% system_days_list = system_days_items.to_sentence(
+		              words_connector: t("hke.preferences.sentences.list_words_connector"),
+		              two_words_connector: t("hke.preferences.sentences.list_two_words_connector"),
+		              last_word_connector: t("hke.preferences.sentences.list_last_word_connector")
+		            ) %>
+		            <% system_days_sentence = system_days_values.any? ? t("hke.preferences.sentences.days_prefix", count: system_days_values.length, list: system_days_list) : "" %>
+
+		            <div class="text-xs text-gray-500">
+		              <%= t("hke.preferences.help.system_default_prefix", value: system_days_sentence) %>
+		            </div>
+		          <% end %>
         </div>
       </section>
 
@@ -64,7 +123,26 @@
 
         <div class="rounded-md border p-3">
 	          <div class="text-sm text-gray-600"><%= t("hke.preferences.labels.priorities") %></div>
-          <div class="font-medium"><%= delivery_display %></div>
+	          <div class="font-medium"><%= delivery_display %></div>
+		          <% if is_community && system_preference.present? %>
+		            <% system_methods = Array(system_preference.delivery_priority).compact.reject(&:blank?) %>
+		            <% system_names = system_methods.map { |v| delivery_labels[v] || v } %>
+		            <% system_delivery_display =
+		              case system_names.length
+		              when 1
+		                t("hke.preferences.sentences.delivery_one", first: system_names[0])
+		              when 2
+		                t("hke.preferences.sentences.delivery_two", first: system_names[0], second: system_names[1])
+		              else
+		                system_names.length >= 3 ?
+		                  t("hke.preferences.sentences.delivery_three", first: system_names[0], second: system_names[1], third: system_names[2]) :
+		                  ""
+		              end %>
+
+		            <div class="text-xs text-gray-500">
+		              <%= t("hke.preferences.help.system_default_prefix", value: system_delivery_display) %>
+		            </div>
+		          <% end %>
         </div>
 
 	        <p class="text-sm text-gray-600"><%= t("hke.preferences.help.no_fallback_single") %></p>
@@ -76,12 +154,22 @@
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div class="rounded-md border p-3">
 	            <div class="text-sm text-gray-600"><%= t("hke.preferences.labels.attempt_resend") %></div>
-            <div class="font-medium"><%= yes_no.call(preference.attempt_to_resend_if_no_sent_on_time) %></div>
+	            <div class="font-medium"><%= yes_no.call(preference.attempt_to_resend_if_no_sent_on_time) %></div>
+		            <% if is_community && system_preference.present? %>
+		              <div class="text-xs text-gray-500">
+		                <%= t("hke.preferences.help.system_default_prefix", value: yes_no.call(system_preference.attempt_to_resend_if_no_sent_on_time)) %>
+		              </div>
+		            <% end %>
           </div>
 
           <div class="rounded-md border p-3">
 	            <div class="text-sm text-gray-600"><%= t("hke.preferences.labels.fallback") %></div>
-            <div class="font-medium"><%= yes_no.call(preference.enable_fallback_delivery_method) %></div>
+	            <div class="font-medium"><%= yes_no.call(preference.enable_fallback_delivery_method) %></div>
+		            <% if is_community && system_preference.present? %>
+		              <div class="text-xs text-gray-500">
+		                <%= t("hke.preferences.help.system_default_prefix", value: yes_no.call(system_preference.enable_fallback_delivery_method)) %>
+		              </div>
+		            <% end %>
           </div>
         </div>
       </section>

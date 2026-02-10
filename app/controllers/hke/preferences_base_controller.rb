@@ -2,6 +2,7 @@ class Hke::PreferencesBaseController < ApplicationController
   # This controller is not intended to be routed directly.
   # Subclasses must set @preferring.
 
+
   before_action :set_preference
 
   def show
@@ -16,7 +17,7 @@ class Hke::PreferencesBaseController < ApplicationController
     if @preference.update(pref_params)
       redirect_to after_update_path
     else
-      render :edit, status: :unprocessable_entity
+      render "hke/preferences/edit", status: :unprocessable_entity
     end
   end
 

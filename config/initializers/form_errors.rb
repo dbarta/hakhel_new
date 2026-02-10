@@ -17,7 +17,7 @@ ActionView::Base.field_error_proc = proc do |html_tag, instance|
 
       <<~HTML
         #{element}
-        <p class="form-hint error">#{attribute} #{errors}</p>
+        <p class="form-hint error">#{errors}</p>
       HTML
     else
       element.to_s

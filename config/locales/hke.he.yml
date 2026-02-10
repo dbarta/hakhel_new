@@ -839,48 +839,33 @@ he:
 
   activerecord:
     attributes:
-      api_token:
-        last_used_at: "Last Used"
-        created_at: "Created"
-      account:
-        name_on_card: "Name on Card"
-
+      hke/preference:
+          daily_sweep_job_time: "שעת הסריקה היומית"
+          send_window_start_time: "תחילת חלון שליחה"
+          delivery_priority: "עדיפויות שליחה"
+          how_many_days_before_yahrzeit_to_send_message: "ימים לפני יארצייט"
     errors:
-      messages:
-        presence: "חסר ערך לשדה"
-        gender_invalid: "gender should be: male or female."
-        value_invalid: "ערך לא תקין"
       models:
-        hke/deceased_person:
-            attributes:
-        hke/contact_person:
-            attributes:
-              # first_name:
-              #   presence: "לאיש הקשר חסר שם פרטי"
-              # last_name:
-              #   presence: "לאיש הקשר חסר שם משפחה"
-              # gender:
-              #   presence: "לאיש הקשר חסר מין"
-        account:
+        hke/preference:
           attributes:
-            domain:
-              reserved: "%{value} is reserved."
-            subdomain:
-              reserved: "%{value} is reserved."
-              format: "must be at least 2 characters and alphanumeric"
-        account_invitation:
-          attributes:
-            email:
-              invited: "has already been invited"
-        account_user:
-          attributes:
-            admin:
-              cannot_be_removed: "role cannot be removed for the account owner"
-        relation:
-          attributes:
-            contact_person:
-              required: "Contact person is required when saving relation"
+            daily_sweep_job_time:
 
+
+            send_window_start_time:
+
+              after_sweep: "שעת השליחה צריכה להיות אחרי שעת הסריקה"
+
+            delivery_priority:
+              required: "יש לבחור לפחות שיטת שליחה אחת"
+              not_array: "מבנה עדיפויות לא תקין"
+              invalid_values: "ערכים לא תקינים: %{bad}"
+              duplicate: "אין לבחור אותה שיטת שליחה יותר מפעם אחת"
+
+            how_many_days_before_yahrzeit_to_send_message:
+              required: "יש להזין לפחות ערך אחד"
+              not_array: "מבנה ימים לא תקין"
+              too_many: "ניתן להזין עד 4 ערכים בלבד"
+              range: "ערכים חייבים להיות בין 0 ל-60"
   helpers:
     placeholder:
       account_invitation:
@@ -921,6 +906,12 @@ he:
   hke:
     preferences:
       title: "העדפות"
+
+      titles:
+        system_show: "העדפות מערכת"
+        system_edit: "עריכת העדפות מערכת"
+        community_show: "העדפות קהילת: %{name}"
+        community_edit: "עריכת העדפות קהילת: %{name}"
       sections:
         schedule: "תזמון כללי"
         days_before: "כמה ימים לפני היארצייט לשלוח"
@@ -941,14 +932,24 @@ he:
         attempt_resend: "ניסיון שליחה חוזר אם לא נשלח בזמן"
         fallback: "אפשר שליחה חוזרת בשיטה אחרת"
         email: "אימייל"
+        none: "— ללא —"
       help:
         days_limit: "ניתן להזין עד 4 ערכים. המערכת תמיין ותסנן אוטומטית."
+        days_before_rules: "המערכת יכולה לשלוח עד 4 הודעות תזכורת. יש לכתוב כמה ימים לפני יש לשלוח, עד 60 יום. המספר ״0״ מציין את יום היארצייט. חייב להיות שדה אחד לפחות עם ערך."
+        system_default_prefix: "ברירת מחדל מערכת: %{value}"
         delivery_order: "המערכת תשלח הודעה אחת לפי השיטה הראשונה שמצליחה, לפי הסדר"
         no_fallback_single: "אם הוגדרה רק עדיפות אחת — לא תתבצע שליחה חוזרת."
       sentences:
-        days_prefix: "ההודעה תישלח %{count} פעמים לפני היארצייט — %{list}"
+        days_prefix:
+          one: "ההודעה תישלח פעם אחת לפני היארצייט — %{list}"
+          two: "ההודעה תישלח פעמיים לפני היארצייט — %{list}"
+          other: "ההודעה תישלח %{count} פעמים לפני היארצייט — %{list}"
+
+        days_item_same_day: "באותו יום"
         days_item_one: "יום אחד לפני"
+        days_item_two: "יומיים לפני"
         days_item_many: "%{days} ימים לפני"
+        days_prefix_one: "ההודעה תישלח פעם אחת לפני היארצייט — %{list}"
         list_words_connector: ", "
         list_two_words_connector: ", ו"
         list_last_word_connector: ", ו"
