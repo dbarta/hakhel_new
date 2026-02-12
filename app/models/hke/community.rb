@@ -5,7 +5,7 @@ module Hke
     include Hke::Addressable
     include Hke::Preferring
 
-    enum :community_type, { synagogue: "synagogue", school: "school" }
+    enum :community_type, {synagogue: "synagogue", school: "school"}
 
     validates :name, presence: true
     validates :community_type, presence: true
@@ -30,10 +30,12 @@ module Hke
       job_name = "daily_for_community_#{id}"
 
       resolved = Hke::PreferenceResolver.resolve(preferring: self)
-      hh, mm = resolved.daily_sweep_wall_clock_hm || [3, 0] # demo fallback if nil
-      cron_expr = "#{mm} #{hh} * * *" # minute hour day month weekday
+      hh, mm = resolved.daily_sweep_wall_clock_hm || [3, 0]
 
-      # Ensure we don't accumulate duplicates / stale schedules
+      puts "=== SCHED resolved wall clock #{hh}:#{mm}"
+
+      cron_expr = "#{mm} #{hh} * * *"
+
       Sidekiq::Cron::Job.find(job_name)&.destroy
 
       Sidekiq::Cron::Job.create(
@@ -42,12 +44,6 @@ module Hke
         args: [id],
         cron: cron_expr
       )
-
-      ActsAsTenant.current_tenant = self
-      # Hke::Logger.log(
-      #   event_type: "Daily Scheduler Job Ensured",
-      #   details: { community_id: id, job_name: job_name, cron: cron_expr, sweep_time: resolved.daily_sweep_wall_clock_str }
-      # )
 
       sweep_str = format("%02d:%02d", hh, mm)
 
@@ -60,12 +56,6 @@ module Hke
           sweep_time: sweep_str
         }
       )
-
-
-
-
-
-
     ensure
       ActsAsTenant.current_tenant = nil
     end
@@ -76,7 +66,7 @@ module Hke
       Sidekiq::Cron::Job.find(job_name)&.destroy
 
       ActsAsTenant.current_tenant = self
-      Hke::Logger.log(event_type: "Daily Scheduler Job Removed", details: { community_id: id, job_name: job_name })
+      Hke::Logger.log(event_type: "Daily Scheduler Job Removed", details: {community_id: id, job_name: job_name})
     ensure
       ActsAsTenant.current_tenant = nil
     end

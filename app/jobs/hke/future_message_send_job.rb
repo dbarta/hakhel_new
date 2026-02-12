@@ -13,11 +13,24 @@ module Hke
 
         log_start(future_message_id, community_id)
 
+        unless approved?(future_message)
+          log_event("Create Job", details: {
+            text: "Skipping send - not approved",
+            community_id: community_id,
+            future_message_id: future_message.id
+          })
+          return
+        end
+
+        return if before_send_window?(future_message, community_id)
+
         return if already_sent?(future_message, community_id)
 
         rendered_text = render_text(future_message)
 
         create_sent_and_delete_future!(future_message, rendered_text, community_id)
+
+        future_message.messageable.process_future_messages
 
         log_done(future_message.id, community_id)
       end
@@ -97,6 +110,36 @@ module Hke
     # -------------------------
     # Core logic
     # -------------------------
+    #
+    def approved?(future_message)
+      return future_message.approved? if future_message.respond_to?(:approved?)
+      future_message.approval_status.to_s == "approved" || future_message.approval_status.to_i == 1
+    end
+
+    def before_send_window?(future_message, community_id)
+      relation = future_message.messageable
+      resolved = Hke::PreferenceResolver.resolve(preferring: relation)
+      hm = resolved.send_window_start_wall_clock_hm
+      return false if hm.nil?
+
+      tz = ActiveSupport::TimeZone["Asia/Jerusalem"]
+      now = tz.now
+      start_time = tz.local(now.year, now.month, now.day, hm[0], hm[1], 0)
+
+      return false if now >= start_time
+
+      delay = (start_time - now).to_i
+      self.class.perform_in(delay, future_message.id, community_id)
+
+      log_event("Create Job", details: {
+        text: "Re-enqueueing before send window",
+        community_id: community_id,
+        future_message_id: future_message.id,
+        delay: delay
+      })
+
+      true
+    end
 
     def already_sent?(future_message, community_id)
       return false unless Hke::SentMessage.exists?(token: future_message.token)

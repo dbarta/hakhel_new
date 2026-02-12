@@ -13,11 +13,12 @@ module Hke
     ) do
       DEFAULT_TZ = "Asia/Jerusalem"
 
-      # For this phase: ignore stored time_zone and treat everything as Israel wall-clock.
+      # These are TIME columns (wall-clock). Rails will typically materialize them as a Time
+      # anchored to a dummy date (often in UTC). We must NOT timezone-convert them, or we'll
+      # shift the intended wall-clock hour (e.g. 05:47 -> 07:47).
       def daily_sweep_wall_clock_hm
         return nil if daily_sweep_job_time.nil?
-        local = daily_sweep_job_time.in_time_zone(DEFAULT_TZ)
-        [local.hour, local.min]
+        [daily_sweep_job_time.hour, daily_sweep_job_time.min]
       end
 
       def daily_sweep_wall_clock_str
@@ -28,8 +29,7 @@ module Hke
 
       def send_window_start_wall_clock_hm
         return nil if send_window_start_time.nil?
-        local = send_window_start_time.in_time_zone(DEFAULT_TZ)
-        [local.hour, local.min]
+        [send_window_start_time.hour, send_window_start_time.min]
       end
 
       def send_window_start_wall_clock_str

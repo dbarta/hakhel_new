@@ -7,6 +7,9 @@ module Hke
     validate :validate_days_before_array
     validate :validate_delivery_priority_array
 
+    after_commit :handle_operational_changes
+    after_commit :reschedule_community_sweep, if: :community_pref?
+
     private
 
     # ---------- TYPE ----------
@@ -70,10 +73,9 @@ module Hke
       end
 
       values = raw.map { |v| v.is_a?(String) ? v.strip : v }
-                  .reject(&:blank?)
-                  .map(&:to_s)
+        .reject(&:blank?)
+        .map(&:to_s)
 
-      # at least one value
       if system_pref? && values.empty?
         errors.add(:delivery_priority, :required)
       end
@@ -82,12 +84,10 @@ module Hke
         errors.add(:delivery_priority, :required)
       end
 
-      # allowed set
       allowed = %w[sms whatsapp email]
       bad = values - allowed
       errors.add(:delivery_priority, :invalid_values, bad: bad.join(", ")) if bad.any?
 
-      # uniqueness across the 3 boxes
       if values.uniq.length != values.length
         errors.add(:delivery_priority, :duplicate)
       end
@@ -109,7 +109,7 @@ module Hke
       end
 
       cleaned = raw.map { |v| v.is_a?(String) ? v.strip : v }
-                   .reject(&:blank?)
+        .reject(&:blank?)
 
       if cleaned.empty? && system_pref?
         errors.add(:how_many_days_before_yahrzeit_to_send_message, :required)
@@ -121,11 +121,97 @@ module Hke
       end
 
       cleaned.each do |value|
-        int_value = Integer(value) rescue nil
+        int_value = begin
+          Integer(value)
+        rescue
+          nil
+        end
+
         unless int_value && int_value.between?(0, 60)
           errors.add(:how_many_days_before_yahrzeit_to_send_message, :range)
         end
       end
+    end
+
+    # -------------------------
+    # Operational change handling
+    # -------------------------
+
+    IMPACT_FIELDS = %w[
+      how_many_days_before_yahrzeit_to_send_message
+      delivery_priority
+    ].freeze
+
+    def impactful_rebuild_change?
+      (saved_changes.keys & IMPACT_FIELDS).any?
+    end
+
+    def rebuild_scope_descriptor
+      case preferring
+      when Hke::Relation
+        ["relation", preferring.id]
+      when Hke::Community
+        ["community", preferring.id]
+      when Hke::System
+        ["system", nil]
+      else
+        [nil, nil]
+      end
+    end
+
+    def rebuild_impact_count
+      case preferring
+      when Hke::Relation
+        preferring.future_messages.count
+      when Hke::Community
+        Hke::FutureMessage.where(community_id: preferring.id).count
+      when Hke::System
+        Hke::FutureMessage.count
+      else
+        0
+      end
+    end
+
+    # -------------------------
+    # DEBUGGED handler
+    # -------------------------
+
+    def handle_operational_changes
+      puts "=== PREF after_commit fired id=#{id} type=#{preferring_type}"
+      changed = previous_changes.keys
+      puts "=== PREF changed keys: #{changed.inspect}"
+
+      # ---- rebuild ----
+      if (changed & IMPACT_FIELDS).any?
+        mode, id = rebuild_scope_descriptor
+        puts "=== PREF enqueue rebuild #{mode}/#{id}"
+        Hke::FutureMessageRebuildJob.perform_async(mode, id) if mode
+      end
+
+      # ---- reschedule sweep ----
+      if changed.include?("daily_sweep_job_time")
+        puts "=== PREF sweep time changed — rescheduling"
+
+        case preferring
+        when Hke::Community
+          puts "=== PREF calling schedule_daily_job for community #{preferring.id}"
+          preferring.send(:schedule_daily_job)
+        when Hke::System
+          puts "=== PREF system sweep change — rescheduling ALL communities"
+          Hke::Community.find_each { |c| c.send(:schedule_daily_job) }
+        end
+      end
+    end
+
+    # -------------------------
+    # community-only callback
+    # -------------------------
+
+    def reschedule_community_sweep
+      puts "=== PREF reschedule_community_sweep fired for #{preferring_type}"
+      return unless preferring.respond_to?(:schedule_daily_job)
+
+      preferring.schedule_daily_job
     end
   end
 end

@@ -156,9 +156,6 @@ he:
   action_edit: "עריכה"
   action_delete: "מחיקה"
 
-
-
-
   account_invitations_mailer:
     invite:
       subject: "%{inviter} invited you to %{account}"
@@ -904,6 +901,26 @@ he:
   actions: "פעולות"
 
   hke:
+    logs:
+      change_old:
+        m: "%{label} ישן"
+        f: "%{label} ישנה"
+      change_new:
+        m: "%{label} חדש"
+        f: "%{label} חדשה"
+
+      labels:
+        send_date: "תאריך שליחה"
+        delivery_method: "שיטת שליחה"
+        email: "אימייל"
+        phone: "טלפון"
+
+      label_gender:
+        send_date: f
+        delivery_method: f
+        email: m
+        phone: m
+
     preferences:
       title: "העדפות"
 

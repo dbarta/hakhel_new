@@ -7,5 +7,18 @@
 			"path": "../../rails_scripts"
 		}
 	],
-	"settings": {}
+	"settings": {
+		"emeraldwalk.runonsave": {
+
+
+			"commands": [
+						{
+							"match": "\\.erb$",
+        			"cmd": "LANG=en_US.UTF-8 LC_ALL=en_US.UTF-8 rbenv exec erb-format -w \"${file}\""
+						}
+					],
+
+				}
+		}
+	}
 }

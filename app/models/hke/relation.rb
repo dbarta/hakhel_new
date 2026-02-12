@@ -3,6 +3,7 @@ module Hke
     include Hke::Deduplicatable
     include Hke::LogModelEvents
     include Hke::MessageGenerator
+
     deduplication_fields :deceased_person_id, :contact_person_id
 
     belongs_to :deceased_person
@@ -11,12 +12,14 @@ module Hke
     has_many :relations_selections
     has_many :selections, through: :relations_selections
     has_one :preference, as: :preferring, dependent: :destroy
+
     has_secure_token length: 24
+
     accepts_nested_attributes_for :contact_person, reject_if: :all_blank
     accepts_nested_attributes_for :deceased_person, reject_if: :all_blank
+
     after_commit :process_future_messages
 
-    # Setter method for contact_person nested attributes
     def contact_person_attributes=(attributes)
       if attributes["phone"].present?
         self.contact_person = ContactPerson.find_or_initialize_by(phone: attributes["phone"])
@@ -24,7 +27,6 @@ module Hke
       end
     end
 
-    # Setter method for deceased_person nested attributes
     def deceased_person_attributes=(attributes)
       if attributes["first_name"].present? && attributes["last_name"].present?
         self.deceased_person = DeceasedPerson.find_or_initialize_by(
@@ -37,38 +39,78 @@ module Hke
 
     def process_future_messages
       return if destroyed? || !persisted?
-    # FutureMessage is delivery intent only; update/create only when intent changes.
-    create_future_messages
+      create_future_messages
     end
 
     def create_future_messages
       dp = deceased_person
       cp = contact_person
-      send_date = calculate_reminder_date(dp.name, dp.hebrew_month_of_death, dp.hebrew_day_of_death)
-    delivery_method = calculate_delivery_method
-    email = cp.email
-    phone = cp.phone
 
-    future_message = future_messages.first
-    if future_message
-      changes = {}
-      changes[:send_date] = send_date if future_message.send_date != send_date
-      changes[:delivery_method] = delivery_method if future_message.delivery_method.to_s != delivery_method.to_s
-      changes[:email] = email if future_message.email != email
-      changes[:phone] = phone if future_message.phone != phone
+      resolved = Hke::PreferenceResolver.resolve(preferring: self)
 
-      future_message.update!(changes) if changes.any?
-      log_info "Reminder updated for contact: #{contact_person.name} deceased: #{dp.name} date: #{future_message.send_date}"
-    else
-      future_message = FutureMessage.create!(
-        messageable: self,
-        send_date: send_date,
-        delivery_method: delivery_method,
-        email: email,
-        phone: phone
+      yahrzeit_date = calculate_yahrzeit_date(
+        dp.name,
+        dp.hebrew_month_of_death,
+        dp.hebrew_day_of_death
       )
-      log_info "Reminder created for contact: #{contact_person.name} deceased: #{dp.name} date: #{future_message.send_date}"
-    end
+
+      offsets = Array(resolved.how_many_days_before_yahrzeit_to_send_message)
+        .compact.map(&:to_i).uniq.sort
+      offsets = [7] if offsets.empty?
+
+      send_date = next_send_date_from_offsets(
+        dp.name,
+        dp.hebrew_month_of_death,
+        dp.hebrew_day_of_death,
+        yahrzeit_date,
+        offsets
+      )
+
+      delivery_method = select_usable_delivery_method(
+        Array(resolved.delivery_priority),
+        cp
+      )
+
+      email = cp.email
+      phone = cp.phone
+
+      future_message = future_messages.first
+
+      # ---- structured build log (stable + minimal) ----
+      Hke::Logger.log(
+        event_type: "future_message_build",
+        entity: self,
+        details: {
+          mode: future_message ? "update" : "create",
+          relation_id: id,
+          contact_id: cp.id,
+          deceased_id: dp.id,
+          yahrzeit_date: yahrzeit_date,
+          offsets: offsets,
+          computed_send_date: send_date,
+          delivery_priority: resolved.delivery_priority,
+          chosen_delivery_method: delivery_method,
+          email_present: email.present?,
+          phone_present: phone.present?
+        }
+      )
+
+      if future_message
+        changes = {}
+        changes[:send_date] = send_date if future_message.send_date != send_date
+        changes[:delivery_method] = delivery_method if future_message.delivery_method.to_s != delivery_method.to_s
+        changes[:email] = email if future_message.email != email
+        changes[:phone] = phone if future_message.phone != phone
+        future_message.update!(changes) if changes.any?
+      else
+        FutureMessage.create!(
+          messageable: self,
+          send_date: send_date,
+          delivery_method: delivery_method,
+          email: email,
+          phone: phone
+        )
+      end
     end
 
     def delivery_method_name
@@ -77,26 +119,38 @@ module Hke
 
     private
 
-    def calculate_reminder_date(name, hm, hd)
-      yahrzeit_date = calculate_yahrzeit_date(name, hm, hd)
-      # preferrence = calculate_merged_preferences
-      reminder_date = yahrzeit_date - 1.week
-      if reminder_date >= Date.today
-        reminder_date
-      else
-        Date.today
-      end
+    def next_send_date_from_offsets(name, hm, hd, yahrzeit_date, offsets)
+      today = Time.zone.today
+      candidate = offsets.sort.map { |d| yahrzeit_date - d.days }.find { |dt| dt >= today }
+      return candidate if candidate
+
+      next_yahrzeit = calculate_yahrzeit_date(name, hm, hd).next_year
+      offsets.sort.map { |d| next_yahrzeit - d.days }.find { |dt| dt >= today } || today
     end
 
     def calculate_yahrzeit_date(name, hm, hd)
-      # puts "@@@ before calling Hke::Heb.yahrzeit_date"
       Hke::Heb.yahrzeit_date(name, hm, hd)
-      # puts "@@@ after calling Hke::Heb.yahrzeit_date: #{result}"
     end
 
     def calculate_delivery_method
-      # You can adjust this logic to return the correct delivery method based on preferences
-      :sms # This should return one of the enum symbols, e.g., :email, :sms, :whatsapp
+      :sms
+    end
+
+    def select_usable_delivery_method(priority_list, contact)
+      methods = Array(priority_list).map(&:to_sym)
+
+      methods.each do |m|
+        case m
+        when :email
+          return :email if contact.email.present?
+        when :sms
+          return :sms
+        when :whatsapp
+          return :whatsapp if contact.phone.present?
+        end
+      end
+
+      :sms
     end
   end
 end

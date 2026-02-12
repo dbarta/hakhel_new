@@ -3,12 +3,12 @@ module Hke
     extend ActiveSupport::Concern
 
     included do
-      after_create  { log_model_event("create", self.attributes) }
+      after_create { log_model_event("create", attributes) }
       after_update do
         changes = saved_changes.except(:updated_at)
         log_model_event("update", changes) unless changes.empty?
       end
-      after_destroy { log_model_event("destroy", self.attributes) }
+      after_destroy { log_model_event("destroy", attributes) }
     end
 
     private

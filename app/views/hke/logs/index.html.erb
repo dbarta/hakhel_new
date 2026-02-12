@@ -15,9 +15,8 @@
   }
 
   .col-date   { width: 150px; }
-  .col-event  { width: 150px; }
+  .col-event  { width: 220px; }
   .col-entity { width: 170px; }
-  /* Other columns grow automatically */
 </style>
 
 <div style="padding-left: 1rem; padding-right: 1rem;">
@@ -30,45 +29,104 @@
         <th>פרטים</th>
       </tr>
     </thead>
+
     <tbody>
       <% @logs.each do |log| %>
         <% details = log.details || {} %>
-        <% human_details = case log.entity_type
-          when "Hke::DeceasedPerson"
-            name = "שם: #{details['first_name']} #{details['last_name']}"
-            date = "תאריך פטירה: #{details['date_of_death']&.to_date}"
-            hebrew_date = "תאריך עברי: #{[details['hebrew_day_of_death'], details['hebrew_month_of_death'], details['hebrew_year_of_death']].compact.join(' ')}"
-            [name, date, hebrew_date].join("; ")
 
-          when "Hke::ContactPerson"
-            name = "שם: #{details['first_name']} #{details['last_name']}"
-            phone = "טלפון: #{details['phone']}"
-            email = details['email'].present? ? "אימייל: #{details['email']}" : nil
-            [name, phone, email].compact.join("; ")
+        <% build_line = ->(d) do
+          parts = []
+          parts << "מצב:#{d["mode"]}"
+          parts << "קשר:#{d["relation_id"]}"
+          parts << "נפטר:#{d["deceased_id"]}"
+          parts << "איש קשר:#{d["contact_id"]}"
+          parts << "יארצייט:#{d["yahrzeit_date"]}"
+          parts << "אופסטים:#{Array(d["offsets"]).join(",")}"
+          parts << "שליחה:#{d["computed_send_date"]}"
+          parts << "עדיפות:#{Array(d["delivery_priority"]).join(",")}"
+          parts << "שיטה:#{d["chosen_delivery_method"]}"
+          parts << "טלפון✓" if d["phone_present"]
+          parts << "אימייל✓" if d["email_present"]
+          parts.compact.join(" | ")
+        end %>
 
-          when "Hke::Relation"
-            relation = "Relation: #{details['relation_of_deceased_to_contact']}"
-            contact_id = "Contact: #{details['contact_person_id']}"
-            deceased_id = "Deceased: #{details['deceased_person_id']}"
-            [relation, contact_id, deceased_id].join("; ")
+        <% diff_line = ->(label_key, arr) do
+          return nil unless arr.is_a?(Array) && arr.size == 2
+        
+          key = label_key.to_s
+          old_v, new_v = arr
+        
+          fmt = ->(v) do
+            begin
+              v.is_a?(String) && v.include?("T") ? Time.parse(v).to_date : v
+            rescue StandardError
+              v
+            end
+          end
+        
+          label = t("hke.logs.labels.#{key}", default: key)
+          gender = t("hke.logs.label_gender.#{key}", default: "m")
+        
+          old_label = t("hke.logs.change_old.#{gender}", label: label)
+          new_label = t("hke.logs.change_new.#{gender}", label: label)
+        
+          "#{old_label}: #{fmt.call(old_v)} -> #{new_label}: #{fmt.call(new_v)}"
+        end %>
 
-          when "Hke::FutureMessage"
-            "הודעה: #{details['full_message']}<br>טלפון: #{details['phone']}}"
-
-          when "Hke::SentMessage"
-            "הודעה: #{details['full_message']}<br>טלפון: #{details['phone']}}"
-
+        <% human_details =
+          case log.event_type
+          when "future_message_build"
+            build_line.call(details)
           else
-            details.map { |k, v| "<strong>#{h k}:</strong> #{h v}" }.join("<br>").html_safe
+            case log.entity_type
+            when "Hke::DeceasedPerson"
+              [
+                "שם: #{details["first_name"]} #{details["last_name"]}",
+                "תאריך פטירה: #{details["date_of_death"]}",
+              ].compact.join("; ")
+            when "Hke::ContactPerson"
+              [
+                "שם: #{details["first_name"]} #{details["last_name"]}",
+                "טלפון: #{details["phone"]}",
+                (details["email"].present? ? "אימייל: #{details["email"]}" : nil),
+              ].compact.join("; ")
+            when "Hke::Relation"
+              [
+                "קשר: #{details["relation_of_deceased_to_contact"]}",
+                "Contact: #{details["contact_person_id"]}",
+                "Deceased: #{details["deceased_person_id"]}",
+              ].join("; ")
+            when "Hke::FutureMessage"
+              lines = []
+              lines << diff_line.call(:send_date, details["send_date"])
+              lines << diff_line.call(:delivery_method, details["delivery_method"])
+              lines << diff_line.call(:email, details["email"])
+              lines << diff_line.call(:phone, details["phone"])
+        
+              lines.compact.join(" | ").presence ||
+                details.map { |k, v| "#{h k}: #{h v}" }.join(" | ")
+            when "Hke::SentMessage"
+              [
+                (
+                  if details["full_message"].present?
+                    "הודעה: #{h details["full_message"]}"
+                  end
+                ),
+                ("טלפון: #{h details["phone"]}" if details["phone"].present?),
+              ].compact.join(" | ")
+            else
+              details.map { |k, v| "<strong>#{h k}:</strong> #{h v}" }.join("<br>")
+            end
           end %>
+
         <tr>
-          <td class="col-date"><%= log.event_time.strftime("%H:%M:%S.%L %m/%d ") %></td>
+          <td class="col-date"><%= log.event_time.strftime("%H:%M:%S.%L %m/%d") %></td>
           <td class="col-event"><%= log.event_type %></td>
           <td class="col-entity"><%= [log.entity_type&.demodulize, log.entity_id].compact.join("#") %></td>
-          <td><%= human_details.html_safe %></td>
+          <td><%= human_details.to_s.html_safe %></td>
         </tr>
+
       <% end %>
     </tbody>
   </table>
 </div>
-
