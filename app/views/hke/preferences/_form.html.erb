@@ -3,14 +3,24 @@
 <% is_community = controller.is_a?(Hke::CommunityPreferencesController) %>
 <% if is_community %>
   <% system_preferring = Hke::System.first %>
-  <% system_preference = system_preferring&.preference || system_preferring&.build_preference %>
+  <% system_preference =
+    system_preferring&.preference || system_preferring&.build_preference %>
 <% end %>
 
 <%= form_with model: preference,
       url: (controller.is_a?(Hke::SystemPreferencesController) ?
               hke_system_preferences_path :
               hke_community_preferences_path),
-      method: :patch do |f| %>
+      method: :patch,
+      data: {
+        controller: "pref-confirm",
+        action: "submit->pref-confirm#submit",
+        pref_confirm_impact_url_value: (
+          controller.is_a?(Hke::SystemPreferencesController) ?
+            impact_preview_hke_system_preferences_path :
+            impact_preview_hke_community_preferences_path
+        )
+      }  do |f| %>
 
   <% object_name = f.object_name %>
 
@@ -28,122 +38,142 @@
   <% end %>
 
   <div class="space-y-8">
-
+    <!-- ================= SCHEDULE ================= -->
     <section class="space-y-4">
       <h2 class="text-lg font-semibold"><%= t("hke.preferences.sections.schedule") %></h2>
 
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
-          <%= f.label :daily_sweep_job_time, t("hke.preferences.labels.daily_sweep_job_time"), class: "block text-sm font-medium mb-1" %>
-          <%= f.time_field :daily_sweep_job_time, class: "block w-full rounded-md border px-3 py-2" %>
+          <%= f.label :daily_sweep_job_time,
+                  t("hke.preferences.labels.daily_sweep_job_time"),
+                  class: "block text-sm font-medium mb-1" %>
+          <%= f.time_field :daily_sweep_job_time,
+                       class: "block w-full rounded-md border px-3 py-2" %>
 
           <% if is_community && system_preference.present? %>
             <div class="text-xs text-gray-500">
-              <%= t("hke.preferences.help.system_default_prefix",
-                    value: (system_preference.daily_sweep_job_time.present? ?
-                      l(system_preference.daily_sweep_job_time, format: :time) : "")) %>
+              <%= t(
+                "hke.preferences.help.system_default_prefix",
+                value:
+                  (
+                    if system_preference.daily_sweep_job_time.present?
+                      l(system_preference.daily_sweep_job_time, format: :time)
+                    else
+                      ""
+                    end
+                  ),
+              ) %>
             </div>
           <% end %>
         </div>
 
         <div>
-          <%= f.label :send_window_start_time, t("hke.preferences.labels.send_window_start_time"), class: "block text-sm font-medium mb-1" %>
-          <%= f.time_field :send_window_start_time, class: "block w-full rounded-md border px-3 py-2" %>
+          <%= f.label :send_window_start_time,
+                  t("hke.preferences.labels.send_window_start_time"),
+                  class: "block text-sm font-medium mb-1" %>
+          <%= f.time_field :send_window_start_time,
+                       class: "block w-full rounded-md border px-3 py-2" %>
 
           <% if is_community && system_preference.present? %>
             <div class="text-xs text-gray-500">
-              <%= t("hke.preferences.help.system_default_prefix",
-                    value: (system_preference.send_window_start_time.present? ?
-                      l(system_preference.send_window_start_time, format: :time) : "")) %>
+              <%= t(
+                "hke.preferences.help.system_default_prefix",
+                value:
+                  (
+                    if system_preference.send_window_start_time.present?
+                      l(system_preference.send_window_start_time, format: :time)
+                    else
+                      ""
+                    end
+                  ),
+              ) %>
             </div>
           <% end %>
         </div>
       </div>
     </section>
-
+    <!-- ================= DAYS BEFORE ================= -->
     <section class="space-y-4">
       <h2 class="text-lg font-semibold"><%= t("hke.preferences.sections.days_before") %></h2>
-      <p class="text-sm text-gray-600"><%= t("hke.preferences.help.days_before_rules") %></p>
 
-      <% days_values = Array(preference.how_many_days_before_yahrzeit_to_send_message).first(4) %>
+      <% days_values =
+        Array(preference.how_many_days_before_yahrzeit_to_send_message).first(4) %>
       <% days_values += [nil] * (4 - days_values.length) %>
 
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-				<% 4.times do |i| %>
-					<div>
-						<%= f.label :"how_many_days_before_yahrzeit_to_send_message_#{i}",
-									t("hke.preferences.labels.days_before_#{i+1}"),
-									class: "block text-sm font-medium mb-1" %>
+        <% 4.times do |i| %>
+          <div>
+            <%= f.label :"how_many_days_before_yahrzeit_to_send_message_#{i}",
+                    t("hke.preferences.labels.days_before_#{i + 1}"),
+                    class: "block text-sm font-medium mb-1" %>
 
-						<%= f.number_field :how_many_days_before_yahrzeit_to_send_message,
-									name: "#{object_name}[how_many_days_before_yahrzeit_to_send_message][]",
-									value: days_values[i],
-									class: "block w-full rounded-md border px-3 py-2" %>
-					</div>
-				<% end %>
-
-      </div>
-
-      <% if is_community && system_preference.present? %>
-        <% system_days = Array(system_preference.how_many_days_before_yahrzeit_to_send_message).compact.join(", ") %>
-        <div class="text-xs text-gray-500">
-          <%= t("hke.preferences.help.system_default_prefix", value: system_days) %>
-        </div>
-      <% end %>
-    </section>
-
-    <section class="space-y-4">
-			<h2 class="text-lg font-semibold"><%= t("hke.preferences.sections.delivery") %></h2>
-
-			<% delivery_values = Array(preference.delivery_priority).first(3) %>
-			<% delivery_values += [nil] * (3 - delivery_values.length) %>
-			<% delivery_options = [[t("hke.preferences.labels.none"), ""], ["SMS","sms"], ["WhatsApp","whatsapp"], [t("hke.preferences.labels.email"),"email"]] %>
-
-			<div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-				<% 3.times do |i| %>
-					<div>
-						<%= f.label :"delivery_priority_#{i}",
-									t("hke.preferences.labels.priority_#{i+1}"),
-									class: "block text-sm font-medium mb-1" %>
-
-						<%= f.select :delivery_priority,
-									options_for_select(delivery_options, delivery_values[i]),
-									{},
-									name: "#{object_name}[delivery_priority][]",
-									class: "block w-full rounded-md border px-3 py-2" %>
-					</div>
-				<% end %>
-			</div>
-		</section>
-
-
-    <section class="space-y-4">
-      <h2 class="text-lg font-semibold"><%= t("hke.preferences.sections.options") %></h2>
-
-      <div class="space-y-3">
-        <div class="flex items-center gap-2">
-          <%= f.check_box :attempt_to_resend_if_no_sent_on_time %>
-          <%= f.label :attempt_to_resend_if_no_sent_on_time, t("hke.preferences.labels.attempt_resend") %>
-        </div>
-
-        <div class="flex items-center gap-2">
-          <%= f.check_box :enable_fallback_delivery_method %>
-          <%= f.label :enable_fallback_delivery_method, t("hke.preferences.labels.fallback") %>
-        </div>
+            <%= f.number_field :how_many_days_before_yahrzeit_to_send_message,
+                           name:
+                             "#{object_name}[how_many_days_before_yahrzeit_to_send_message][]",
+                           value: days_values[i],
+                           class: "block w-full rounded-md border px-3 py-2" %>
+          </div>
+        <% end %>
       </div>
     </section>
+    <!-- ================= DELIVERY ================= -->
+    <section class="space-y-4">
+      <h2 class="text-lg font-semibold"><%= t("hke.preferences.sections.delivery") %></h2>
 
+      <% delivery_values = Array(preference.delivery_priority).first(3) %>
+      <% delivery_values += [nil] * (3 - delivery_values.length) %>
+      <% delivery_options = [
+        [t("hke.preferences.labels.none"), ""],
+        %w[SMS sms],
+        %w[WhatsApp whatsapp],
+        [t("hke.preferences.labels.email"), "email"],
+      ] %>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <% 3.times do |i| %>
+          <div>
+            <%= f.label :"delivery_priority_#{i}",
+                    t("hke.preferences.labels.priority_#{i + 1}"),
+                    class: "block text-sm font-medium mb-1" %>
+
+            <%= f.select :delivery_priority,
+                     options_for_select(delivery_options, delivery_values[i]),
+                     {},
+                     name: "#{object_name}[delivery_priority][]",
+                     class: "block w-full rounded-md border px-3 py-2" %>
+          </div>
+        <% end %>
+      </div>
+    </section>
+    <!-- ================= OPTIONS ================= -->
+    <section class="space-y-4">
+      <div class="flex items-center gap-2">
+        <%= f.check_box :attempt_to_resend_if_no_sent_on_time %>
+        <%= f.label :attempt_to_resend_if_no_sent_on_time,
+                t("hke.preferences.labels.attempt_resend") %>
+      </div>
+
+      <div class="flex items-center gap-2">
+        <%= f.check_box :enable_fallback_delivery_method %>
+        <%= f.label :enable_fallback_delivery_method, t("hke.preferences.labels.fallback") %>
+      </div>
+    </section>
+    <!-- ================= BUTTONS ================= -->
     <div class="pt-4 border-t">
       <div class="flex items-center gap-3">
         <%= f.submit t("hke.preferences.buttons.save"),
-              class: "inline-flex items-center rounded-md bg-blue-600 px-4 py-2 text-white hover:bg-blue-700" %>
+                 class:
+                   "inline-flex items-center rounded-md bg-blue-600 px-4 py-2 text-white hover:bg-blue-700" %>
 
         <%= link_to t("hke.preferences.buttons.cancel"),
-              (controller.is_a?(Hke::SystemPreferencesController) ?
-                hke_system_preferences_path :
-                hke_community_preferences_path) %>
+        (
+          if controller.is_a?(Hke::SystemPreferencesController)
+            hke_system_preferences_path
+          else
+            hke_community_preferences_path
+          end
+        ) %>
       </div>
     </div>
-
   </div>
 <% end %>

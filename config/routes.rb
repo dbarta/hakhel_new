@@ -29,25 +29,30 @@ Rails.application.routes.draw do
     end
 
     # Community Admin Routes
-	    resource :system_preferences, only: [:show, :edit, :update, :destroy]
-	    resource :community_preferences, only: [:show, :edit, :update, :destroy]
+    resource :system_preferences, only: [:show, :edit, :update, :destroy] do
+      patch :impact_preview, on: :collection
+    end
+
+    resource :community_preferences, only: [:show, :edit, :update, :destroy] do
+      patch :impact_preview, on: :collection
+    end
 
     resources :logs, only: [:index]
     resources :cemeteries
     resources :communities, only: [:show, :edit, :update]
 
-	    resources :future_messages do
-	      member do
-	        post :blast
-	        post :toggle_approval
-	      end
-	      collection do
-	        get :approve
-	        post :bulk_approve
-	        post :approve_all
-	        post :disapprove_all
-	      end
-	    end
+    resources :future_messages do
+      member do
+        post :blast
+        post :toggle_approval
+      end
+      collection do
+        get :approve
+        post :bulk_approve
+        post :approve_all
+        post :disapprove_all
+      end
+    end
 
     resources :csv_imports, only: [:new, :create, :show, :index, :destroy] do
       collection do
@@ -60,15 +65,15 @@ Rails.application.routes.draw do
 
     resources :contact_people do
       collection do
-	        post :import_csv
-	      end
-	    end
+        post :import_csv
+      end
+    end
 
     resources :deceased_people do
       collection do
-	        post :import_csv
-	    end
-	  end
+        post :import_csv
+      end
+    end
 
     namespace :api, defaults: {format: :json} do
       namespace :v1 do

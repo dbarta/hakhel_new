@@ -5,11 +5,11 @@ class Hke::SystemPreferencesController < Hke::PreferencesBaseController
   protected
 
   def after_update_path
-		hke_system_preferences_path
+    hke_system_preferences_path
   end
 
   def after_destroy_path
-		hke_system_preferences_path
+    hke_system_preferences_path
   end
 
   private

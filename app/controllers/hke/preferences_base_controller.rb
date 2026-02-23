@@ -2,7 +2,6 @@ class Hke::PreferencesBaseController < ApplicationController
   # This controller is not intended to be routed directly.
   # Subclasses must set @preferring.
 
-
   before_action :set_preference
 
   def show
@@ -24,6 +23,24 @@ class Hke::PreferencesBaseController < ApplicationController
   def destroy
     @preference.destroy if @preference.persisted?
     redirect_to after_destroy_path
+  end
+
+  # ---------- NEW ----------
+  # Preview how many FutureMessages will be impacted by this change
+  def impact_preview
+    raise NotImplementedError, "Subclasses must set @preferring" if @preferring.nil?
+
+    pref = @preferring.preference || @preferring.build_preference
+    pref.assign_attributes(pref_params)
+
+    impact =
+      if pref.send(:impactful_rebuild_change?)
+        pref.send(:rebuild_impact_count)
+      else
+        0
+      end
+
+    render json: {impact_count: impact}
   end
 
   protected

@@ -143,7 +143,8 @@ module Hke
     ].freeze
 
     def impactful_rebuild_change?
-      (saved_changes.keys & IMPACT_FIELDS).any?
+      puts "@@@@@@@@@@@@@@@@ in impactful_rebuild_change? keys: #{changes_to_save.keys} IMPACT_FIELDS: #{IMPACT_FIELDS}"
+      (changes_to_save.keys & IMPACT_FIELDS).any?
     end
 
     def rebuild_scope_descriptor
@@ -160,16 +161,28 @@ module Hke
     end
 
     def rebuild_impact_count
-      case preferring
-      when Hke::Relation
-        preferring.future_messages.count
-      when Hke::Community
-        Hke::FutureMessage.where(community_id: preferring.id).count
-      when Hke::System
-        Hke::FutureMessage.count
-      else
-        0
+      counter = lambda do
+        case preferring
+        when Hke::Relation
+          preferring.future_messages.count
+        when Hke::Community
+          Hke::FutureMessage.where(community_id: preferring.id).count
+        when Hke::System
+          Hke::FutureMessage.count
+        else
+          0
+        end
       end
+
+      # Hke::* records are tenant-scoped via ActsAsTenant. For an impact preview/count we
+      # want to be independent of the current tenant (especially for system prefs).
+      count = if defined?(ActsAsTenant) && ActsAsTenant.respond_to?(:without_tenant)
+        ActsAsTenant.without_tenant { counter.call }
+      else
+        counter.call
+      end
+      puts "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ in rebuild_impact_count, prefering: #{preferring}, count = #{count}"
+      count
     end
 
     # -------------------------
