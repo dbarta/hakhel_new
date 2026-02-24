@@ -902,6 +902,22 @@ he:
 
   hke:
     logs:
+      index:
+        title:
+          zero: "אין אירועים ביומן"
+          one: "יש אירוע אחד מ-%{from_date} ועד היום"
+          other: "יש %{count} אירועים מ-%{from_date} ועד היום"
+        clear_all: "מחק את כל היומן"
+        clear_all_confirm: "האם למחוק את כל רשומות היומן?"
+        cleared:
+          zero: "אין רשומות למחיקה"
+          one: "נמחקה רשומה אחת"
+          other: "נמחקו %{count} רשומות"
+        filter_event_type: "סנן לפי אירוע"
+        filter_entity_type: "סנן לפי ישות"
+        filter_all: "הכל"
+        per_page: "שורות בעמוד"
+        per_page_all: "הכל"
       change_old:
         m: "%{label} ישן"
         f: "%{label} ישנה"

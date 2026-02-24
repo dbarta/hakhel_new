@@ -10,7 +10,7 @@ module Hke
       def show
         # Check authorization manually for dashboard
         unless current_user.system_admin?
-          redirect_to root_path, alert: t('admin.dashboard.access_denied')
+          redirect_to root_path, alert: t("admin.dashboard.access_denied")
           return
         end
 
@@ -25,8 +25,10 @@ module Hke
         thirty_days_ago = 30.days.ago
         thirty_days_from_now = 30.days.from_now
 
-        @messages_sent_30_days = Hke::SentMessage.where(created_at: thirty_days_ago..Time.current).count
-        @messages_to_send_30_days = Hke::FutureMessage.where(send_date: Time.current..thirty_days_from_now).count
+        ActsAsTenant.without_tenant do
+          @messages_sent_30_days = Hke::SentMessage.where(created_at: thirty_days_ago..Time.current).count
+          @messages_to_send_30_days = Hke::FutureMessage.where(send_date: Time.current..thirty_days_from_now).count
+        end
       end
 
       def switch_to_community
@@ -39,10 +41,10 @@ module Hke
         if community_id.present?
           community = Hke::Community.find(community_id)
           session[:selected_community_id] = community.id
-	          redirect_to hke_root_path #, notice: t('admin.dashboard.community_switching.switched_to_community', community: community.name)
+          redirect_to hke_root_path # , notice: t('admin.dashboard.community_switching.switched_to_community', community: community.name)
         else
           session[:selected_community_id] = nil
-	          redirect_to hke_admin_root_path #, notice: t('admin.dashboard.community_switching.returned_to_system_admin')
+          redirect_to hke_admin_root_path # , notice: t('admin.dashboard.community_switching.returned_to_system_admin')
         end
       end
     end

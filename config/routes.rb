@@ -37,7 +37,11 @@ Rails.application.routes.draw do
       patch :impact_preview, on: :collection
     end
 
-    resources :logs, only: [:index]
+    resources :logs, only: [:index] do
+      collection do
+        delete :destroy_all
+      end
+    end
     resources :cemeteries
     resources :communities, only: [:show, :edit, :update]
 

@@ -20,6 +20,85 @@
 </style>
 
 <div style="padding-left: 1rem; padding-right: 1rem;">
+  <div
+    class="
+      flex flex-col gap-4 md:flex-row md:items-center md:justify-between mb-4
+    "
+  >
+    <h1 class="text-xl font-bold">
+      <%= t(
+        "hke.logs.index.title",
+        count: @total_count,
+        from_date: @earliest_date ? l(@earliest_date, format: "%d/%m/%Y") : "—",
+      ) %>
+    </h1>
+    <% if @total_count > 0 %>
+      <%= link_to t("hke.logs.index.clear_all"),
+      destroy_all_hke_logs_path,
+      class:
+        "px-4 py-2 bg-red-600 text-white rounded-md text-sm font-medium hover:bg-red-700 whitespace-nowrap",
+      data: {
+        turbo_method: :delete,
+        turbo_confirm: t("hke.logs.index.clear_all_confirm"),
+      } %>
+    <% end %>
+  </div>
+
+  <%# ---- Filters bar ---- %>
+  <%= form_tag(request.path, method: :get, class: "flex flex-wrap items-end gap-4 mb-4 text-sm", dir: "rtl", data: { turbo: false }) do %>
+    <%# Preserve sort params as hidden fields %>
+    <%= hidden_field_tag :sort, params[:sort] if params[:sort].present? %>
+    <%= hidden_field_tag :direction, params[:direction] if params[:direction].present? %>
+    <%= hidden_field_tag :start, params[:start] if params[:start].present? %>
+    <%= hidden_field_tag :end, params[:end] if params[:end].present? %>
+
+    <%# Event-type filter %>
+    <div>
+      <label class="block text-xs font-medium text-gray-600 mb-1"><%= t("hke.logs.index.filter_event_type") %></label>
+      <select
+        name="event_type"
+        class="border rounded px-2 py-1 text-sm"
+        onchange="this.form.submit()"
+      >
+        <option value=""><%= t("hke.logs.index.filter_all") %></option>
+        <% @event_types.each do |et| %>
+          <option value="<%= et %>" <%= "selected" if params[:event_type] == et %>><%= et %></option>
+        <% end %>
+      </select>
+    </div>
+
+    <%# Entity-type filter %>
+    <div>
+      <label class="block text-xs font-medium text-gray-600 mb-1"><%= t("hke.logs.index.filter_entity_type") %></label>
+      <select
+        name="entity_type"
+        class="border rounded px-2 py-1 text-sm"
+        onchange="this.form.submit()"
+      >
+        <option value=""><%= t("hke.logs.index.filter_all") %></option>
+        <% @entity_types.each do |et| %>
+          <option value="<%= et %>" <%= "selected" if params[:entity_type] == et %>><%= et.demodulize %></option>
+        <% end %>
+      </select>
+    </div>
+
+    <%# Per-page selector %>
+    <div>
+      <label class="block text-xs font-medium text-gray-600 mb-1"><%= t("hke.logs.index.per_page") %></label>
+      <select
+        name="per_page"
+        class="border rounded px-2 py-1 text-sm"
+        onchange="this.form.submit()"
+      >
+        <% %w[50 100 250 500 all].each do |n| %>
+          <option value="<%= n %>" <%= "selected" if @per_page.to_s == n %>>
+            <%= n == "all" ? t("hke.logs.index.per_page_all") : n %>
+          </option>
+        <% end %>
+      </select>
+    </div>
+  <% end %>
+
   <table class="hke-log-table text-sm">
     <thead class="bg-gray-100">
       <tr>
@@ -129,4 +208,10 @@
       <% end %>
     </tbody>
   </table>
+
+  <% if @pagy.last > 1 %>
+    <div class="text-center mt-8">
+      <%== @pagy.series_nav %>
+    </div>
+  <% end %>
 </div>

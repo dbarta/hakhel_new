@@ -1,5 +1,7 @@
 module Hke
   class Preference < ApplicationRecord
+    include Hke::LogModelEvents
+
     belongs_to :preferring, polymorphic: true
 
     validate :validate_time_presence_for_system
@@ -11,6 +13,25 @@ module Hke
     after_commit :reschedule_community_sweep, if: :community_pref?
 
     private
+
+    # Override LogModelEvents to supply the correct community_id.
+    # System prefs have no tenant set, so we must resolve it explicitly.
+    def log_model_event(event_type, data)
+      cid = case preferring
+      when Hke::Community then preferring.id
+      when Hke::Relation then preferring.community_id
+      end
+      # For system prefs cid is nil — log once per community so each sees it.
+      if cid
+        Hke::Logger.log(event_type: event_type, entity: self, community_id: cid, details: data)
+      else
+        ActsAsTenant.without_tenant do
+          Hke::Community.pluck(:id, :name).each do |id, _name|
+            Hke::Logger.log(event_type: event_type, entity: self, community_id: id, details: data)
+          end
+        end
+      end
+    end
 
     # ---------- TYPE ----------
 
@@ -161,32 +182,38 @@ module Hke
     end
 
     def rebuild_impact_count
-      counter = lambda do
+      ActsAsTenant.without_tenant do
         case preferring
         when Hke::Relation
           preferring.future_messages.count
         when Hke::Community
-          Hke::FutureMessage.where(community_id: preferring.id).count
+          # Only count if effective value actually changes
+          system_pref = Hke::System.first&.preference
+          changed_impact = changes_to_save.keys & IMPACT_FIELDS
+          actually_changed = changed_impact.select do |field|
+            old_val = public_send("#{field}_was")
+            new_val = public_send(field)
+            effective_old = value_present?(old_val) ? old_val : system_pref&.public_send(field)
+            effective_new = value_present?(new_val) ? new_val : system_pref&.public_send(field)
+            effective_old != effective_new
+          end
+          actually_changed.any? ? Hke::FutureMessage.where(community_id: preferring.id).count : 0
         when Hke::System
-          Hke::FutureMessage.count
+          # Only count FutureMessages in communities that inherit the changed fields
+          changed_impact = changes_to_save.keys & IMPACT_FIELDS
+          affected_community_ids = Hke::Community.pluck(:id).select do |cid|
+            community_pref = Hke::Preference.find_by(preferring_type: "Hke::Community", preferring_id: cid)
+            changed_impact.any? { |f| !value_present?(community_pref&.public_send(f)) }
+          end
+          affected_community_ids.any? ? Hke::FutureMessage.where(community_id: affected_community_ids).count : 0
         else
           0
         end
       end
-
-      # Hke::* records are tenant-scoped via ActsAsTenant. For an impact preview/count we
-      # want to be independent of the current tenant (especially for system prefs).
-      count = if defined?(ActsAsTenant) && ActsAsTenant.respond_to?(:without_tenant)
-        ActsAsTenant.without_tenant { counter.call }
-      else
-        counter.call
-      end
-      puts "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ in rebuild_impact_count, prefering: #{preferring}, count = #{count}"
-      count
     end
 
     # -------------------------
-    # DEBUGGED handler
+    # after_commit handler
     # -------------------------
 
     def handle_operational_changes
@@ -194,11 +221,21 @@ module Hke
       changed = previous_changes.keys
       puts "=== PREF changed keys: #{changed.inspect}"
 
-      # ---- rebuild ----
-      if (changed & IMPACT_FIELDS).any?
-        mode, id = rebuild_scope_descriptor
-        puts "=== PREF enqueue rebuild #{mode}/#{id}"
-        Hke::FutureMessageRebuildJob.perform_async(mode, id) if mode
+      changed_impact = changed & IMPACT_FIELDS
+      if changed_impact.any?
+        case preferring
+        when Hke::System
+          enqueue_system_rebuild_selectively(changed_impact)
+        when Hke::Community
+          enqueue_community_rebuild_selectively(changed_impact)
+        when Hke::Relation
+          Hke::FutureMessageRebuildJob.perform_async("relation", preferring.id)
+          log_rebuild_decision(
+            community: preferring.community,
+            decision: "rebuild",
+            reason: "relation preference changed: #{changed_impact.join(", ")}"
+          )
+        end
       end
 
       # ---- reschedule sweep ----
@@ -207,12 +244,110 @@ module Hke
 
         case preferring
         when Hke::Community
-          puts "=== PREF calling schedule_daily_job for community #{preferring.id}"
           preferring.send(:schedule_daily_job)
         when Hke::System
-          puts "=== PREF system sweep change — rescheduling ALL communities"
           Hke::Community.find_each { |c| c.send(:schedule_daily_job) }
         end
+      end
+    end
+
+    # When a system pref changes, only rebuild communities whose effective
+    # value actually changes (i.e. the community does NOT override the field).
+    def enqueue_system_rebuild_selectively(changed_fields)
+      ActsAsTenant.without_tenant do
+        Hke::Community.find_each do |community|
+          community_pref = Hke::Preference.find_by(preferring: community)
+
+          # A community is affected if, for ANY changed impact field,
+          # its own preference is nil (meaning it inherits from system).
+          overridden_fields = []
+          inherited_fields = []
+
+          changed_fields.each do |field|
+            community_val = community_pref&.public_send(field)
+            if community_val.present?
+              overridden_fields << field
+            else
+              inherited_fields << field
+            end
+          end
+
+          if inherited_fields.any?
+            Hke::FutureMessageRebuildJob.perform_async("community", community.id)
+            log_rebuild_decision(
+              community: community,
+              decision: "rebuild",
+              reason: "system pref changed #{inherited_fields.join(", ")}; " \
+                      "community inherits these (no local override)"
+            )
+          else
+            log_rebuild_decision(
+              community: community,
+              decision: "skip",
+              reason: "system pref changed #{changed_fields.join(", ")}; " \
+                      "community overrides all: #{overridden_fields.join(", ")}"
+            )
+          end
+        end
+      end
+    end
+
+    # When a community pref changes, only rebuild if the effective value
+    # actually changed. If the community value was already overriding the
+    # system value, and the new value is different, rebuild. If the community
+    # clears a field (sets to nil), the effective value now falls through to
+    # system — that's also a change worth rebuilding.
+    def enqueue_community_rebuild_selectively(changed_fields)
+      system_pref = Hke::System.first&.preference
+
+      actually_changed = changed_fields.select do |field|
+        old_val, new_val = previous_changes[field]
+        # Effective old = old_val if present, else system fallback
+        effective_old = value_present?(old_val) ? old_val : system_pref&.public_send(field)
+        # Effective new = new_val if present, else system fallback
+        effective_new = value_present?(new_val) ? new_val : system_pref&.public_send(field)
+        effective_old != effective_new
+      end
+
+      if actually_changed.any?
+        Hke::FutureMessageRebuildJob.perform_async("community", preferring.id)
+        log_rebuild_decision(
+          community: preferring,
+          decision: "rebuild",
+          reason: "community pref changed #{actually_changed.join(", ")}; " \
+                  "effective value differs from before"
+        )
+      else
+        log_rebuild_decision(
+          community: preferring,
+          decision: "skip",
+          reason: "community pref changed #{changed_fields.join(", ")}; " \
+                  "effective value unchanged (same as system default)"
+        )
+      end
+    end
+
+    def value_present?(val)
+      return false if val.nil?
+      return val.reject(&:blank?).any? if val.is_a?(Array)
+      val.present?
+    end
+
+    def log_rebuild_decision(community:, decision:, reason:)
+      puts "=== PREF rebuild #{decision} for community #{community&.id}: #{reason}"
+      ActsAsTenant.without_tenant do
+        Hke::Logger.log(
+          event_type: "pref_rebuild_decision",
+          entity: self,
+          community_id: community&.id,
+          details: {
+            decision: decision,
+            community_id: community&.id,
+            community_name: community&.name,
+            preferring_type: preferring_type,
+            reason: reason
+          }
+        )
       end
     end
 

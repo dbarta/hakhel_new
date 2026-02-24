@@ -2,13 +2,17 @@ module Hke
   class LogPolicy < ApplicationPolicy
     # Logs can be viewed by system admins and community admins
     # Community admins can only view logs for their community
-    
+
     def index?
       user.system_admin? || user.community_admin?
     end
 
     def show?
       user.system_admin? || (user.community_admin? && same_community?)
+    end
+
+    def destroy_all?
+      user.system_admin? || user.community_admin?
     end
 
     class Scope < Scope
@@ -25,4 +29,3 @@ module Hke
     end
   end
 end
-

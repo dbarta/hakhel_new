@@ -1,12 +1,12 @@
 module Hke
   class Logger
-    def self.log(event_type:, entity: nil, message_token: nil, details: {}, error: nil, event_time: Time.current)
+    def self.log(event_type:, entity: nil, message_token: nil, details: {}, error: nil, event_time: Time.current, community_id: nil)
       Hke::Log.create!(
         event_type: event_type,
         entity_type: entity&.class&.name,
         entity_id: entity&.id,
         user_id: Current.user&.id,
-        community_id: ActsAsTenant.current_tenant&.id,
+        community_id: community_id || ActsAsTenant.current_tenant&.id,
         # ip_address:     Current.request&.ip,
         message_token: message_token,
         event_time: event_time,

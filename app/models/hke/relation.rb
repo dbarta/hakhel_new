@@ -9,6 +9,7 @@ module Hke
     belongs_to :deceased_person
     belongs_to :contact_person
     has_many :future_messages, as: :messageable, dependent: :destroy
+    has_many :sent_messages, as: :messageable
     has_many :relations_selections
     has_many :selections, through: :relations_selections
     has_one :preference, as: :preferring, dependent: :destroy
@@ -121,11 +122,18 @@ module Hke
 
     def next_send_date_from_offsets(name, hm, hd, yahrzeit_date, offsets)
       today = Time.zone.today
-      candidate = offsets.sort.map { |d| yahrzeit_date - d.days }.find { |dt| dt >= today }
+
+      # If a message was already sent today, don't schedule another for today
+      already_sent_today = sent_messages
+        .where(send_date: today.beginning_of_day..today.end_of_day)
+        .exists?
+      min_date = already_sent_today ? today.tomorrow : today
+
+      candidate = offsets.sort.map { |d| yahrzeit_date - d.days }.find { |dt| dt >= min_date }
       return candidate if candidate
 
       next_yahrzeit = calculate_yahrzeit_date(name, hm, hd).next_year
-      offsets.sort.map { |d| next_yahrzeit - d.days }.find { |dt| dt >= today } || today
+      offsets.sort.map { |d| next_yahrzeit - d.days }.find { |dt| dt >= min_date } || min_date
     end
 
     def calculate_yahrzeit_date(name, hm, hd)
