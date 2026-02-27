@@ -4,7 +4,7 @@ require_relative "support/api_seeds_executor"
 
 include Hke::Loggable
 
-max_num_people = (ARGV.length > 0) ? ARGV[0].to_i : 1000
+max_num_people = ENV["MAX_IMPORT_ROWS"].present? ? ENV["MAX_IMPORT_ROWS"].to_i : 1000
 init_logging "api_import_csv"
 log_info "@@@ Running script/hke/import_from_csv.rb. Setting locale to :he. Importing no more than #{max_num_people} deceased people."
 
