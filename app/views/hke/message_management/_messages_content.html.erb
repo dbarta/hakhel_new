@@ -1,0 +1,6 @@
+<% if tab == 'sent' %>
+  <%= render partial: "messages_table", locals: { messages: sent_messages } %>
+<% else %>
+  <%= render partial: "not_sent_table", locals: { messages: not_sent_messages } %>
+<% end %>
+

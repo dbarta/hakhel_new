@@ -29,7 +29,7 @@ module Hke
 
     def show_community_admin_dashboard
       # Get time filter from params, default to one week
-      @time_filter = params[:time_filter] || 'one_week'
+      @time_filter = params[:time_filter] || "one_week"
 
       # Get messages based on time filter using same logic as future_messages controller
       @messages = get_filtered_messages(@time_filter)
@@ -43,37 +43,36 @@ module Hke
         pending_this_week: @messages.pending_approval.count
       }
 
-      respond_to do |format|
-        format.html { render 'show_community_admin' }
-        format.turbo_stream do
-          render turbo_stream: [
-            turbo_stream.update("stats_line",
-              partial: "stats_line",
-              locals: { messages: @messages, time_filter: @time_filter }
-            ),
-            turbo_stream.update("messages_table",
-              partial: "messages_approval_table",
-              locals: { messages: @messages, time_filter: @time_filter }
-            )
-          ]
-        end
+      # Only respond with turbo_stream for explicit filter changes (time_filter param present).
+      # Full page navigation (e.g. after login redirect) must always get HTML.
+      if params[:time_filter].present? && request.format.turbo_stream?
+        render turbo_stream: [
+          turbo_stream.update("stats_line",
+            partial: "stats_line",
+            locals: {messages: @messages, time_filter: @time_filter}),
+          turbo_stream.update("messages_table",
+            partial: "messages_approval_table",
+            locals: {messages: @messages, time_filter: @time_filter})
+        ]
+      else
+        render "show_community_admin"
       end
     end
 
     def show_community_user_dashboard
       # Future implementation for community users
-      render 'show_community_user'
+      render "show_community_user"
     end
 
     private
 
     def get_filtered_messages(time_filter)
       case time_filter
-      when 'one_week'
+      when "one_week"
         Hke::FutureMessage.where(send_date: Date.current..1.week.from_now).order(:send_date)
-      when 'two_weeks'
+      when "two_weeks"
         Hke::FutureMessage.where(send_date: Date.current..2.weeks.from_now).order(:send_date)
-      when 'one_month'
+      when "one_month"
         Hke::FutureMessage.where(send_date: Date.current..1.month.from_now).order(:send_date)
       else
         Hke::FutureMessage.order(:send_date)

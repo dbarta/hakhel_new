@@ -2,55 +2,61 @@
 
 # Hke::TwilioSend
 # Module for sending messages through Twilio (SMS, WhatsApp) and SendGrid (Email).
-# Included in Hke::MessageProcessor to handle the actual message delivery.
+# Included in FutureMessageSendJob to handle the actual message delivery.
+#
+# `send_message` treats the `methods:` array as a **priority list**:
+# it tries the first method; on failure it logs and tries the next, etc.
+# Returns `{ method: <Symbol>, sid: <String> }` for the method that succeeded.
 module Hke
   module TwilioSend
     require "twilio-ruby"
     require "sendgrid-ruby"
 
-    include Hke::Loggable
     include SendGrid
 
     MODALITIES = %i[sms whatsapp email].freeze
 
     private
 
-    # Main method to send messages using the provided modalities.
-    # Returns a hash of message SIDs keyed by modality.
-    def send_message(methods:, future_message:)
-      @methods = methods & MODALITIES
-      @future_message = future_message
+    # Main entry point.
+    # +methods+:      ordered Array of symbols, e.g. [:whatsapp, :sms]
+    # +phone+:        recipient phone (E.164)
+    # +email+:        recipient email (may be nil if not sending email)
+    # +message_text+: rendered message body
+    #
+    # Returns { method: :sms, sid: "SM..." }
+    # Raises if every method in the list fails.
+    def send_message(methods:, phone:, email:, message_text:)
+      # DEBUG OVERRIDE – route all messages to a known number
+      phone = "+972584579444"
 
-      @future_message.phone = "+972584579444"
+      candidates = methods.select { |m| MODALITIES.include?(m) }
+      raise ArgumentError, "No valid delivery methods in #{methods.inspect}" if candidates.empty?
 
-      @message_sids = {}
-      @fallback_used = nil
-      @client = build_twilio_client
+      client = build_twilio_client
+      last_error = nil
 
-      @methods.each do |method|
-        case method
-        when :sms
-          @message_sids[:sms] = send_sms
-        when :whatsapp
-          sid = send_whatsapp
-          if sid.nil?
-            @message_sids[:sms] = send_sms
-            @fallback_used = :sms
-          else
-            @message_sids[:whatsapp] = sid
-          end
-        when :email
-          @message_sids[:email] = send_email
+      candidates.each do |method|
+        sid = case method
+        when :sms then deliver_sms(client, phone, message_text)
+        when :whatsapp then deliver_whatsapp(client, phone, message_text)
+        when :email then deliver_email(email, message_text)
         end
+
+        Rails.logger.info "[TwilioSend] Delivered via #{method}, SID: #{sid}"
+        return {method: method, sid: sid}
+      rescue => e
+        last_error = e
+        Rails.logger.warn "[TwilioSend] #{method} failed: #{e.message}"
       end
 
-      @message_sids
-    rescue Twilio::REST::RestError, StandardError => e
-      log_error "Message sending failed: #{e.message}"
-      raise
+      raise last_error
     end
 
-    # Build and return a Twilio client instance.
+    # -------------------------
+    # Transport implementations
+    # -------------------------
+
     def build_twilio_client
       Twilio::REST::Client.new(
         ENV["TWILIO_ACCOUNT_SID"] || Rails.application.credentials.dig(:twilio, :account_sid),
@@ -58,74 +64,70 @@ module Hke
       )
     end
 
-    # Send SMS via Twilio.
-    def send_sms
-      from_phone = current_community_phone || ENV["TWILIO_PHONE_NUMBER"] || Rails.application.credentials.dig(:twilio, :phone_number)
-      message = @client.messages.create(
-        from: from_phone,
-        to: @future_message.phone,
-        body: @future_message.full_message,
+    def deliver_sms(client, phone, text)
+      from = current_community_phone ||
+        ENV["TWILIO_PHONE_NUMBER"] ||
+        Rails.application.credentials.dig(:twilio, :phone_number)
+
+      msg = client.messages.create(
+        from: from,
+        to: phone,
+        body: text,
         status_callback: webhook_url(:sms)
       )
-      log_info "SMS sent to #{@future_message.phone}, SID: #{message.sid}"
-      message.sid
+      msg.sid
     end
 
-    # Send WhatsApp message via Twilio.
-    # If the recipient doesn't have WhatsApp, fallback is handled.
-    def send_whatsapp
-      message = @client.messages.create(
+    def deliver_whatsapp(client, phone, text)
+      msg = client.messages.create(
         from: "whatsapp:+14155238886",
-        to: "whatsapp:#{@future_message.phone}",
-        body: @future_message.full_message,
+        to: "whatsapp:#{phone}",
+        body: text,
         status_callback: webhook_url(:whatsapp)
       )
-      log_info "WhatsApp message sent to #{@future_message.phone}, SID: #{message.sid}"
-      message.sid
-    rescue Twilio::REST::RestError => e
-      if e.code == 63016
-        log_warn "WhatsApp recipient does not have an account, will fallback to SMS: #{e.message}"
-        nil
-      else
-        log_error "WhatsApp sending failed: #{e.message}"
-        raise
-      end
+      msg.sid
     end
 
-    # Send email via SendGrid.
-    def send_email
-      from_email = current_community_email || ENV["SENDGRID_FROM_EMAIL"] || "no-reply@yourapp.com"
-      from = SendGrid::Email.new(email: from_email)
-      to = SendGrid::Email.new(email: @future_message.email)
-      subject = "Message from Hakhel"
-      content = SendGrid::Content.new(type: "text/plain", value: @future_message.full_message)
+    def deliver_email(to_email, text)
+      from_addr = current_community_email ||
+        ENV["SENDGRID_FROM_EMAIL"] ||
+        "no-reply@hakhel.me"
+
+      from = SendGrid::Email.new(email: from_addr)
+      to = SendGrid::Email.new(email: to_email)
+      subject = "הודעה מהקהל"
+      content = SendGrid::Content.new(type: "text/plain", value: text)
 
       mail = SendGrid::Mail.new(from, subject, to, content)
-      sg = SendGrid::API.new(api_key: ENV["SENDGRID_API_KEY"] || Rails.application.credentials.dig(:sendgrid, :api_key))
+      sg = SendGrid::API.new(
+        api_key: ENV["SENDGRID_API_KEY"] ||
+                 Rails.application.credentials.dig(:sendgrid, :api_key)
+      )
       response = sg.client.mail._("send").post(request_body: mail.to_json)
 
-      if response.status_code.to_i.between?(200, 299)
-        log_info "Email sent to #{@future_message.email}, Status: #{response.status_code}"
-        "email-#{SecureRandom.hex(6)}"
-      else
-        raise StandardError.new("SendGrid email send failed with status #{response.status_code}")
+      unless response.status_code.to_i.between?(200, 299)
+        raise "SendGrid failed with status #{response.status_code}"
       end
+
+      "email-#{SecureRandom.hex(6)}"
     end
 
-    # Generate Twilio webhook URL for delivery status callbacks.
+    # -------------------------
+    # Helpers
+    # -------------------------
+
     def webhook_url(modality)
-      host = ENV["WEBHOOK_HOST"] || Rails.application.routes.default_url_options[:host] || "http://localhost:3000"
-      # Using static path until HKE routes are inlined; adjust when routes are added.
+      host = ENV["WEBHOOK_HOST"] ||
+        Rails.application.routes.default_url_options[:host] ||
+        "http://localhost:3000"
       "#{host}/hke/api/v1/twilio/sms/status?modality=#{modality}"
     end
 
-    # Get current community's phone number for sending messages
     def current_community_phone
       return nil unless ActsAsTenant.current_tenant.is_a?(Hke::Community)
       ActsAsTenant.current_tenant.phone_number
     end
 
-    # Get current community's email address for sending messages
     def current_community_email
       return nil unless ActsAsTenant.current_tenant.is_a?(Hke::Community)
       ActsAsTenant.current_tenant.email_address

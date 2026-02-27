@@ -1,21 +1,22 @@
 class User < ApplicationRecord
   include Accounts, Agreements, Authenticatable, Mentions, Notifiable, Profile, Searchable, Theme
+  include Hke::LogModelEvents
 
   # HKE roles and community association
-  ROLES = [:system_admin, :community_admin, :community_user]
   belongs_to :community, class_name: "Hke::Community", optional: true
-  before_validation { self.roles ||= {} }
 
+  before_save :clear_community_unless_needed
   validate :must_have_at_least_one_role
 
-  scope :system_admin, -> { where("roles @> ?", {system_admin: true}.to_json) }
-  scope :community_admin, -> { where("roles @> ?", {community_admin: true}.to_json) }
-  scope :community_user, -> { where("roles @> ?", {community_user: true}.to_json) }
+  scope :system_admin, -> { where(system_admin: true) }
+  scope :community_admin, -> { where(community_admin: true) }
+  scope :community_user, -> { where(community_user: true) }
 
   def must_have_at_least_one_role
-    return if roles.blank? && admin? # Allow old-style admin users for backward compatibility
-    return if roles.is_a?(Hash) && roles.values.any?
-    errors.add(:roles, "User must have at least one role assigned")
+    return if admin? # Allow old-style admin users for backward compatibility
+    unless system_admin? || community_admin? || community_user?
+      errors.add(:base, :must_have_at_least_one_role)
+    end
   end
 
   # Methods for search_results partial
@@ -43,9 +44,22 @@ class User < ApplicationRecord
     super || system_admin?
   end
 
-  ROLES.each do |role|
-    define_method("#{role}?") do
-      roles.is_a?(Hash) && (roles[role.to_s] || roles[role])
-    end
+  private
+
+  SENSITIVE_USER_FIELDS = %w[encrypted_password reset_password_token remember_token
+    invitation_token confirmation_token unlock_token otp_secret].freeze
+
+  def log_model_event(event_type, data)
+    filtered = data.except(*SENSITIVE_USER_FIELDS)
+    Hke::Logger.log(
+      event_type: event_type,
+      entity: self,
+      community_id: community_id,
+      details: filtered
+    )
+  end
+
+  def clear_community_unless_needed
+    self.community_id = nil unless community_admin? || community_user?
   end
 end

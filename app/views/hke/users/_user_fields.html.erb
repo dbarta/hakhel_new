@@ -1,0 +1,118 @@
+<% profile_mode = local_assigns.fetch(:profile_mode, false) %>
+<div data-controller="user-roles" class="text-[16px]">
+
+  <%# Avatar — shown for profile mode and edit %>
+  <% if profile_mode || @user.persisted? %>
+    <div class="flex items-center gap-4 mb-6">
+      <div class="shrink-0">
+        <% if @user.respond_to?(:avatar) && @user.avatar.attached? %>
+          <%= image_tag @user.avatar.variant(resize_to_fit: [80, 80]),
+          class: "h-20 w-20 rounded-full object-cover" %>
+        <% else %>
+          <%= image_tag AvatarHelper.avatar_url_for(@user, size: 80),
+          class: "h-20 w-20 rounded-full object-cover" %>
+        <% end %>
+      </div>
+      <div>
+        <%= form.label :avatar, "תמונת פרופיל", class: "text-sm block mb-1" %>
+        <%= form.file_field :avatar,
+                        accept: "image/*",
+                        class:
+                          "text-sm text-gray-500 file:mr-4 file:py-2 file:px-4
+                                                    file:rounded file:border-0 file:text-sm file:font-semibold
+                                                    file:bg-primary-50 file:text-primary-700
+                                                    hover:file:bg-primary-100" %>
+      </div>
+    </div>
+  <% end %>
+
+  <%# Personal details — horizontal row like deceased form %>
+  <div class="grid grid-cols-3 gap-4 mb-6">
+    <div>
+      <%= form.label :first_name, t("first_name"), class: "text-sm" %>
+      <%= form.text_field :first_name, class: "form-control", autocomplete: "off" %>
+    </div>
+    <div>
+      <%= form.label :last_name, t("last_name"), class: "text-sm" %>
+      <%= form.text_field :last_name, class: "form-control", autocomplete: "off" %>
+    </div>
+    <div>
+      <%= form.label :email, t("email"), class: "text-sm" %>
+      <%= form.email_field :email, class: "form-control", autocomplete: "off" %>
+    </div>
+  </div>
+
+  <%# Password fields — new user (required) or profile mode (optional change) %>
+  <% if !@user.persisted? || profile_mode %>
+    <div class="grid grid-cols-3 gap-4 mb-6">
+      <% if profile_mode %>
+        <div>
+          <%= form.label :current_password, "סיסמה נוכחית", class: "text-sm" %>
+          <%= form.password_field :current_password,
+                              class: "form-control",
+                              autocomplete: "current-password" %>
+          <p class="mt-1 text-xs text-gray-500">נדרש רק בעת שינוי סיסמה</p>
+        </div>
+      <% end %>
+      <div>
+        <%= form.label :password,
+                   (@user.persisted? ? "סיסמה חדשה" : "סיסמה"),
+                   class: "text-sm" %>
+        <%= form.password_field :password,
+                            class: "form-control",
+                            autocomplete: "new-password" %>
+        <p class="mt-1 text-xs text-gray-500">לפחות 6 תווים</p>
+      </div>
+      <div>
+        <%= form.label :password_confirmation, "אישור סיסמה", class: "text-sm" %>
+        <%= form.password_field :password_confirmation,
+                            class: "form-control",
+                            autocomplete: "new-password" %>
+      </div>
+    </div>
+  <% end %>
+
+  <%# Roles & Community — hidden in profile mode for non-system-admins %>
+  <% unless profile_mode && !current_user.system_admin? %>
+    <%# Roles — horizontal row %>
+    <h5 class="text-base font-medium mb-2"><%= t("users.index.roles") %></h5>
+    <div class="flex items-center gap-8 mb-4">
+      <div class="flex items-center gap-2">
+        <%= form.check_box :system_admin %>
+        <%= form.label :system_admin, t("users.new.system_admin") %>
+      </div>
+      <div class="flex items-center gap-2">
+        <%= form.check_box :community_admin,
+                       data: {
+                         user_roles_target: "communityAdmin",
+                         action: "user-roles#toggle",
+                       } %>
+        <%= form.label :community_admin, t("users.new.community_admin") %>
+      </div>
+      <div class="flex items-center gap-2">
+        <%= form.check_box :community_user,
+                       data: {
+                         user_roles_target: "communityUser",
+                         action: "user-roles#toggle",
+                       } %>
+        <%= form.label :community_user, t("users.new.community_user") %>
+      </div>
+    </div>
+
+    <%# Community dropdown — shown only when community_admin or community_user is checked %>
+    <div
+      data-user-roles-target="communityField"
+      <%= "hidden" unless @user.community_admin? || @user.community_user? %>
+      class="mb-4"
+      style="max-width: 300px;"
+    >
+      <%= form.label :community_id, t("users.index.community"), class: "text-sm" %>
+      <%= form.collection_select :community_id,
+                             Hke::Community.all,
+                             :id,
+                             :name,
+                             { prompt: "בחר קהילה" },
+                             { class: "form-control" } %>
+    </div>
+  <% end %>
+</div>

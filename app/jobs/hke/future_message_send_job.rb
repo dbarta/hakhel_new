@@ -2,6 +2,7 @@ module Hke
   class FutureMessageSendJob
     include Sidekiq::Job
     include Hke::JobLoggingHelper
+    include Hke::TwilioSend
 
     def perform(future_message_id, community_id)
       community = find_community(community_id, future_message_id)
@@ -19,6 +20,7 @@ module Hke
             community_id: community_id,
             future_message_id: future_message.id
           })
+          create_not_sent_and_delete_future!(future_message, :not_approved)
           return
         end
 
@@ -28,7 +30,16 @@ module Hke
 
         rendered_text = render_text(future_message)
 
-        create_sent_and_delete_future!(future_message, rendered_text, community_id)
+        delivery_methods = build_delivery_methods(future_message)
+
+        result = send_message(
+          methods: delivery_methods,
+          phone: future_message.phone,
+          email: future_message.email,
+          message_text: rendered_text
+        )
+
+        create_sent_and_delete_future!(future_message, rendered_text, community_id, result)
 
         future_message.messageable.process_future_messages
 
@@ -41,7 +52,8 @@ module Hke
         community_id: community_id,
         future_message_id: future_message_id
       })
-      raise
+      # Record delivery failure and delete the future message — do not retry
+      handle_delivery_failure(future_message_id, community_id, e)
     end
 
     private
@@ -163,7 +175,26 @@ module Hke
       )
     end
 
-    def create_sent_and_delete_future!(future_message, rendered_text, community_id)
+    # Build an ordered list of delivery methods to try.
+    # Primary = the method stored on the FutureMessage (already resolved at creation).
+    # If enable_fallback_delivery_method is true, append the remaining methods
+    # from the preference chain's delivery_priority (in their original order).
+    def build_delivery_methods(future_message)
+      primary = future_message.delivery_method.to_sym
+
+      relation = future_message.messageable
+      resolved = Hke::PreferenceResolver.resolve(preferring: relation)
+
+      if resolved.enable_fallback_delivery_method
+        full_priority = Array(resolved.delivery_priority).map(&:to_sym)
+        # Put primary first, then the rest in priority order (no duplicates)
+        ([primary] + full_priority).uniq
+      else
+        [primary]
+      end
+    end
+
+    def create_sent_and_delete_future!(future_message, rendered_text, community_id, delivery_result)
       Hke::SentMessage.transaction do
         # Idempotency guard (in-transaction)
         if Hke::SentMessage.exists?(token: future_message.token)
@@ -180,16 +211,61 @@ module Hke
           send_date: future_message.send_date,
           full_message: rendered_text,
           message_type: future_message.message_type,
-          delivery_method: future_message.delivery_method,
+          delivery_method: delivery_result[:method].to_s,
           email: future_message.email,
           phone: future_message.phone,
           token: future_message.token,
-          community_id: future_message.community_id
+          community_id: future_message.community_id,
+          twilio_message_sid: delivery_result[:sid]
         )
 
         # SentMessage is immutable audit log; delete intent only after commit.
         future_message.destroy!
       end
+    end
+
+    def create_not_sent_and_delete_future!(future_message, reason, error_msg = nil)
+      Hke::NotSentMessage.transaction do
+        rendered_text = begin
+          render_text(future_message)
+        rescue
+          nil
+        end
+
+        Hke::NotSentMessage.create!(
+          messageable_type: future_message.messageable_type,
+          messageable_id: future_message.messageable_id,
+          send_date: future_message.send_date,
+          full_message: rendered_text,
+          message_type: future_message.message_type,
+          delivery_method: future_message.delivery_method,
+          email: future_message.email,
+          phone: future_message.phone,
+          token: future_message.token,
+          community_id: future_message.community_id,
+          reason: reason,
+          error_message: error_msg
+        )
+
+        future_message.destroy!
+      end
+    end
+
+    def handle_delivery_failure(future_message_id, community_id, error)
+      community = Hke::Community.find_by(id: community_id)
+      return unless community
+
+      ActsAsTenant.current_tenant = community
+      future_message = Hke::FutureMessage.find_by(id: future_message_id)
+      return unless future_message
+
+      create_not_sent_and_delete_future!(
+        future_message,
+        :delivery_failed,
+        error.message.truncate(500)
+      )
+    ensure
+      ActsAsTenant.current_tenant = nil
     end
   end
 end

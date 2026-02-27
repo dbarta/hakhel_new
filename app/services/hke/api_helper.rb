@@ -143,7 +143,7 @@ module Hke
         name: "David Barta",
         password: "odeca111",
         terms_of_service: true,
-        roles: {system_admin: true, community_admin: false, community_user: false}
+        system_admin: true, community_admin: false, community_user: false
       )
       user.skip_confirmation! if user.respond_to?(:skip_confirmation!)
       user.save!
@@ -183,7 +183,6 @@ module Hke
         time_zone: "Asia/Jerusalem",
         daily_sweep_job_time: Time.parse("03:00"),
         send_window_start_time: Time.parse("09:00")
-
       )
       system_pref.save!
       log_info "@@@ System preferences ensured with id: #{system_pref.id}."

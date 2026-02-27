@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_01_29_153232) do
+ActiveRecord::Schema[8.1].define(version: 2026_02_26_163118) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -294,6 +294,27 @@ ActiveRecord::Schema[8.1].define(version: 2026_01_29_153232) do
     t.index ["user_id"], name: "index_hke_logs_on_user_id"
   end
 
+  create_table "hke_not_sent_messages", force: :cascade do |t|
+    t.bigint "community_id", null: false
+    t.datetime "created_at", null: false
+    t.integer "delivery_method"
+    t.string "email"
+    t.text "error_message"
+    t.text "full_message"
+    t.integer "message_type"
+    t.bigint "messageable_id", null: false
+    t.string "messageable_type", null: false
+    t.string "phone"
+    t.integer "reason", default: 0, null: false
+    t.date "send_date"
+    t.string "token"
+    t.datetime "updated_at", null: false
+    t.index ["community_id"], name: "index_hke_not_sent_messages_on_community_id"
+    t.index ["messageable_type", "messageable_id"], name: "index_hke_not_sent_messages_on_messageable"
+    t.index ["reason"], name: "index_hke_not_sent_messages_on_reason"
+    t.index ["token"], name: "index_hke_not_sent_messages_on_token"
+  end
+
   create_table "hke_preferences", force: :cascade do |t|
     t.boolean "attempt_to_resend_if_no_sent_on_time"
     t.datetime "created_at", null: false
@@ -563,7 +584,9 @@ ActiveRecord::Schema[8.1].define(version: 2026_01_29_153232) do
     t.datetime "accepted_terms_at", precision: nil
     t.boolean "admin"
     t.datetime "announcements_read_at", precision: nil
+    t.boolean "community_admin", default: false, null: false
     t.bigint "community_id"
+    t.boolean "community_user", default: false, null: false
     t.datetime "confirmation_sent_at", precision: nil
     t.string "confirmation_token"
     t.datetime "confirmed_at", precision: nil
@@ -590,7 +613,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_01_29_153232) do
     t.datetime "remember_created_at", precision: nil
     t.datetime "reset_password_sent_at", precision: nil
     t.string "reset_password_token"
-    t.jsonb "roles", default: {}, null: false
+    t.boolean "system_admin", default: false, null: false
     t.string "time_zone"
     t.string "unconfirmed_email"
     t.datetime "updated_at", precision: nil, null: false
@@ -601,7 +624,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_01_29_153232) do
     t.index ["invited_by_id"], name: "index_users_on_invited_by_id"
     t.index ["invited_by_type", "invited_by_id"], name: "index_users_on_invited_by_type_and_invited_by_id"
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
-    t.index ["roles"], name: "index_users_on_roles", using: :gin
   end
 
   add_foreign_key "account_invitations", "accounts"
@@ -623,6 +645,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_01_29_153232) do
   add_foreign_key "hke_future_messages", "users", column: "approved_by_id"
   add_foreign_key "hke_landing_pages", "hke_communities", column: "community_id"
   add_foreign_key "hke_landing_pages", "users"
+  add_foreign_key "hke_not_sent_messages", "hke_communities", column: "community_id"
   add_foreign_key "hke_relations", "hke_communities", column: "community_id"
   add_foreign_key "hke_relations", "hke_contact_people", column: "contact_person_id"
   add_foreign_key "hke_relations", "hke_deceased_people", column: "deceased_person_id"

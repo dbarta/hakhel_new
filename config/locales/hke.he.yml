@@ -484,6 +484,9 @@ he:
       all_messages: "כל ההודעות"
       successful_only: "הצליחו בלבד"
       failed_only: "נכשלו בלבד"
+    tabs:
+      sent: "נשלחו (%{count})"
+      not_sent: "לא נשלחו (%{count})"
     table:
       sent_at: "נשלח ב"
       recipient: "נמען"
@@ -491,6 +494,16 @@ he:
       status: "סטטוס"
       message_preview: "תוכן ההודעה"
       view_error: "צפה בשגיאה"
+    not_sent:
+      reason: "סיבה"
+      error_details: "פרטי שגיאה"
+      no_messages: "אין הודעות שלא נשלחו בתקופה זו"
+    not_sent_reasons:
+      not_approved: "לא אושר"
+      delivery_failed: "שליחה נכשלה"
+      no_contact_info: "חסר מידע ליצירת קשר"
+      opt_out: "ביטול הרשמה"
+      no_delivery_method: "אין שיטת שליחה"
     statuses:
       sent: "נשלח"
       failed: "נכשל"
@@ -546,56 +559,6 @@ he:
         attempt_to_resend_label: "נסה לשלוח שוב אם לא נשלח בזמן"
         days_before_yahrzeit_label: "כמה ימים לפני יארציית לשלוח הודעה"
         days_suffix: "ימים"
-
-  users:
-    index:
-      title: "ניהול משתמשים"
-      create_new: "יצירת משתמש חדש"
-      no_users: "לא נמצאו משתמשים"
-      create_first: "צור את המשתמש הראשון"
-      name: "שם"
-      email: "דואר אלקטרוני"
-      roles: "תפקידים"
-      community: "קהילה"
-      created: "נוצר"
-      actions: "פעולות"
-      edit: "עריכה"
-      delete: "מחיקה"
-      confirm_delete: "האם אתה בטוח?"
-      no_community: "אין קהילה"
-      system_admins: "מנהלי מערכת"
-      community_admins: "מנהלי קהילות"
-      community_users: "משתמשי קהילות"
-      system_admins_desc: "גישה מלאה למערכת"
-      community_admins_desc: "ניהול הקהילות שלהם"
-      community_users_desc: "חברי קהילה רגילים"
-    new:
-      title: "יצירת משתמש חדש"
-      cancel: "ביטול"
-      user_details: "פרטי משתמש"
-      community_and_roles: "קהילה ותפקידים"
-      community_label: "קהילה"
-      community_prompt: "בחר קהילה (אופציונלי)"
-      community_help: "בחר לאיזו קהילה המשתמש שייך"
-      user_roles: "תפקידי משתמש"
-      system_admin: "מנהל מערכת"
-      system_admin_desc: "גישה מלאה לכל תכונות המערכת"
-      community_admin: "מנהל קהילה"
-      community_admin_desc: "יכול לנהל את הקהילה המוקצית"
-      community_user: "משתמש קהילה"
-      community_user_desc: "גישת חבר קהילה רגיל"
-      create_user: "צור משתמש"
-    edit:
-      title: "עריכת משתמש"
-      update_user: "עדכן משתמש"
-    show:
-      title: "פרטי משתמש"
-      user_accounts: "חשבונות משתמש"
-      user_communities: "קהילות משתמש"
-    created: "המשתמש נוצר בהצלחה"
-    updated: "המשתמש עודכן בהצלחה"
-    deleted: "המשתמש נמחק בהצלחה"
-    cannot_delete_self: "לא ניתן למחוק את החשבון שלך"
 
   dashboard:
     show:
@@ -809,6 +772,54 @@ he:
         verify_description: "After scanning the barcode image, the app will display a code that you can enter below."
         cancel: "Cancel"
         verify: "Verify"
+    index:
+      title: "ניהול משתמשים"
+      create_new: "יצירת משתמש חדש"
+      no_users: "לא נמצאו משתמשים"
+      create_first: "צור את המשתמש הראשון"
+      name: "שם"
+      email: "דואר אלקטרוני"
+      roles: "תפקידים"
+      community: "קהילה"
+      created: "נוצר"
+      actions: "פעולות"
+      edit: "עריכה"
+      delete: "מחיקה"
+      confirm_delete: "האם אתה בטוח?"
+      no_community: "אין קהילה"
+      system_admins: "מנהלי מערכת"
+      community_admins: "מנהלי קהילות"
+      community_users: "משתמשי קהילות"
+      system_admins_desc: "גישה מלאה למערכת"
+      community_admins_desc: "ניהול הקהילות שלהם"
+      community_users_desc: "חברי קהילה רגילים"
+    new:
+      title: "יצירת משתמש חדש"
+      cancel: "ביטול"
+      user_details: "פרטי משתמש"
+      community_and_roles: "קהילה ותפקידים"
+      community_label: "קהילה"
+      community_prompt: "בחר קהילה (אופציונלי)"
+      community_help: "בחר לאיזו קהילה המשתמש שייך"
+      user_roles: "תפקידי משתמש"
+      system_admin: "מנהל מערכת"
+      system_admin_desc: "גישה מלאה לכל תכונות המערכת"
+      community_admin: "מנהל קהילה"
+      community_admin_desc: "יכול לנהל את הקהילה המוקצית"
+      community_user: "משתמש קהילה"
+      community_user_desc: "גישת חבר קהילה רגיל"
+      create_user: "צור משתמש"
+    edit:
+      title: "עריכת משתמש"
+      update_user: "עדכן משתמש"
+    show:
+      title: "פרטי משתמש"
+      user_accounts: "חשבונות משתמש"
+      user_communities: "קהילות משתמש"
+    created: "המשתמש נוצר בהצלחה"
+    updated: "המשתמש עודכן בהצלחה"
+    deleted: "המשתמש נמחק בהצלחה"
+    cannot_delete_self: "לא ניתן למחוק את החשבון שלך"
 
   layouts:
     mailer:
@@ -829,13 +840,32 @@ he:
 
   errors:
     messages:
-      #presence: "%{attribute} חובה למלא את השדה"
+      not_saved:
+        one: "שגיאה אחת מנעה את שמירת %{resource}:"
+        other: "%{count} שגיאות מנעו את שמירת %{resource}:"
       gender_invalid: "מין לא תקין. צריך להיות זכר או נקבה."
       record_invalid: "הרשומה אינה תקינה"
-
+      blank: "שדה חובה"
+      invalid: "ערך לא תקין"
+      too_short: "קצר מדי (מינימום %{count} תווים)"
+      too_long: "ארוך מדי (מקסימום %{count} תווים)"
+      taken: "כבר תפוס"
+      confirmation: "לא תואם את האישור"
 
   activerecord:
+    models:
+      user: "משתמש"
     attributes:
+      user:
+        first_name: "שם פרטי"
+        last_name: "שם משפחה"
+        email: "דואר אלקטרוני"
+        password: "סיסמה"
+        password_confirmation: "אישור סיסמה"
+        system_admin: "מנהל מערכת"
+        community_admin: "מנהל קהילה"
+        community_user: "משתמש קהילה"
+        community_id: "קהילה"
       hke/preference:
           daily_sweep_job_time: "שעת הסריקה היומית"
           send_window_start_time: "תחילת חלון שליחה"
@@ -843,6 +873,8 @@ he:
           how_many_days_before_yahrzeit_to_send_message: "ימים לפני יארצייט"
     errors:
       models:
+        user:
+          must_have_at_least_one_role: "יש להקצות למשתמש לפחות תפקיד אחד"
         hke/preference:
           attributes:
             daily_sweep_job_time:

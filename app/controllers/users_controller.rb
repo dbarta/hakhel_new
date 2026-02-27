@@ -53,7 +53,6 @@ class UsersController < ApplicationController
 
     @user.terms_of_service = true
     @user.skip_confirmation!
-    assign_roles(@user, user_params)
 
     if Jumpstart.config.register_with_account?
       account = @user.owned_accounts.first_or_initialize
@@ -61,10 +60,6 @@ class UsersController < ApplicationController
     end
 
     if @user.save
-      if params[:user][:community_id].present?
-        community = Hke::Community.find(params[:user][:community_id])
-        @user.update(community: community)
-      end
       redirect_to "/admin/users/#{@user.id}", notice: t("users.created")
     else
       render :new
@@ -76,13 +71,7 @@ class UsersController < ApplicationController
   end
 
   def update
-    assign_roles(@user, user_params)
-
     if @user.update(user_params)
-      if params[:user][:community_id].present?
-        community = Hke::Community.find(params[:user][:community_id])
-        @user.update(community: community)
-      end
       redirect_to user_path(@user), notice: t("users.updated")
     else
       @communities = Hke::Community.all
@@ -97,8 +86,7 @@ class UsersController < ApplicationController
     end
 
     if @user.system_admin?
-      system_admin_count = User.where("roles ? 'system_admin'").count
-      if system_admin_count <= 1
+      if User.system_admin.count <= 1
         redirect_to "/admin/users", alert: t("users.cannot_delete_last_admin")
         return
       end
@@ -121,15 +109,6 @@ class UsersController < ApplicationController
   def user_params
     params.require(:user).permit(:first_name, :last_name, :email, :password, :password_confirmation,
       :community_id, :system_admin, :community_admin, :community_user)
-  end
-
-  def assign_roles(user, user_params)
-    return unless user_params
-
-    user.roles = {}
-    user.roles[:system_admin] = true if user_params[:system_admin] == "true"
-    user.roles[:community_admin] = true if user_params[:community_admin] == "true"
-    user.roles[:community_user] = true if user_params[:community_user] == "true"
   end
 
   def ensure_system_admin

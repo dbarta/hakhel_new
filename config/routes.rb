@@ -79,6 +79,13 @@ Rails.application.routes.draw do
       end
     end
 
+    resources :users, except: [:show] do
+      collection do
+        get :profile, action: :edit
+        patch :profile, action: :update
+      end
+    end
+
     namespace :api, defaults: {format: :json} do
       namespace :v1 do
         post "twilio/sms/status", to: "twilio_callback#sms_status"

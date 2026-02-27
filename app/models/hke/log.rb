@@ -1,5 +1,5 @@
 module Hke
-  class Log < CommunityRecord
+  class Log < Hke::ApplicationRecord
     belongs_to :user, optional: true
     belongs_to :community, optional: true
 
