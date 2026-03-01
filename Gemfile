@@ -82,7 +82,7 @@ end
 # gem "redis", "~> 5.1"
 
 # ActionText editor
-gem "lexxy", "~> 0.1.23.beta"
+gem "lexxy", "~> 0.7.2.beta"
 
 # Jumpstart Pro dependencies
 require_relative "lib/jumpstart/lib/jumpstart/configuration"
