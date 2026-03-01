@@ -46,3 +46,7 @@ yarn-debug.log*
 .idea
 dump.rdb
 *~
+
+# Ignore key files for decrypting credentials and more.
+/config/*.key
+

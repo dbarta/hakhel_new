@@ -33,10 +33,24 @@ module Hke
       candidates = methods.select { |m| MODALITIES.include?(m) }
       raise ArgumentError, "No valid delivery methods in #{methods.inspect}" if candidates.empty?
 
+      # Filter out methods where the required contact info is missing
+      usable = candidates.select do |m|
+        case m
+        when :sms, :whatsapp then phone.present?
+        when :email then email.present?
+        else false
+        end
+      end
+
+      if usable.empty?
+        raise ArgumentError,
+          "No usable delivery methods: #{candidates.inspect} (phone=#{phone.present? ? "yes" : "missing"}, email=#{email.present? ? "yes" : "missing"})"
+      end
+
       client = build_twilio_client
       last_error = nil
 
-      candidates.each do |method|
+      usable.each do |method|
         sid = case method
         when :sms then deliver_sms(client, phone, message_text)
         when :whatsapp then deliver_whatsapp(client, phone, message_text)
@@ -69,22 +83,22 @@ module Hke
         ENV["TWILIO_PHONE_NUMBER"] ||
         Rails.application.credentials.dig(:twilio, :phone_number)
 
-      msg = client.messages.create(
-        from: from,
-        to: phone,
-        body: text,
-        status_callback: webhook_url(:sms)
-      )
+      params = {from: from, to: phone, body: text}
+      cb = webhook_url(:sms)
+      params[:status_callback] = cb if cb
+      msg = client.messages.create(**params)
       msg.sid
     end
 
     def deliver_whatsapp(client, phone, text)
-      msg = client.messages.create(
+      params = {
         from: "whatsapp:+14155238886",
         to: "whatsapp:#{phone}",
-        body: text,
-        status_callback: webhook_url(:whatsapp)
-      )
+        body: text
+      }
+      cb = webhook_url(:whatsapp)
+      params[:status_callback] = cb if cb
+      msg = client.messages.create(**params)
       msg.sid
     end
 
@@ -118,8 +132,8 @@ module Hke
 
     def webhook_url(modality)
       host = ENV["WEBHOOK_HOST"] ||
-        Rails.application.routes.default_url_options[:host] ||
-        "http://localhost:3000"
+        Rails.application.routes.default_url_options[:host]
+      return nil if host.blank? || host.include?("localhost")
       "#{host}/hke/api/v1/twilio/sms/status?modality=#{modality}"
     end
 
