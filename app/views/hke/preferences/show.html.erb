@@ -1,14 +1,15 @@
-<% preference = @preference %>
-
 <% is_system = controller.is_a?(Hke::SystemPreferencesController) %>
 <% is_community = controller.is_a?(Hke::CommunityPreferencesController) %>
-
 
 <% if is_community %>
   <% community_name = @preference.preferring&.name %>
   <% system_preferring = Hke::System.first %>
   <% system_preference = system_preferring&.preference || system_preferring&.build_preference %>
 <% end %>
+
+<%# When community has no saved preference yet, fall back to showing system values %>
+<% community_has_own_preference = is_community && @preference.persisted? %>
+<% preference = (is_community && !@preference.persisted?) ? system_preference : @preference %>
 
 <div dir="rtl" class="max-w-3xl mx-auto px-4 py-6">
   <div class="rounded-lg border bg-white shadow-sm p-6">
@@ -33,7 +34,7 @@
           <div class="rounded-md border p-3">
 	            <div class="text-sm text-gray-600"><%= t("hke.preferences.labels.daily_sweep_job_time") %></div>
 		            <div class="font-medium"><%= preference.daily_sweep_job_time.present? ? l(preference.daily_sweep_job_time, format: :time) : "" %></div>
-		            <% if is_community && system_preference.present? %>
+		            <% if community_has_own_preference && system_preference.present? %>
 		              <div class="text-xs text-gray-500">
 		                <%= t("hke.preferences.help.system_default_prefix", value: (system_preference.daily_sweep_job_time.present? ? l(system_preference.daily_sweep_job_time, format: :time) : "")) %>
 		              </div>
@@ -43,7 +44,7 @@
           <div class="rounded-md border p-3">
 	            <div class="text-sm text-gray-600"><%= t("hke.preferences.labels.send_window_start_time") %></div>
 		            <div class="font-medium"><%= preference.send_window_start_time.present? ? l(preference.send_window_start_time, format: :time) : "" %></div>
-		            <% if is_community && system_preference.present? %>
+		            <% if community_has_own_preference && system_preference.present? %>
 		              <div class="text-xs text-gray-500">
 		                <%= t("hke.preferences.help.system_default_prefix", value: (system_preference.send_window_start_time.present? ? l(system_preference.send_window_start_time, format: :time) : "")) %>
 		              </div>
@@ -86,7 +87,7 @@
 
 						<div class="font-medium"><%= days_sentence %></div>
 
-		          <% if is_community && system_preference.present? %>
+		          <% if community_has_own_preference && system_preference.present? %>
 		            <% system_days_values = Array(system_preference.how_many_days_before_yahrzeit_to_send_message).compact.map(&:to_i).sort.reverse %>
 		            <% system_days_items = system_days_values.map { |v| v == 1 ? t("hke.preferences.sentences.days_item_one") : t("hke.preferences.sentences.days_item_many", days: v) } %>
 		            <% system_days_list = system_days_items.to_sentence(
@@ -124,7 +125,7 @@
         <div class="rounded-md border p-3">
 	          <div class="text-sm text-gray-600"><%= t("hke.preferences.labels.priorities") %></div>
 	          <div class="font-medium"><%= delivery_display %></div>
-		          <% if is_community && system_preference.present? %>
+		          <% if community_has_own_preference && system_preference.present? %>
 		            <% system_methods = Array(system_preference.delivery_priority).compact.reject(&:blank?) %>
 		            <% system_names = system_methods.map { |v| delivery_labels[v] || v } %>
 		            <% system_delivery_display =
@@ -155,7 +156,7 @@
           <div class="rounded-md border p-3">
 	            <div class="text-sm text-gray-600"><%= t("hke.preferences.labels.attempt_resend") %></div>
 	            <div class="font-medium"><%= yes_no.call(preference.attempt_to_resend_if_no_sent_on_time) %></div>
-		            <% if is_community && system_preference.present? %>
+		            <% if community_has_own_preference && system_preference.present? %>
 		              <div class="text-xs text-gray-500">
 		                <%= t("hke.preferences.help.system_default_prefix", value: yes_no.call(system_preference.attempt_to_resend_if_no_sent_on_time)) %>
 		              </div>
@@ -165,7 +166,7 @@
           <div class="rounded-md border p-3">
 	            <div class="text-sm text-gray-600"><%= t("hke.preferences.labels.fallback") %></div>
 	            <div class="font-medium"><%= yes_no.call(preference.enable_fallback_delivery_method) %></div>
-		            <% if is_community && system_preference.present? %>
+		            <% if community_has_own_preference && system_preference.present? %>
 		              <div class="text-xs text-gray-500">
 		                <%= t("hke.preferences.help.system_default_prefix", value: yes_no.call(system_preference.enable_fallback_delivery_method)) %>
 		              </div>

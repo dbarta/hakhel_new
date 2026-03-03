@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_02_26_163118) do
+ActiveRecord::Schema[8.1].define(version: 2026_03_03_192010) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -321,7 +321,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_26_163118) do
     t.time "daily_sweep_job_time"
     t.string "delivery_priority", array: true
     t.boolean "enable_fallback_delivery_method"
-    t.integer "how_many_days_before_yahrzeit_to_send_message", default: [7], array: true
+    t.integer "how_many_days_before_yahrzeit_to_send_message", array: true
     t.bigint "preferring_id", null: false
     t.string "preferring_type", null: false
     t.time "send_window_start_time"
