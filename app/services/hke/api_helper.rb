@@ -28,6 +28,7 @@ module Hke
       [
         Hke::FutureMessage,    # No dependencies
         Hke::SentMessage,      # No dependencies
+        Hke::NotSentMessage,      # No dependencies
         Hke::Relation,         # References DeceasedPerson/ContactPerson
         Hke::DeceasedPerson,   # References Cemetery/Community
         Hke::ContactPerson,    # References Community

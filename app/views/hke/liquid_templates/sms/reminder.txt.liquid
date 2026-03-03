@@ -1,5 +1,5 @@
 {{c_salutation}} {{c_first_name}} {{c_last_name}} שלום וברכה,
-רצינו להזכיר כי בעוד {{num_days_till}} ימים ביום {{day_of_week}} {{heb_month_and_day}}
+רצינו להזכיר כי {% if num_days_till == 0 %}היום{% elsif num_days_till == 1 %}מחר{% elsif num_days_till == 2 %}מחרתיים{% else %}בעוד {{num_days_till}} ימים{% endif %} ביום {{day_of_week}} {{heb_month_and_day}}
 יחול יום השנה ה {{yahrzeit_years}} ל{{petirata}} של {{relation}} {{d_salutation}} {{d_first_name}} {{d_last_name}} {{alav}}.
 הנך {{muzmenet}} לבית הכנסת כפר ורדים כדי לומר קדיש.
 כאן ישנן מספר אפשרויות נוספות לציון יום {{petirata}} של {{relation}} ז”ל.
