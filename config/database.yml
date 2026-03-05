@@ -120,27 +120,14 @@ staging:
 # for a full overview on how database connection configuration can be specified.
 #
 production:
-  primary: &primary_production
-    <<: *default
-    database: hakhel_production
-    username: jumpstart
-    password: <%= ENV["POSTGRES_PASSWORD"] %>
-    # Or set DATABASE_URL to override
+  primary:
+    url: <%= ENV["DATABASE_URL"] %>
 
   cache:
-    <<: *primary_production
-    database: hakhel_production_cache
-    migrations_paths: db/cache_migrate
-    # Or set CACHE_DATABASE_URL to override
+    url: <%= ENV["DATABASE_URL"] %>
 
   queue:
-    <<: *primary_production
-    database: hakhel_production_queue
-    migrations_paths: db/queue_migrate
-    # Or set QUEUE_DATABASE_URL to override
+    url: <%= ENV["DATABASE_URL"] %>
 
   cable:
-    <<: *primary_production
-    database: hakhel_production_cable
-    migrations_paths: db/cable_migrate
-    # Or set CABLE_DATABASE_URL to override
+    url: <%= ENV["DATABASE_URL"] %>
