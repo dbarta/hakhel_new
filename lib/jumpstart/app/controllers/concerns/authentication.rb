@@ -41,11 +41,10 @@ module Authentication
     stored_location_for(resource_or_scope) || super
   end
 
-  # Helper method for verifying authentication in a before_action, but redirecting to sign up instead of login
   def authenticate_user_with_sign_up!
     unless user_signed_in?
       store_location_for(:user, request.fullpath)
-      redirect_to new_user_registration_path, alert: t("create_an_account_first")
+      redirect_to new_user_session_path, alert: t("create_an_account_first")
     end
   end
 
@@ -56,6 +55,6 @@ module Authentication
   private
 
   def require_account
-    redirect_to new_user_registration_path unless Current.account
+    redirect_to new_user_session_path unless Current.account
   end
 end

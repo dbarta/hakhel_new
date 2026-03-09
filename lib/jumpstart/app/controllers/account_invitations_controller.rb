@@ -32,7 +32,7 @@ class AccountInvitationsController < ApplicationController
   def authenticate_user_with_invite!
     unless user_signed_in?
       store_location_for(:user, request.fullpath)
-      redirect_to new_user_registration_path(invite: @account_invitation.token), alert: t(".authenticate")
+      redirect_to new_user_session_path, alert: t(".authenticate")
     end
   end
 end
