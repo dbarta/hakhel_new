@@ -15,8 +15,12 @@ module SeedsHelper
   end
 
   def log_error(msg)
-    @error.error msg
-    @num_errors += 1
+    if @error
+      @error.error msg
+    else
+      puts "ERROR: #{msg}"
+    end
+    @num_errors = (@num_errors || 0) + 1
   end
 
   def check_response(request_body, response, raise: true)
