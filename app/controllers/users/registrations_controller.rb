@@ -1,6 +1,7 @@
 class Users::RegistrationsController < Devise::RegistrationsController
   layout "auth"
 
+  before_action :require_system_admin!, only: [:new, :create]
   before_action :load_collections, only: [:new, :create]
 
   def create
@@ -51,5 +52,11 @@ class Users::RegistrationsController < Devise::RegistrationsController
   def load_collections
     @communities = Hke::Community.order(:name)
     @roles = %w[system_admin community_admin community_user]
+  end
+
+  def require_system_admin!
+    unless user_signed_in? && current_user.system_admin?
+      redirect_to new_user_session_path, alert: t("devise.registrations.not_authorized", default: "אין לך הרשאה לבצע פעולה זו.")
+    end
   end
 end
