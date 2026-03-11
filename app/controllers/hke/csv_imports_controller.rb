@@ -32,7 +32,7 @@ module Hke
     end
 
     def index
-      @csv_imports = policy_scope(CsvImport).includes(:user).order(created_at: :desc)
+      @csv_imports = policy_scope(CsvImport).select(CsvImport.column_names - %w[csv_data errors_data]).includes(:user).order(created_at: :desc)
       authorize CsvImport
     end
 
