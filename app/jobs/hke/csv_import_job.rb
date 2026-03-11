@@ -6,9 +6,11 @@ module Hke
 	      csv_import = CsvImport.unscoped.find(csv_import_id)
 	      csv_import.update!(status: :processing) unless csv_import.processing?
 
-      csv_import.file.open do |io|
+      Tempfile.create(["csv_import_#{csv_import.id}", ".csv"]) do |tmp|
+        tmp.write(csv_import.csv_data)
+        tmp.flush
         client = Hke::Import::CsvImportApiClient.new(
-          file_path: io.path,
+          file_path: tmp.path,
           csv_import_id: csv_import.id
         )
         client.run!

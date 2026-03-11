@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_03_03_192010) do
+ActiveRecord::Schema[8.1].define(version: 2026_03_11_173502) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -197,6 +197,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_03_192010) do
   create_table "hke_csv_imports", force: :cascade do |t|
     t.bigint "community_id", null: false
     t.datetime "created_at", null: false
+    t.text "csv_data"
     t.text "errors_data"
     t.integer "existing_deceased", default: 0
     t.integer "failed_rows", default: 0

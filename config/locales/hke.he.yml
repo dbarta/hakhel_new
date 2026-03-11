@@ -450,6 +450,7 @@ he:
       combined: "נפטרים ואנשי קשר"
     statuses:
       pending: "ממתין"
+    upload_success: "הקובץ הועלה בהצלחה ומתחיל עיבוד"
   logs:
     levels:
       info: "מידע"
@@ -459,7 +460,6 @@ he:
       processing: "מעבד"
       completed: "הושלם"
       failed: "נכשל"
-    upload_success: "הקובץ הועלה בהצלחה ומתחיל עיבוד"
 
   message_management:
     index:

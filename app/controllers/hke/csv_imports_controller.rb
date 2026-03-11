@@ -13,7 +13,8 @@ module Hke
       @csv_import = CsvImport.new(csv_import_params)
       @csv_import.user = current_user
       @csv_import.community = ActsAsTenant.current_tenant
-	    @csv_import.status = :processing
+      @csv_import.status = :processing
+      @csv_import.csv_data = params.require(CsvImport.model_name.param_key)[:file]&.read
       authorize @csv_import
 
       if @csv_import.save
