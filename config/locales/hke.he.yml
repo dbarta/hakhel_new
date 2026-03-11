@@ -51,6 +51,7 @@ he:
   delete: "מחק"
   edit: "עריכה"
   are_you_sure: "האם אתה בטוח?"
+  unauthorized: "אין לך הרשאה לבצע פעולה זו."
   profile: "פרופיל"
   logout: "התנתקות"
   first_name: "שם פרטי"

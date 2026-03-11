@@ -88,7 +88,7 @@ module Hke
 
     def authenticate_admin
       puts "in  authenticate_admin, #{true_user}"
-      redirect_to "/", alert: t("unauthorized") unless user_signed_in? && current_user.admin?
+      redirect_to "/", alert: t("unauthorized") unless user_signed_in? && (current_user.system_admin? || current_user.community_admin?)
     end
   end
 end
