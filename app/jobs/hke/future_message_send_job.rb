@@ -167,12 +167,28 @@ module Hke
       # FutureMessage is delivery intent only.
       # Render message text dynamically from the Relation.
       relation = future_message.messageable
+      portal_url = generate_portal_short_url(future_message)
 
       Hke::MessageRenderer.render(
         relation: relation,
         delivery_method: future_message.delivery_method.to_sym,
-        reference_date: future_message.send_date || Time.zone.today
+        reference_date: future_message.send_date || Time.zone.today,
+        portal_url: portal_url
       )
+    end
+
+    def generate_portal_short_url(future_message)
+      contact = future_message.messageable&.contact_person
+      return nil unless contact&.portal_token.present?
+
+      link = Hke::ShortLink.find_or_create_by!(
+        contact_person: contact,
+        via_token: future_message.token
+      )
+      link.short_url
+    rescue => e
+      log_event("Create Job", details: { text: "ShortLink generation failed: #{e.message}" })
+      nil
     end
 
     # Build an ordered list of delivery methods to try.

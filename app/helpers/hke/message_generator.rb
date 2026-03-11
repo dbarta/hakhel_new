@@ -2,7 +2,7 @@ module Hke::MessageGenerator
   extend ActiveSupport::Concern
   include Hke::ApplicationHelper
 
-  def generate_msg_data(relation, reference_date:)
+  def generate_msg_data(relation, reference_date:, portal_url: nil)
     return {} unless relation
 
     c = relation.contact_person
@@ -25,16 +25,16 @@ module Hke::MessageGenerator
       day_of_week: day_of_week_of_yahrzeit(d),
       heb_month_and_day: hebrew_date_of_yahrzeit(d),
       yahrzeit_years: num_of_years_gone(d),
-      petirata: petirata(d.gender)
-
+      petirata: petirata(d.gender),
+      portal_url: portal_url.to_s
     }
   end
 
-  def generate_hebrew_snippets(relation, modalities = [:web, :sms], reference_date:)
+  def generate_hebrew_snippets(relation, modalities = [:web, :sms], reference_date:, portal_url: nil)
 
     return {} unless relation
 
-    msg_data = generate_msg_data(relation, reference_date: reference_date)
+    msg_data = generate_msg_data(relation, reference_date: reference_date, portal_url: portal_url)
     context = msg_data.transform_keys(&:to_s)
 
     snippets = {}

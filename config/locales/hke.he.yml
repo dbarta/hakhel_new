@@ -1029,3 +1029,19 @@ he:
       values:
         'yes': "כן"
         'no': "לא"
+
+    portal:
+      profile:
+        saved: "הפרופיל עודכן בהצלחה"
+        title: "פרופיל שלי"
+      preferences:
+        saved: "ההעדפות נשמרו בהצלחה"
+        save_failed: "שגיאה בשמירת ההעדפות"
+        title: "העדפות"
+      venues:
+        already_requested: "כבר שלחת בקשה לשירות זה"
+        request_sent: "הבקשה נשלחה בהצלחה"
+        request_failed: "שגיאה בשליחת הבקשה"
+        title: "שירותים קהילתיים"
+      dashboard:
+        title: "ראשי"

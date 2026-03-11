@@ -1,0 +1,1318 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>הקהל — האזור האישי שלי</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@300;400;500;700;900&family=Heebo:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --cream: #F7F2E8;
+      --parchment: #EDE4D0;
+      --border: #D9CFBA;
+      --navy: #1C2B45;
+      --navy-mid: #2A3F66;
+      --gold: #B8872A;
+      --gold-soft: #F2E4B8;
+      --gold-bright: #D4A93A;
+      --sage: #2B5244;
+      --text: #28221A;
+      --text-mid: #574E44;
+      --text-soft: #9A8F82;
+      --white: #FFFFFF;
+      --card-bg: rgba(255,253,248,0.97);
+      --shadow: 0 2px 18px rgba(28,20,8,0.09), 0 1px 4px rgba(28,20,8,0.05);
+      --radius: 18px;
+      --radius-sm: 12px;
+      --nav-h: 74px;
+      --content-max: 860px;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Heebo', system-ui, sans-serif;
+      background: var(--cream);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    /* ═══ HEADER ═══ */
+    .header {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: var(--navy);
+      padding: 18px 24px 22px;
+      overflow: hidden;
+    }
+
+    .header::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse at 110% -20%, rgba(184,135,42,0.28) 0%, transparent 55%),
+        radial-gradient(ellipse at -10% 120%, rgba(43,82,68,0.2) 0%, transparent 50%);
+    }
+
+    .header-inner {
+      position: relative;
+      z-index: 1;
+      max-width: var(--content-max);
+      margin: 0 auto;
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+    }
+
+    .header-text { flex: 1; }
+
+    .brand-line {
+      font-size: 10px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--gold-bright);
+      font-weight: 400;
+      opacity: 0.85;
+      margin-bottom: 6px;
+    }
+
+    .greeting {
+      font-family: 'Frank Ruhl Libre', serif;
+      font-size: 27px;
+      font-weight: 500;
+      color: #fff;
+      line-height: 1.15;
+      margin-bottom: 5px;
+    }
+
+    .header-date {
+      font-size: 12px;
+      color: rgba(255,255,255,0.48);
+      font-weight: 300;
+    }
+
+    .candle-wrap {
+      position: relative;
+      width: 46px;
+      height: 56px;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .candle-glow {
+      position: absolute;
+      width: 40px; height: 40px;
+      background: radial-gradient(circle, rgba(212,169,58,0.5) 0%, transparent 70%);
+      animation: glow-pulse 2.5s ease-in-out infinite;
+      border-radius: 50%;
+    }
+
+    .candle-emoji {
+      font-size: 32px;
+      position: relative;
+      z-index: 1;
+      animation: candle-flicker 3.2s ease-in-out infinite;
+      filter: drop-shadow(0 0 6px rgba(212,169,58,0.7));
+    }
+
+    @keyframes candle-flicker {
+      0%,100% { transform: rotate(-1deg) scale(1);   filter: drop-shadow(0 0 6px  rgba(212,169,58,0.7)); }
+      25%      { transform: rotate(1.5deg) scale(1.04); filter: drop-shadow(0 0 10px rgba(212,169,58,1));   }
+      50%      { transform: rotate(-.5deg) scale(.98);  filter: drop-shadow(0 0 5px  rgba(212,169,58,0.5)); }
+      75%      { transform: rotate(1deg)  scale(1.02); filter: drop-shadow(0 0 9px  rgba(212,169,58,0.85));}
+    }
+
+    @keyframes glow-pulse {
+      0%,100% { opacity:.6; transform:scale(1);    }
+      50%     { opacity:1;  transform:scale(1.15); }
+    }
+
+    /* ═══ BOTTOM NAV — mobile only ═══ */
+    .bottom-nav {
+      display: none;
+      position: fixed;
+      bottom: 0; left: 0; right: 0;
+      height: var(--nav-h);
+      background: var(--white);
+      border-top: 1px solid var(--border);
+      justify-content: space-around;
+      align-items: center;
+      z-index: 100;
+      box-shadow: 0 -2px 24px rgba(28,20,8,0.08);
+    }
+
+    .nav-btn {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 5px;
+      padding: 10px 0 8px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: var(--text-soft);
+      font-family: 'Heebo', sans-serif;
+      transition: color 0.2s;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .nav-btn.active { color: var(--navy); }
+
+    .nav-pip {
+      width: 38px; height: 32px;
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      transition: background 0.2s;
+    }
+
+    .nav-btn.active .nav-pip { background: var(--gold-soft); }
+    .nav-btn.active .nav-pip svg { stroke: var(--gold); }
+    .nav-label { font-size: 10px; font-weight: 600; }
+
+    /* ═══ DESKTOP SIDEBAR NAV ═══ */
+    .layout {
+      max-width: var(--content-max);
+      margin: 0 auto;
+      display: flex;
+      gap: 0;
+      min-height: calc(100vh - 88px);
+    }
+
+    .sidebar {
+      display: none;
+      width: 200px;
+      flex-shrink: 0;
+      padding: 28px 0 28px 0;
+      position: sticky;
+      top: 88px;
+      height: calc(100vh - 88px);
+      overflow-y: auto;
+    }
+
+    .sidebar-btn {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      width: 100%;
+      padding: 12px 20px;
+      background: none;
+      border: none;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      font-family: 'Heebo', sans-serif;
+      font-size: 15px;
+      font-weight: 500;
+      color: var(--text-mid);
+      transition: all 0.18s;
+      text-align: right;
+      direction: rtl;
+      margin-bottom: 3px;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .sidebar-btn:hover { background: var(--parchment); color: var(--navy); }
+
+    .sidebar-btn.active {
+      background: var(--gold-soft);
+      color: var(--navy);
+      font-weight: 700;
+    }
+
+    .sidebar-btn.active svg { stroke: var(--gold); }
+
+    .sidebar-btn svg { flex-shrink: 0; }
+
+    .sidebar-divider {
+      height: 1px;
+      background: var(--border);
+      margin: 12px 20px;
+    }
+
+    /* ═══ CONTENT AREA ═══ */
+    .content {
+      flex: 1;
+      min-width: 0;
+      padding: 24px 24px calc(var(--nav-h) + 24px);
+    }
+
+    /* ═══ SCREENS ═══ */
+    .screen {
+      display: none;
+      animation: screen-in 0.22s ease forwards;
+    }
+
+    .screen.active { display: block; }
+
+    @keyframes screen-in {
+      from { opacity: 0; transform: translateY(8px); }
+      to   { opacity: 1; transform: translateY(0);   }
+    }
+
+    /* ═══ TYPOGRAPHY ═══ */
+    .screen-title {
+      font-family: 'Frank Ruhl Libre', serif;
+      font-size: 23px;
+      font-weight: 500;
+      color: var(--navy);
+      margin-bottom: 4px;
+      padding-top: 4px;
+    }
+
+    .screen-sub {
+      font-size: 13px;
+      color: var(--text-soft);
+      margin-bottom: 22px;
+      font-weight: 300;
+    }
+
+    .section { margin-bottom: 26px; }
+
+    .section-title {
+      font-family: 'Frank Ruhl Libre', serif;
+      font-size: 17px;
+      font-weight: 500;
+      color: var(--navy);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 14px;
+    }
+
+    .section-title::before {
+      content: '';
+      display: block;
+      width: 3px; height: 16px;
+      background: var(--gold);
+      border-radius: 2px;
+      flex-shrink: 0;
+    }
+
+    .divider {
+      height: 1px;
+      background: linear-gradient(to left, transparent, var(--border) 30%, var(--border) 70%, transparent);
+      margin: 20px 0;
+      position: relative;
+    }
+
+    .divider-star {
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      background: var(--cream);
+      padding: 0 8px;
+      color: var(--gold);
+      font-size: 12px;
+      opacity: 0.6;
+    }
+
+    /* ═══ QUICK LINKS (top of home) ═══ */
+    .quick-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-bottom: 22px;
+    }
+
+    .quick-card {
+      background: var(--card-bg);
+      border-radius: var(--radius-sm);
+      padding: 16px 8px 14px;
+      text-align: center;
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+      cursor: pointer;
+      transition: all 0.15s;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .quick-card:hover { border-color: var(--gold); background: #FFFEF5; transform: translateY(-1px); }
+    .quick-card:active { transform: scale(0.97); }
+    .quick-icon { font-size: 26px; margin-bottom: 7px; }
+    .quick-label { font-size: 12px; font-weight: 600; color: var(--text-mid); }
+
+    /* ═══ LETTER CARD ═══ */
+    .letter-card {
+      background: var(--card-bg);
+      border-radius: var(--radius);
+      padding: 22px 20px;
+      box-shadow: var(--shadow);
+      border: 1px solid var(--border);
+      margin-bottom: 10px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .letter-card::before {
+      content: '';
+      position: absolute;
+      top: 0; right: 0;
+      width: 4px; height: 100%;
+      background: linear-gradient(to bottom, var(--gold), transparent);
+    }
+
+    .letter-community {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      color: var(--gold);
+      text-transform: uppercase;
+      margin-bottom: 12px;
+    }
+
+    .letter-salutation {
+      font-family: 'Frank Ruhl Libre', serif;
+      font-size: 18px;
+      font-weight: 500;
+      color: var(--navy);
+      margin-bottom: 10px;
+      line-height: 1.4;
+    }
+
+    .letter-body {
+      font-size: 14px;
+      color: var(--text-mid);
+      line-height: 1.75;
+      margin-bottom: 14px;
+    }
+
+    .letter-options {
+      list-style: none;
+      margin: 10px 0 14px;
+    }
+
+    .letter-options li {
+      font-size: 14px;
+      color: var(--text-mid);
+      line-height: 1.6;
+      padding: 5px 0;
+      border-bottom: 1px solid var(--parchment);
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+    }
+
+    .letter-options li:last-child { border-bottom: none; }
+
+    .letter-options li::before {
+      content: '•';
+      color: var(--gold);
+      font-size: 16px;
+      flex-shrink: 0;
+      line-height: 1.5;
+    }
+
+    .letter-yahrzeit {
+      background: var(--gold-soft);
+      border-radius: 10px;
+      padding: 10px 13px;
+      font-size: 13px;
+      color: var(--text-mid);
+      line-height: 1.6;
+      margin-top: 6px;
+    }
+
+    .letter-yahrzeit strong { color: var(--navy); font-weight: 700; }
+
+    /* ═══ DECEASED CARDS ═══ */
+    /* On desktop, show 2 columns */
+    .deceased-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+    }
+
+    .deceased-card {
+      background: var(--card-bg);
+      border-radius: var(--radius);
+      padding: 15px;
+      box-shadow: var(--shadow);
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 13px;
+      transition: box-shadow 0.15s;
+    }
+
+    .d-avatar {
+      width: 50px; height: 50px;
+      background: linear-gradient(140deg, var(--navy), var(--navy-mid));
+      border-radius: 15px;
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Frank Ruhl Libre', serif;
+      font-size: 22px;
+      color: var(--gold-bright);
+      font-weight: 500;
+      flex-shrink: 0;
+      box-shadow: 0 2px 8px rgba(28,43,69,0.3);
+    }
+
+    .d-info { flex: 1; min-width: 0; }
+
+    .d-name {
+      font-family: 'Frank Ruhl Libre', serif;
+      font-size: 17px;
+      font-weight: 500;
+      color: var(--navy);
+      margin-bottom: 2px;
+    }
+
+    .d-rel {
+      font-size: 12px;
+      color: var(--text-soft);
+      margin-bottom: 7px;
+      font-weight: 300;
+    }
+
+    .yahrzeit-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 3px 9px;
+      border-radius: 7px;
+      font-size: 11px;
+      font-weight: 600;
+      background: var(--gold-soft);
+      color: var(--gold);
+    }
+
+    .yahrzeit-tag.later { background: rgba(28,43,69,0.08); color: var(--navy); }
+
+    .d-actions {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      flex-shrink: 0;
+    }
+
+    .d-candle {
+      font-size: 20px;
+      opacity: 0.5;
+      animation: candle-flicker 4s ease-in-out infinite;
+      animation-delay: 0.8s;
+    }
+
+    .btn-edit {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      padding: 5px 10px;
+      border-radius: 8px;
+      border: 1.5px solid var(--border);
+      background: var(--white);
+      font-family: 'Heebo', sans-serif;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-mid);
+      cursor: pointer;
+      transition: all 0.15s;
+      white-space: nowrap;
+    }
+
+    .btn-edit:hover { border-color: var(--gold); color: var(--gold); background: #FFFEF5; }
+    .btn-edit svg { flex-shrink: 0; }
+
+    /* ═══ MESSAGE CARDS ═══ */
+    .msg-card {
+      background: var(--card-bg);
+      border-radius: var(--radius-sm);
+      padding: 13px 15px;
+      box-shadow: var(--shadow);
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 8px;
+    }
+
+    .msg-icon {
+      width: 40px; height: 40px;
+      border-radius: 11px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 18px;
+      flex-shrink: 0;
+    }
+
+    .msg-icon.sms   { background: #EBF4FD; }
+    .msg-icon.wa    { background: #E8F6EE; }
+    .msg-icon.email { background: #FFF4E6; }
+
+    .msg-body { flex: 1; }
+    .msg-title { font-size: 14px; font-weight: 600; color: var(--text); margin-bottom: 2px; }
+    .msg-meta  { font-size: 11px; color: var(--text-soft); }
+    .msg-date  { font-size: 12px; font-weight: 700; color: var(--navy); direction: ltr; text-align: left; white-space: nowrap; }
+
+    /* ═══ PROFILE FORM ═══ */
+    .form-group { margin-bottom: 16px; }
+
+    .form-label {
+      display: block;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--text-mid);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 7px;
+    }
+
+    .form-input {
+      width: 100%;
+      padding: 13px 15px;
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-sm);
+      font-family: 'Heebo', sans-serif;
+      font-size: 15px;
+      color: var(--text);
+      background: var(--white);
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      direction: rtl;
+      -webkit-appearance: none;
+    }
+
+    .form-input:focus {
+      border-color: var(--gold);
+      box-shadow: 0 0 0 3px rgba(184,135,42,0.13);
+    }
+
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 11px; }
+
+    .form-hint {
+      margin-top: 14px;
+      padding: 11px 14px;
+      background: rgba(184,135,42,0.07);
+      border-radius: 9px;
+      border-right: 3px solid var(--gold);
+      font-size: 12px;
+      color: var(--text-mid);
+      line-height: 1.6;
+    }
+
+    .btn-primary {
+      width: 100%;
+      padding: 15px;
+      background: var(--navy);
+      color: #fff;
+      border: none;
+      border-radius: var(--radius-sm);
+      font-family: 'Heebo', sans-serif;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      margin-top: 10px;
+      transition: all 0.2s;
+      position: relative;
+      overflow: hidden;
+      -webkit-appearance: none;
+    }
+
+    .btn-primary::after {
+      content: '';
+      position: absolute; inset: 0;
+      background: linear-gradient(135deg, transparent 50%, rgba(184,135,42,0.15));
+    }
+
+    .btn-primary:hover { background: var(--navy-mid); }
+    .btn-primary:active { transform: scale(0.99); }
+
+    .success-banner {
+      display: none;
+      text-align: center;
+      padding: 14px;
+      background: rgba(43,82,68,0.09);
+      border-radius: var(--radius-sm);
+      margin-top: 12px;
+    }
+
+    .success-banner.show { display: block; animation: screen-in 0.25s ease; }
+    .success-icon { font-size: 26px; margin-bottom: 5px; }
+    .success-text { font-size: 14px; color: var(--sage); font-weight: 600; }
+
+    /* ═══ PREFERENCES ═══ */
+    .pref-block {
+      background: var(--card-bg);
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      margin-bottom: 14px;
+    }
+
+    .pref-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 15px 16px;
+      border-bottom: 1px solid var(--parchment);
+      gap: 12px;
+    }
+
+    .pref-row:last-child { border-bottom: none; }
+    .pref-row-label { flex: 1; }
+    .pref-title { font-size: 15px; font-weight: 500; color: var(--text); margin-bottom: 2px; }
+    .pref-desc  { font-size: 12px; color: var(--text-soft); font-weight: 300; }
+
+    .toggle { position: relative; width: 48px; height: 27px; flex-shrink: 0; }
+    .toggle input { opacity: 0; width: 0; height: 0; }
+
+    .slider {
+      position: absolute; inset: 0;
+      background: #D0C8BC;
+      border-radius: 14px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    .slider::after {
+      content: '';
+      position: absolute;
+      width: 21px; height: 21px;
+      background: #fff;
+      border-radius: 50%;
+      top: 3px; right: 3px;
+      transition: 0.3s;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.22);
+    }
+
+    .toggle input:checked ~ .slider { background: var(--sage); }
+    .toggle input:checked ~ .slider::after { right: 24px; }
+
+    .pills { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
+
+    .pill {
+      padding: 7px 14px;
+      border-radius: 20px;
+      border: 1.5px solid var(--border);
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text-mid);
+      cursor: pointer;
+      transition: all 0.2s;
+      background: var(--white);
+      font-family: 'Heebo', sans-serif;
+    }
+
+    .pill.on { background: var(--navy); border-color: var(--navy); color: #fff; }
+
+    .day-chips { display: flex; gap: 9px; margin-top: 10px; }
+
+    .day-chip {
+      width: 54px; height: 54px;
+      border-radius: 14px;
+      border: 1.5px solid var(--border);
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      cursor: pointer;
+      background: var(--white);
+      transition: all 0.18s;
+    }
+
+    .day-chip.on { background: var(--gold-soft); border-color: var(--gold); }
+    .day-num { font-family: 'Frank Ruhl Libre', serif; font-size: 19px; font-weight: 700; color: var(--navy); line-height: 1; }
+    .day-chip.on .day-num { color: var(--gold); }
+    .day-lbl { font-size: 9px; color: var(--text-soft); font-weight: 600; margin-top: 1px; }
+
+    .rel-row {
+      background: var(--card-bg);
+      border-radius: var(--radius-sm);
+      padding: 13px 15px;
+      box-shadow: var(--shadow);
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 9px;
+    }
+
+    .rel-info { flex: 1; }
+    .rel-name { font-family: 'Frank Ruhl Libre', serif; font-size: 16px; font-weight: 500; color: var(--navy); }
+    .rel-sub  { font-size: 11px; color: var(--text-soft); margin-top: 1px; }
+    .rel-toggle-wrap { text-align: center; }
+    .opt-lbl { font-size: 10px; color: var(--text-soft); margin-top: 4px; font-weight: 600; }
+
+    .sub-title {
+      font-family: 'Frank Ruhl Libre', serif;
+      font-size: 16px; font-weight: 500;
+      color: var(--navy);
+      margin: 22px 0 5px;
+    }
+
+    .sub-desc { font-size: 12px; color: var(--text-soft); margin-bottom: 13px; font-weight: 300; }
+
+    /* ═══ VENUES ═══ */
+    .venues-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 14px;
+    }
+
+    .venue-card {
+      background: var(--card-bg);
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .venue-top {
+      background: linear-gradient(140deg, var(--navy) 0%, var(--navy-mid) 100%);
+      padding: 18px 18px 14px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .venue-top.warm  { background: linear-gradient(140deg, #3A2C18, #5C4020); }
+    .venue-top.green { background: linear-gradient(140deg, #1E3D2F, #2B5244); }
+
+    .venue-top::before {
+      content: '';
+      position: absolute;
+      top: -24px; left: -24px;
+      width: 110px; height: 110px;
+      background: radial-gradient(circle, rgba(212,169,58,0.18) 0%, transparent 70%);
+    }
+
+    .venue-ico  { font-size: 28px; margin-bottom: 9px; position: relative; z-index: 1; }
+    .venue-name {
+      font-family: 'Frank Ruhl Libre', serif;
+      font-size: 20px; font-weight: 500;
+      color: #fff;
+      position: relative; z-index: 1;
+    }
+
+    .venue-body { padding: 14px 18px 18px; }
+
+    .venue-desc {
+      font-size: 14px;
+      color: var(--text-mid);
+      line-height: 1.65;
+      margin-bottom: 14px;
+      font-weight: 300;
+    }
+
+    .btn-venue {
+      width: 100%;
+      padding: 12px;
+      background: transparent;
+      border: 1.5px solid var(--gold);
+      border-radius: var(--radius-sm);
+      font-family: 'Heebo', sans-serif;
+      font-size: 15px; font-weight: 700;
+      color: var(--gold);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-venue:hover { background: var(--gold); color: #fff; }
+
+    .btn-venue.done {
+      background: var(--sage);
+      border-color: var(--sage);
+      color: #fff;
+      cursor: default;
+    }
+
+    .venue-confirm {
+      display: none;
+      text-align: center;
+      font-size: 12px;
+      color: var(--sage);
+      font-weight: 600;
+      margin-top: 10px;
+    }
+
+    .venue-confirm.show { display: block; animation: screen-in 0.3s ease; }
+
+    /* ═══ TOAST ═══ */
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%) translateY(16px);
+      background: var(--sage);
+      color: #fff;
+      padding: 11px 22px;
+      border-radius: 24px;
+      font-size: 14px; font-weight: 600;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.22);
+      z-index: 300;
+      opacity: 0;
+      transition: all 0.28s cubic-bezier(0.34, 1.56, 0.64, 1);
+      white-space: nowrap;
+      pointer-events: none;
+    }
+
+    .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+    .dimmed { opacity: 0.38; pointer-events: none; transition: opacity 0.3s; }
+
+    /* ═══ RESPONSIVE ═══ */
+
+    /* Mobile: show bottom nav, hide sidebar, full-width content */
+    @media (max-width: 640px) {
+      .bottom-nav { display: flex; }
+      .sidebar { display: none !important; }
+      .content { padding: 16px 14px calc(var(--nav-h) + 20px); }
+      .toast { bottom: calc(var(--nav-h) + 12px); }
+    }
+
+    /* Desktop: show sidebar, hide bottom nav */
+    @media (min-width: 641px) {
+      body { background: #E8E0D0; }
+      .layout { padding: 0 24px; }
+      .sidebar { display: block; }
+      .content { padding: 28px 0 40px 0; }
+      .deceased-grid { grid-template-columns: 1fr 1fr; }
+      .venues-grid   { grid-template-columns: 1fr 1fr 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header class="header">
+    <div class="header-inner">
+      <div class="header-text">
+        <div class="brand-line">הקהל · HAKHEL</div>
+        <div class="greeting">שלום, שרה</div>
+        <div class="header-date">כ״ד אדר תשפ״ו &nbsp;·&nbsp; 24 מרץ 2026</div>
+      </div>
+      <div class="candle-wrap">
+        <div class="candle-glow"></div>
+        <div class="candle-emoji">🕯️</div>
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN LAYOUT -->
+  <div class="layout">
+
+    <!-- SIDEBAR (desktop) -->
+    <nav class="sidebar">
+      <button class="sidebar-btn active" id="sb-home" onclick="go('home')">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>
+        </svg>
+        בית
+      </button>
+      <button class="sidebar-btn" id="sb-profile" onclick="go('profile')">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/>
+        </svg>
+        הפרופיל שלי
+      </button>
+      <button class="sidebar-btn" id="sb-prefs" onclick="go('prefs')">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="3"/>
+          <path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/>
+        </svg>
+        העדפות
+      </button>
+      <div class="sidebar-divider"></div>
+      <button class="sidebar-btn" id="sb-venues" onclick="go('venues')">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M3 22V9l9-7 9 7v13"/><path d="M9 22v-7h6v7"/>
+        </svg>
+        שירותי הקהילה
+      </button>
+    </nav>
+
+    <!-- CONTENT -->
+    <main class="content">
+
+      <!-- ─── HOME ─── -->
+      <div class="screen active" id="s-home">
+
+        <!-- Quick access at top -->
+        <div class="quick-grid">
+          <div class="quick-card" onclick="go('profile')">
+            <div class="quick-icon">👤</div>
+            <div class="quick-label">הפרופיל שלי</div>
+          </div>
+          <div class="quick-card" onclick="go('prefs')">
+            <div class="quick-icon">⚙️</div>
+            <div class="quick-label">העדפות</div>
+          </div>
+          <div class="quick-card" onclick="go('venues')">
+            <div class="quick-icon">🏛️</div>
+            <div class="quick-label">שירותים</div>
+          </div>
+        </div>
+
+        <!-- Personal letter -->
+        <div class="letter-card">
+          <div class="letter-community">בית הכנסת בכפר ורדים</div>
+          <div class="letter-salutation">גברת שרה כהן שלום וברכה,</div>
+          <div class="letter-body">
+            ברוכה הבאה לאתר יזכור של בית הכנסת בכפר ורדים.<br>
+            לפניך מספר אפשרויות לציון יום הפטירה של אביך מר <strong>אברהם כהן</strong> עליו השלום:
+          </div>
+          <ul class="letter-options">
+            <li>אמירת קדיש בבית הכנסת על ידי אחד המתפללים</li>
+            <li>עליה לקבר, הדלקת נר נשמה ואמירת תהילים לזכר אביך</li>
+            <li>קידוש לשבת בבית הכנסת</li>
+            <li>תרומת סעודה שלישית בבית הכנסת</li>
+            <li>סעודת מצווה ביום חול עם דרשה לזכר אביך</li>
+          </ul>
+          <div class="letter-yahrzeit">
+            🕯️ <strong>אברהם כהן</strong> · יארצייט ט׳ ניסן תשפ״ו · עוד <strong>14 ימים</strong>
+          </div>
+        </div>
+
+        <div class="divider" style="margin-top:22px"><span class="divider-star">✦</span></div>
+
+        <!-- Deceased -->
+        <div class="section">
+          <h2 class="section-title">הנפטרים שלי</h2>
+          <div class="deceased-grid">
+
+            <div class="deceased-card">
+              <div class="d-avatar">א</div>
+              <div class="d-info">
+                <div class="d-name">אברהם כהן</div>
+                <div class="d-rel">אב</div>
+                <span class="yahrzeit-tag">🕯️ ט׳ ניסן &nbsp;—&nbsp; 7 אפריל</span>
+              </div>
+              <div class="d-actions">
+                <div class="d-candle">🕯️</div>
+                <button class="btn-edit" onclick="toast('עריכה בקרוב')">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/>
+                    <path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                  </svg>
+                  ערוך
+                </button>
+              </div>
+            </div>
+
+            <div class="deceased-card">
+              <div class="d-avatar">מ</div>
+              <div class="d-info">
+                <div class="d-name">מרים לוי</div>
+                <div class="d-rel">סבתא מצד אמא</div>
+                <span class="yahrzeit-tag later">ד׳ סיון &nbsp;—&nbsp; 30 מאי</span>
+              </div>
+              <div class="d-actions">
+                <div class="d-candle" style="opacity:0.25"></div>
+                <button class="btn-edit" onclick="toast('עריכה בקרוב')">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/>
+                    <path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                  </svg>
+                  ערוך
+                </button>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <div class="divider"><span class="divider-star">✦</span></div>
+
+        <!-- Upcoming messages -->
+        <div class="section">
+          <h2 class="section-title">הודעות קרובות</h2>
+
+          <div class="msg-card">
+            <div class="msg-icon sms">💬</div>
+            <div class="msg-body">
+              <div class="msg-title">יארצייט — אברהם כהן</div>
+              <div class="msg-meta">14 ימים לפני · SMS</div>
+            </div>
+            <div class="msg-date">24 מרץ</div>
+          </div>
+
+          <div class="msg-card">
+            <div class="msg-icon wa">📱</div>
+            <div class="msg-body">
+              <div class="msg-title">יארצייט — אברהם כהן</div>
+              <div class="msg-meta">7 ימים לפני · WhatsApp</div>
+            </div>
+            <div class="msg-date">31 מרץ</div>
+          </div>
+
+          <div class="msg-card" style="opacity:0.6">
+            <div class="msg-icon email">📧</div>
+            <div class="msg-body">
+              <div class="msg-title">יארצייט — מרים לוי</div>
+              <div class="msg-meta">30 ימים לפני · אימייל</div>
+            </div>
+            <div class="msg-date">30 אפריל</div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- ─── PROFILE ─── -->
+      <div class="screen" id="s-profile">
+        <h1 class="screen-title">הפרופיל שלי</h1>
+        <p class="screen-sub">עדכון פרטי הקשר שלך</p>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">שם פרטי</label>
+            <input class="form-input" type="text" value="שרה">
+          </div>
+          <div class="form-group">
+            <label class="form-label">שם משפחה</label>
+            <input class="form-input" type="text" value="כהן">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">טלפון</label>
+          <input class="form-input" type="tel" value="050-1234567" dir="ltr" style="text-align:right">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">אימייל</label>
+          <input class="form-input" type="email" value="sara.cohen@example.com" dir="ltr" style="text-align:right">
+        </div>
+
+        <div class="form-hint">
+          שינוי בפרטי הקשר יעדכן אוטומטית את ההודעות המתוכננות עבורך.
+        </div>
+
+        <button class="btn-primary" onclick="doSave('profile-ok')">שמור שינויים</button>
+
+        <div class="success-banner" id="profile-ok">
+          <div class="success-icon">✅</div>
+          <div class="success-text">הפרטים עודכנו בהצלחה</div>
+        </div>
+      </div>
+
+      <!-- ─── PREFERENCES ─── -->
+      <div class="screen" id="s-prefs">
+        <h1 class="screen-title">העדפות</h1>
+        <p class="screen-sub">בחר כיצד ומתי לקבל תזכורות</p>
+
+        <div class="pref-block">
+          <div class="pref-row">
+            <div class="pref-row-label">
+              <div class="pref-title">ביטול כל ההודעות</div>
+              <div class="pref-desc">לא לקבל תזכורות כלל</div>
+            </div>
+            <label class="toggle">
+              <input type="checkbox" onchange="dimPrefs(this)">
+              <span class="slider"></span>
+            </label>
+          </div>
+        </div>
+
+        <div id="prefs-body">
+          <div class="pref-block">
+            <div class="pref-row" style="flex-direction:column; align-items:flex-start;">
+              <div class="pref-title">אמצעי קבלה מועדף</div>
+              <div class="pref-desc">הבחירה חלה על כל הנפטרים</div>
+              <div class="pills">
+                <button class="pill on" onclick="pickPill(this)">💬 SMS</button>
+                <button class="pill" onclick="pickPill(this)">📱 WhatsApp</button>
+                <button class="pill" onclick="pickPill(this)">📧 אימייל</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="pref-block">
+            <div class="pref-row" style="flex-direction:column; align-items:flex-start;">
+              <div class="pref-title">ימים לפני היארצייט</div>
+              <div class="pref-desc">ניתן לבחור מספר אפשרויות</div>
+              <div class="day-chips">
+                <div class="day-chip" onclick="flipChip(this)">
+                  <span class="day-num">0</span><span class="day-lbl">ביום</span>
+                </div>
+                <div class="day-chip on" onclick="flipChip(this)">
+                  <span class="day-num">7</span><span class="day-lbl">ימים</span>
+                </div>
+                <div class="day-chip on" onclick="flipChip(this)">
+                  <span class="day-num">14</span><span class="day-lbl">ימים</span>
+                </div>
+                <div class="day-chip" onclick="flipChip(this)">
+                  <span class="day-num">30</span><span class="day-lbl">ימים</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="sub-title">הגדרות לכל נפטר</div>
+          <p class="sub-desc">ניתן לבטל קבלת הודעות עבור נפטר ספציפי</p>
+
+          <div class="rel-row">
+            <div class="rel-info">
+              <div class="rel-name">אברהם כהן</div>
+              <div class="rel-sub">אב · יארצייט ט׳ ניסן</div>
+            </div>
+            <div class="rel-toggle-wrap">
+              <label class="toggle"><input type="checkbox"><span class="slider"></span></label>
+              <div class="opt-lbl">בטל הודעות</div>
+            </div>
+          </div>
+
+          <div class="rel-row">
+            <div class="rel-info">
+              <div class="rel-name">מרים לוי</div>
+              <div class="rel-sub">סבתא · יארצייט ד׳ סיון</div>
+            </div>
+            <div class="rel-toggle-wrap">
+              <label class="toggle"><input type="checkbox"><span class="slider"></span></label>
+              <div class="opt-lbl">בטל הודעות</div>
+            </div>
+          </div>
+
+          <button class="btn-primary" style="margin-top:20px" onclick="doSave('prefs-ok')">שמור העדפות</button>
+          <div class="success-banner" id="prefs-ok">
+            <div class="success-icon">✅</div>
+            <div class="success-text">ההעדפות נשמרו בהצלחה</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ─── VENUES ─── -->
+      <div class="screen" id="s-venues">
+        <h1 class="screen-title">שירותי הקהילה</h1>
+        <p class="screen-sub">דרכים נוספות לכבד את זכר הנפטר</p>
+
+        <div class="venues-grid">
+
+          <div class="venue-card">
+            <div class="venue-top">
+              <div class="venue-ico">🕍</div>
+              <div class="venue-name">אמירת קדיש</div>
+            </div>
+            <div class="venue-body">
+              <p class="venue-desc">לא יכולים להגיע לבית הכנסת? ניתן לבקש מהקהילה שיאמרו קדיש לעילוי נשמת הנפטר.</p>
+              <button class="btn-venue" id="v-kaddish" onclick="reqVenue('kaddish')">בקש קדיש</button>
+              <div class="venue-confirm" id="c-kaddish">✅ הבקשה נשלחה — הצוות יצור איתך קשר</div>
+            </div>
+          </div>
+
+          <div class="venue-card">
+            <div class="venue-top warm">
+              <div class="venue-ico">🍽️</div>
+              <div class="venue-name">סעודת מצווה</div>
+            </div>
+            <div class="venue-body">
+              <p class="venue-desc">ארגן סעודת מצווה לכבוד הנפטר — ביום היארצייט, בשבוע שחל בו, או בשבת הסמוכה.</p>
+              <button class="btn-venue" id="v-seudah" onclick="reqVenue('seudah')">בקש סעודת מצווה</button>
+              <div class="venue-confirm" id="c-seudah">✅ הבקשה נשלחה — הצוות יצור איתך קשר</div>
+            </div>
+          </div>
+
+          <div class="venue-card">
+            <div class="venue-top green">
+              <div class="venue-ico">📖</div>
+              <div class="venue-name">לימוד לעילוי נשמה</div>
+            </div>
+            <div class="venue-body">
+              <p class="venue-desc">בקש לימוד משנה או גמרא לעילוי נשמת הנפטר ביום היארצייט בבית הכנסת.</p>
+              <button class="btn-venue" id="v-limud" onclick="reqVenue('limud')">בקש לימוד לזכר</button>
+              <div class="venue-confirm" id="c-limud">✅ הבקשה נשלחה — הצוות יצור איתך קשר</div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <!-- BOTTOM NAV (mobile) -->
+  <nav class="bottom-nav">
+    <button class="nav-btn active" id="n-home" onclick="go('home')">
+      <div class="nav-pip">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>
+        </svg>
+      </div>
+      <span class="nav-label">בית</span>
+    </button>
+    <button class="nav-btn" id="n-profile" onclick="go('profile')">
+      <div class="nav-pip">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/>
+        </svg>
+      </div>
+      <span class="nav-label">פרופיל</span>
+    </button>
+    <button class="nav-btn" id="n-prefs" onclick="go('prefs')">
+      <div class="nav-pip">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="3"/>
+          <path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/>
+        </svg>
+      </div>
+      <span class="nav-label">העדפות</span>
+    </button>
+    <button class="nav-btn" id="n-venues" onclick="go('venues')">
+      <div class="nav-pip">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M3 22V9l9-7 9 7v13"/><path d="M9 22v-7h6v7"/>
+        </svg>
+      </div>
+      <span class="nav-label">שירותים</span>
+    </button>
+  </nav>
+
+  <div class="toast" id="toast"></div>
+
+  <script>
+    const screens = ['home','profile','prefs','venues'];
+
+    function go(id) {
+      screens.forEach(s => {
+        document.getElementById('s-'+s).classList.remove('active');
+        const nb = document.getElementById('n-'+s);
+        const sb = document.getElementById('sb-'+s);
+        if (nb) nb.classList.remove('active');
+        if (sb) sb.classList.remove('active');
+      });
+      document.getElementById('s-'+id).classList.add('active');
+      const nb = document.getElementById('n-'+id);
+      const sb = document.getElementById('sb-'+id);
+      if (nb) nb.classList.add('active');
+      if (sb) sb.classList.add('active');
+      window.scrollTo(0, 0);
+    }
+
+    function doSave(bannerId) {
+      const el = document.getElementById(bannerId);
+      el.classList.add('show');
+      toast('השינויים נשמרו בהצלחה ✓');
+      setTimeout(() => el.classList.remove('show'), 3500);
+    }
+
+    function pickPill(el) {
+      el.closest('.pills').querySelectorAll('.pill').forEach(p => p.classList.remove('on'));
+      el.classList.add('on');
+    }
+
+    function flipChip(el) { el.classList.toggle('on'); }
+
+    function dimPrefs(cb) {
+      document.getElementById('prefs-body').classList.toggle('dimmed', cb.checked);
+    }
+
+    function reqVenue(id) {
+      const btn = document.getElementById('v-'+id);
+      const confirm = document.getElementById('c-'+id);
+      btn.textContent = '✓ נשלח';
+      btn.classList.add('done');
+      btn.disabled = true;
+      confirm.classList.add('show');
+      toast('הבקשה נשלחה לצוות הקהילה ✓');
+    }
+
+    function toast(msg) {
+      const t = document.getElementById('toast');
+      t.textContent = msg;
+      t.classList.add('show');
+      setTimeout(() => t.classList.remove('show'), 2800);
+    }
+  </script>
+</body>
+</html>

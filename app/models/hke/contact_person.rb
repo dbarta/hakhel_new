@@ -9,7 +9,12 @@ module Hke
     has_many :relations, dependent: :destroy
     has_many :deceased_people, through: :relations
     has_many :future_messages, through: :relations
+    has_many :short_links, class_name: "Hke::ShortLink", dependent: :destroy
+    has_many :venue_requests, class_name: "Hke::VenueRequest", dependent: :destroy
     has_one :preference, as: :preferring, dependent: :destroy
+
+    has_secure_token :portal_token, length: 24
+
     validates :first_name, :last_name, :gender, :phone, presence: {message: :presence}
     validates :gender, inclusion: {in: ["male", "female"], message: :gender_invalid}
     accepts_nested_attributes_for :relations, allow_destroy: true, reject_if: :all_blank

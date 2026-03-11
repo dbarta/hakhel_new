@@ -1,0 +1,110 @@
+<%# Portal Preferences %>
+<div style="display: flex; flex-direction: column; gap: 1.5rem;">
+  <h1 style="font-family: var(--font-serif); font-size: 1.5rem; color: var(--color-navy); margin: 0;">העדפות</h1>
+
+  <%# Global preferences form %>
+  <%= form_with url: portal_preferences_path(@portal_token), method: :patch, local: true do |f| %>
+    <div class="portal-card" style="display: flex; flex-direction: column; gap: 1.25rem;">
+      <div class="section-heading" style="margin-bottom: 0;">
+        הגדרות כלליות
+      </div>
+
+      <%# Delivery method %>
+      <div>
+        <div style="font-size: 0.82rem; color: var(--color-warm-gray); margin-bottom: 0.5rem;">שיטת קבלת ההודעות (לפי עדיפות)</div>
+        <div style="display: flex; flex-direction: column; gap: 0.4rem;">
+          <% [["sms", "SMS"], ["whatsapp", "WhatsApp"], ["email", "אימייל"]].each do |val, label| %>
+            <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer; font-size: 0.9rem;">
+              <input type="checkbox" name="preference[delivery_priority][]" value="<%= val %>"
+                <%= "checked" if @preference&.delivery_priority&.include?(val) %>
+                style="width: 1rem; height: 1rem; accent-color: var(--color-navy);">
+              <%= label %>
+            </label>
+          <% end %>
+        </div>
+        <%# Hidden field to send empty array if none checked %>
+        <input type="hidden" name="preference[delivery_priority][]" value="">
+      </div>
+
+      <%# Days before yahrzeit %>
+      <div>
+        <div style="font-size: 0.82rem; color: var(--color-warm-gray); margin-bottom: 0.5rem;">כמה ימים לפני היארצייט לשלוח הודעה</div>
+        <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+          <% [0, 7, 14, 30].each do |days| %>
+            <label style="cursor: pointer;">
+              <input type="checkbox" name="preference[how_many_days_before_yahrzeit_to_send_message][]" value="<%= days %>"
+                <%= "checked" if @preference&.how_many_days_before_yahrzeit_to_send_message&.map(&:to_i)&.include?(days) %>
+                style="display: none;" class="days-checkbox" id="days-<%= days %>">
+              <span style="display: inline-block; padding: 0.4rem 0.9rem; border: 1.5px solid var(--color-border); border-radius: 20px; font-size: 0.85rem; color: var(--color-navy); transition: all 0.15s; user-select: none;"
+                class="days-label" data-for="days-<%= days %>">
+                <%= days == 0 ? "ביום עצמו" : "#{days} ימים" %>
+              </span>
+            </label>
+          <% end %>
+        </div>
+        <input type="hidden" name="preference[how_many_days_before_yahrzeit_to_send_message][]" value="">
+      </div>
+
+      <div style="display: flex; justify-content: flex-end;">
+        <%= f.submit "שמור הגדרות", class: "btn-primary" %>
+      </div>
+    </div>
+  <% end %>
+
+  <%# Per-relation opt-out %>
+  <% if @relations.any? %>
+    <section>
+      <div class="section-heading">
+        הגדרות לפי נפטר
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+        <% @relations.each do |relation| %>
+          <% dp = relation.deceased_person %>
+          <% rel_pref = relation.preference %>
+          <div class="portal-card" style="display: flex; justify-content: space-between; align-items: center; gap: 1rem;">
+            <div>
+              <div style="font-family: var(--font-serif); color: var(--color-navy); font-size: 1rem;">
+                <%= dp.first_name %> <%= dp.last_name %>
+              </div>
+            </div>
+            <%= form_with url: portal_relation_preference_path(@portal_token, relation_id: relation.id), method: :patch, local: true, style: "display: flex; align-items: center; gap: 0.5rem;" do |rf| %>
+              <label style="display: flex; align-items: center; gap: 0.4rem; font-size: 0.85rem; color: var(--color-warm-gray); cursor: pointer;">
+                <input type="checkbox" name="relation_preference[delivery_priority][]" value="no_delivery"
+                  <%= "checked" if rel_pref&.delivery_priority == ["no_delivery"] %>
+                  onchange="this.form.requestSubmit()"
+                  style="width: 1rem; height: 1rem; accent-color: var(--color-navy);">
+                ללא הודעות לנפטר זה
+              </label>
+            <% end %>
+          </div>
+        <% end %>
+      </div>
+    </section>
+  <% end %>
+</div>
+
+<script>
+  // Toggle pill style for days checkboxes
+  document.querySelectorAll('.days-checkbox').forEach(function(cb) {
+    function updateStyle() {
+      var label = document.querySelector('.days-label[data-for="' + cb.id + '"]');
+      if (label) {
+        if (cb.checked) {
+          label.style.background = 'var(--color-navy)';
+          label.style.color = 'white';
+          label.style.borderColor = 'var(--color-navy)';
+        } else {
+          label.style.background = 'transparent';
+          label.style.color = 'var(--color-navy)';
+          label.style.borderColor = 'var(--color-border)';
+        }
+      }
+    }
+    updateStyle();
+    cb.addEventListener('change', updateStyle);
+    var label = document.querySelector('.days-label[data-for="' + cb.id + '"]');
+    if (label) {
+      label.addEventListener('click', function() { cb.checked = !cb.checked; cb.dispatchEvent(new Event('change')); });
+    }
+  });
+</script>

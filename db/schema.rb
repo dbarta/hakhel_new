@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_03_11_173502) do
+ActiveRecord::Schema[8.1].define(version: 2026_03_12_100004) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -171,6 +171,18 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_11_173502) do
     t.index ["account_id"], name: "index_hke_communities_on_account_id"
   end
 
+  create_table "hke_community_venues", force: :cascade do |t|
+    t.boolean "active", default: true, null: false
+    t.integer "community_id", null: false
+    t.datetime "created_at", null: false
+    t.text "description"
+    t.string "title", null: false
+    t.datetime "updated_at", null: false
+    t.string "venue_type", null: false
+    t.index ["community_id", "venue_type"], name: "index_hke_community_venues_on_community_id_and_venue_type"
+    t.index ["community_id"], name: "index_hke_community_venues_on_community_id"
+  end
+
   create_table "hke_contact_people", force: :cascade do |t|
     t.bigint "community_id", null: false
     t.datetime "created_at", null: false
@@ -179,8 +191,10 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_11_173502) do
     t.string "gender"
     t.string "last_name"
     t.string "phone"
+    t.string "portal_token"
     t.datetime "updated_at", null: false
     t.index ["community_id"], name: "index_hke_contact_people_on_community_id"
+    t.index ["portal_token"], name: "index_hke_contact_people_on_portal_token", unique: true
   end
 
   create_table "hke_csv_import_logs", force: :cascade do |t|
@@ -394,11 +408,42 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_11_173502) do
     t.index ["twilio_message_sid"], name: "index_hke_sent_messages_on_twilio_message_sid", unique: true
   end
 
+  create_table "hke_short_links", force: :cascade do |t|
+    t.integer "click_count", default: 0, null: false
+    t.string "code", null: false
+    t.integer "community_id", null: false
+    t.bigint "contact_person_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "first_clicked_at"
+    t.datetime "updated_at", null: false
+    t.string "via_token"
+    t.index ["code"], name: "index_hke_short_links_on_code", unique: true
+    t.index ["community_id"], name: "index_hke_short_links_on_community_id"
+    t.index ["contact_person_id"], name: "index_hke_short_links_on_contact_person_id"
+  end
+
   create_table "hke_systems", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.string "product_name", default: "Hakhel"
     t.datetime "updated_at", null: false
     t.string "version", default: "1.0"
+  end
+
+  create_table "hke_venue_requests", force: :cascade do |t|
+    t.integer "community_id", null: false
+    t.bigint "community_venue_id", null: false
+    t.bigint "contact_person_id", null: false
+    t.datetime "created_at", null: false
+    t.text "note"
+    t.bigint "relation_id"
+    t.datetime "sent_email_at"
+    t.string "status", default: "pending", null: false
+    t.datetime "updated_at", null: false
+    t.index ["community_id"], name: "index_hke_venue_requests_on_community_id"
+    t.index ["community_venue_id"], name: "index_hke_venue_requests_on_community_venue_id"
+    t.index ["contact_person_id"], name: "index_hke_venue_requests_on_contact_person_id"
+    t.index ["relation_id"], name: "index_hke_venue_requests_on_relation_id"
+    t.index ["status"], name: "index_hke_venue_requests_on_status"
   end
 
   create_table "inbound_webhooks", force: :cascade do |t|
@@ -655,6 +700,10 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_11_173502) do
   add_foreign_key "hke_relations_selections", "hke_selections", column: "selection_id"
   add_foreign_key "hke_selections", "hke_communities", column: "community_id"
   add_foreign_key "hke_sent_messages", "hke_communities", column: "community_id"
+  add_foreign_key "hke_short_links", "hke_contact_people", column: "contact_person_id"
+  add_foreign_key "hke_venue_requests", "hke_community_venues", column: "community_venue_id"
+  add_foreign_key "hke_venue_requests", "hke_contact_people", column: "contact_person_id"
+  add_foreign_key "hke_venue_requests", "hke_relations", column: "relation_id"
   add_foreign_key "pay_charges", "pay_customers", column: "customer_id"
   add_foreign_key "pay_payment_methods", "pay_customers", column: "customer_id"
   add_foreign_key "pay_subscriptions", "pay_customers", column: "customer_id"

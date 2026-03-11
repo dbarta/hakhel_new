@@ -1,0 +1,28 @@
+<%# Portal Profile — View %>
+<div style="display: flex; flex-direction: column; gap: 1.25rem;">
+  <div style="display: flex; justify-content: space-between; align-items: center;">
+    <h1 style="font-family: var(--font-serif); font-size: 1.5rem; color: var(--color-navy); margin: 0;">פרופיל שלי</h1>
+    <%= link_to "ערוך", portal_edit_profile_path(@portal_token), class: "btn-outline" %>
+  </div>
+
+  <div class="portal-card" style="display: grid; gap: 1rem;">
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+      <div>
+        <div style="font-size: 0.78rem; color: var(--color-warm-gray); margin-bottom: 0.2rem;">שם פרטי</div>
+        <div style="font-size: 1rem; color: var(--color-navy);"><%= @contact.first_name %></div>
+      </div>
+      <div>
+        <div style="font-size: 0.78rem; color: var(--color-warm-gray); margin-bottom: 0.2rem;">שם משפחה</div>
+        <div style="font-size: 1rem; color: var(--color-navy);"><%= @contact.last_name %></div>
+      </div>
+    </div>
+    <div>
+      <div style="font-size: 0.78rem; color: var(--color-warm-gray); margin-bottom: 0.2rem;">טלפון</div>
+      <div style="font-size: 1rem; color: var(--color-navy);"><%= @contact.phone.presence || "—" %></div>
+    </div>
+    <div>
+      <div style="font-size: 0.78rem; color: var(--color-warm-gray); margin-bottom: 0.2rem;">אימייל</div>
+      <div style="font-size: 1rem; color: var(--color-navy);"><%= @contact.email.presence || "—" %></div>
+    </div>
+  </div>
+</div>

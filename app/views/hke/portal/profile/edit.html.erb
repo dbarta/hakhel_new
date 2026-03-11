@@ -1,0 +1,44 @@
+<%# Portal Profile — Edit %>
+<div style="display: flex; flex-direction: column; gap: 1.25rem;">
+  <h1 style="font-family: var(--font-serif); font-size: 1.5rem; color: var(--color-navy); margin: 0;">עריכת פרופיל</h1>
+
+  <%= form_with model: @contact, url: portal_profile_path(@portal_token), method: :patch, local: true do |f| %>
+    <div class="portal-card" style="display: flex; flex-direction: column; gap: 1rem;">
+
+      <% if @contact.errors.any? %>
+        <div class="flash-alert">
+          <% @contact.errors.full_messages.each do |msg| %>
+            <div><%= msg %></div>
+          <% end %>
+        </div>
+      <% end %>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+        <div>
+          <%= f.label :first_name, "שם פרטי", style: "display: block; font-size: 0.82rem; color: var(--color-warm-gray); margin-bottom: 0.3rem;" %>
+          <%= f.text_field :first_name, style: "width: 100%; border: 1.5px solid var(--color-border); border-radius: 8px; padding: 0.5rem 0.75rem; font-family: var(--font-sans); font-size: 0.95rem; outline: none;" %>
+        </div>
+        <div>
+          <%= f.label :last_name, "שם משפחה", style: "display: block; font-size: 0.82rem; color: var(--color-warm-gray); margin-bottom: 0.3rem;" %>
+          <%= f.text_field :last_name, style: "width: 100%; border: 1.5px solid var(--color-border); border-radius: 8px; padding: 0.5rem 0.75rem; font-family: var(--font-sans); font-size: 0.95rem; outline: none;" %>
+        </div>
+      </div>
+
+      <div>
+        <%= f.label :phone, "טלפון", style: "display: block; font-size: 0.82rem; color: var(--color-warm-gray); margin-bottom: 0.3rem;" %>
+        <%= f.telephone_field :phone, style: "width: 100%; border: 1.5px solid var(--color-border); border-radius: 8px; padding: 0.5rem 0.75rem; font-family: var(--font-sans); font-size: 0.95rem; outline: none; direction: ltr; text-align: right;" %>
+      </div>
+
+      <div>
+        <%= f.label :email, "אימייל", style: "display: block; font-size: 0.82rem; color: var(--color-warm-gray); margin-bottom: 0.3rem;" %>
+        <%= f.email_field :email, style: "width: 100%; border: 1.5px solid var(--color-border); border-radius: 8px; padding: 0.5rem 0.75rem; font-family: var(--font-sans); font-size: 0.95rem; outline: none; direction: ltr; text-align: right;" %>
+        <p style="font-size: 0.75rem; color: var(--color-warm-gray); margin-top: 0.3rem;">שינוי פרטי קשר יחשב מחדש את הודעות היארצייט העתידיות</p>
+      </div>
+
+      <div style="display: flex; gap: 0.75rem; justify-content: flex-end; padding-top: 0.5rem;">
+        <%= link_to "ביטול", portal_profile_path(@portal_token), class: "btn-outline" %>
+        <%= f.submit "שמור", class: "btn-primary" %>
+      </div>
+    </div>
+  <% end %>
+</div>

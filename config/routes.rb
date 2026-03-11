@@ -17,6 +17,22 @@ Rails.application.routes.draw do
   # Public marketing homepage
   root to: "hke/welcome#index"
 
+  # Short link redirect (public)
+  get "/go/:code", to: "hke/short_links#redirect", as: :short_link
+
+  # Contact self-service portal (public, token-based)
+  scope "/portal/:portal_token", as: :portal do
+    get "/", to: "hke/portal/dashboard#show", as: :dashboard
+    get "/profile", to: "hke/portal/profile#show", as: :profile
+    get "/profile/edit", to: "hke/portal/profile#edit", as: :edit_profile
+    patch "/profile", to: "hke/portal/profile#update"
+    get "/preferences", to: "hke/portal/preferences#show", as: :preferences
+    patch "/preferences", to: "hke/portal/preferences#update"
+    patch "/preferences/relation/:relation_id", to: "hke/portal/preferences#update_relation_preference", as: :relation_preference
+    get "/venues", to: "hke/portal/venues#index", as: :venues
+    post "/venues/:venue_id/request", to: "hke/portal/venues#request_venue", as: :venue_request
+  end
+
   # HKE routes (inlined from engine)
   namespace :hke, path: "/hke" do
     # System Admin Routes

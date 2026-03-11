@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html class="h-full" lang="he" dir="rtl">
+  <head>
+    <title>הכהל — פורטל אישי</title>
+
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+
+    <%= javascript_include_tag "application", "data-turbo-track": "reload", defer: true %>
+    <%= stylesheet_link_tag "application", media: "all", "data-turbo-track": "reload" %>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@300;400;500;700&family=Heebo:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+    <style>
+      :root {
+        --color-cream: #faf7f2;
+        --color-navy: #1e3a5f;
+        --color-gold: #c9a84c;
+        --color-sage: #4a7c59;
+        --color-warm-gray: #6b6560;
+        --color-border: #e8e0d5;
+        --font-serif: 'Frank Ruhl Libre', serif;
+        --font-sans: 'Heebo', sans-serif;
+      }
+
+      body {
+        font-family: var(--font-sans);
+        background-color: var(--color-cream);
+        color: #2c2825;
+      }
+
+      .portal-title, h1, h2, h3 {
+        font-family: var(--font-serif);
+      }
+
+      /* Bottom nav (mobile) */
+      .portal-bottom-nav {
+        position: fixed;
+        bottom: 0;
+        right: 0;
+        left: 0;
+        background: white;
+        border-top: 1px solid var(--color-border);
+        display: flex;
+        z-index: 50;
+        padding-bottom: env(safe-area-inset-bottom);
+      }
+
+      .portal-bottom-nav a {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 0.6rem 0.25rem;
+        font-size: 0.7rem;
+        color: var(--color-warm-gray);
+        text-decoration: none;
+        gap: 0.2rem;
+        transition: color 0.15s;
+      }
+
+      .portal-bottom-nav a.active,
+      .portal-bottom-nav a:hover {
+        color: var(--color-navy);
+      }
+
+      .portal-bottom-nav a.active svg,
+      .portal-bottom-nav a:hover svg {
+        stroke: var(--color-navy);
+      }
+
+      .portal-bottom-nav svg {
+        width: 1.4rem;
+        height: 1.4rem;
+        stroke: var(--color-warm-gray);
+        stroke-width: 1.5;
+        fill: none;
+      }
+
+      /* Sidebar nav (desktop) */
+      .portal-sidebar {
+        position: fixed;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        width: 220px;
+        background: white;
+        border-left: 1px solid var(--color-border);
+        padding: 2rem 1.25rem;
+        display: flex;
+        flex-direction: column;
+        gap: 0.25rem;
+        overflow-y: auto;
+        z-index: 50;
+      }
+
+      .portal-sidebar .brand {
+        font-family: var(--font-serif);
+        font-size: 1.4rem;
+        color: var(--color-navy);
+        margin-bottom: 2rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      .portal-sidebar a {
+        display: flex;
+        align-items: center;
+        gap: 0.6rem;
+        padding: 0.6rem 0.75rem;
+        border-radius: 8px;
+        color: var(--color-warm-gray);
+        text-decoration: none;
+        font-size: 0.95rem;
+        transition: all 0.15s;
+      }
+
+      .portal-sidebar a:hover,
+      .portal-sidebar a.active {
+        background: #f0ebe3;
+        color: var(--color-navy);
+      }
+
+      .portal-sidebar a svg {
+        width: 1.2rem;
+        height: 1.2rem;
+        stroke: currentColor;
+        fill: none;
+        stroke-width: 1.5;
+        flex-shrink: 0;
+      }
+
+      /* Main content area */
+      .portal-main {
+        min-height: 100dvh;
+        padding-bottom: 5rem; /* space for bottom nav */
+      }
+
+      @media (min-width: 641px) {
+        .portal-bottom-nav { display: none !important; }
+        .portal-sidebar { display: flex !important; }
+        .portal-main {
+          margin-right: 220px;
+          padding-bottom: 2rem;
+        }
+      }
+
+      @media (max-width: 640px) {
+        .portal-sidebar { display: none !important; }
+        .portal-bottom-nav { display: flex !important; }
+      }
+
+      /* Card style */
+      .portal-card {
+        background: white;
+        border: 1px solid var(--color-border);
+        border-radius: 12px;
+        padding: 1.25rem;
+      }
+
+      /* Gold accent */
+      .gold-accent { color: var(--color-gold); }
+
+      /* Section heading */
+      .section-heading {
+        font-family: var(--font-serif);
+        font-size: 1.15rem;
+        color: var(--color-navy);
+        margin-bottom: 0.75rem;
+        display: flex;
+        align-items: center;
+        gap: 0.4rem;
+      }
+
+      /* Buttons */
+      .btn-primary {
+        background: var(--color-navy);
+        color: white;
+        padding: 0.6rem 1.25rem;
+        border-radius: 8px;
+        border: none;
+        font-family: var(--font-sans);
+        font-size: 0.9rem;
+        cursor: pointer;
+        transition: opacity 0.15s;
+        text-decoration: none;
+        display: inline-block;
+      }
+      .btn-primary:hover { opacity: 0.88; }
+
+      .btn-outline {
+        background: transparent;
+        color: var(--color-navy);
+        padding: 0.5rem 1rem;
+        border-radius: 8px;
+        border: 1.5px solid var(--color-navy);
+        font-family: var(--font-sans);
+        font-size: 0.875rem;
+        cursor: pointer;
+        transition: all 0.15s;
+        text-decoration: none;
+        display: inline-block;
+      }
+      .btn-outline:hover { background: var(--color-navy); color: white; }
+
+      .btn-gold {
+        background: var(--color-gold);
+        color: white;
+        padding: 0.6rem 1.25rem;
+        border-radius: 8px;
+        border: none;
+        font-family: var(--font-sans);
+        font-size: 0.9rem;
+        cursor: pointer;
+        transition: opacity 0.15s;
+        text-decoration: none;
+        display: inline-block;
+      }
+      .btn-gold:hover { opacity: 0.88; }
+
+      /* Flash messages */
+      .flash-notice {
+        background: #ecfdf5;
+        border: 1px solid #6ee7b7;
+        color: #065f46;
+        padding: 0.75rem 1rem;
+        border-radius: 8px;
+        margin-bottom: 1rem;
+      }
+
+      .flash-alert {
+        background: #fef2f2;
+        border: 1px solid #fca5a5;
+        color: #991b1b;
+        padding: 0.75rem 1rem;
+        border-radius: 8px;
+        margin-bottom: 1rem;
+      }
+    </style>
+  </head>
+
+  <body>
+    <%# Sidebar nav (desktop) %>
+    <nav class="portal-sidebar">
+      <div class="brand">
+        <span style="color: var(--color-gold);">✡</span>
+        הכהל
+      </div>
+
+      <%= portal_nav_link(
+        label: "ראשי",
+        path: portal_dashboard_path(@portal_token),
+        icon: :home,
+        current_action: action_name,
+        current_controller: controller_name
+      ) %>
+      <%= portal_nav_link(
+        label: "פרופיל שלי",
+        path: portal_profile_path(@portal_token),
+        icon: :user,
+        current_action: action_name,
+        current_controller: controller_name
+      ) %>
+      <%= portal_nav_link(
+        label: "העדפות",
+        path: portal_preferences_path(@portal_token),
+        icon: :sliders,
+        current_action: action_name,
+        current_controller: controller_name
+      ) %>
+      <%= portal_nav_link(
+        label: "שירותים",
+        path: portal_venues_path(@portal_token),
+        icon: :star,
+        current_action: action_name,
+        current_controller: controller_name
+      ) %>
+    </nav>
+
+    <%# Bottom nav (mobile) %>
+    <nav class="portal-bottom-nav">
+      <%= portal_nav_link(
+        label: "ראשי",
+        path: portal_dashboard_path(@portal_token),
+        icon: :home,
+        current_action: action_name,
+        current_controller: controller_name
+      ) %>
+      <%= portal_nav_link(
+        label: "פרופיל",
+        path: portal_profile_path(@portal_token),
+        icon: :user,
+        current_action: action_name,
+        current_controller: controller_name
+      ) %>
+      <%= portal_nav_link(
+        label: "העדפות",
+        path: portal_preferences_path(@portal_token),
+        icon: :sliders,
+        current_action: action_name,
+        current_controller: controller_name
+      ) %>
+      <%= portal_nav_link(
+        label: "שירותים",
+        path: portal_venues_path(@portal_token),
+        icon: :star,
+        current_action: action_name,
+        current_controller: controller_name
+      ) %>
+    </nav>
+
+    <main class="portal-main">
+      <div style="max-width: 860px; margin: 0 auto; padding: 1.5rem 1rem;">
+        <% if flash[:notice] %>
+          <div class="flash-notice"><%= flash[:notice] %></div>
+        <% end %>
+        <% if flash[:alert] %>
+          <div class="flash-alert"><%= flash[:alert] %></div>
+        <% end %>
+
+        <%= yield %>
+      </div>
+    </main>
+  </body>
+</html>

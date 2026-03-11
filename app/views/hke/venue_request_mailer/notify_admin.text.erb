@@ -1,0 +1,11 @@
+בקשה חדשה לשירות קהילתי
+
+שירות: <%= @venue.title %>
+איש קשר: <%= @contact.first_name %> <%= @contact.last_name %>
+טלפון: <%= @contact.phone %>
+אימייל: <%= @contact.email %>
+<% if @relation %>
+נפטר: <%= @relation.deceased_person.first_name %> <%= @relation.deceased_person.last_name %>
+<% end %>
+
+תאריך: <%= Time.current.strftime("%d/%m/%Y %H:%M") %>

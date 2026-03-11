@@ -1,0 +1,45 @@
+<%# Portal Venues %>
+<div style="display: flex; flex-direction: column; gap: 1.25rem;">
+  <h1 style="font-family: var(--font-serif); font-size: 1.5rem; color: var(--color-navy); margin: 0;">שירותים קהילתיים</h1>
+
+  <% if @venues.any? %>
+    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 1rem;">
+      <% @venues.each do |venue| %>
+        <% already_requested = @submitted_venue_ids.include?(venue.id) %>
+        <div class="portal-card" style="display: flex; flex-direction: column; gap: 0.75rem;">
+          <div style="display: flex; align-items: center; gap: 0.5rem;">
+            <span style="font-size: 1.3rem;">
+              <%= venue.venue_type == "kaddish" ? "🕍" : venue.venue_type == "seudah" ? "🍽️" : "✨" %>
+            </span>
+            <div style="font-family: var(--font-serif); font-size: 1.05rem; color: var(--color-navy); font-weight: 500;">
+              <%= venue.title %>
+            </div>
+          </div>
+
+          <% if venue.description.present? %>
+            <div style="font-size: 0.85rem; color: var(--color-warm-gray); line-height: 1.5;">
+              <%= venue.description %>
+            </div>
+          <% end %>
+
+          <div style="margin-top: auto; padding-top: 0.25rem;">
+            <% if already_requested %>
+              <div style="display: flex; align-items: center; gap: 0.4rem; color: var(--color-sage); font-size: 0.85rem; font-weight: 500;">
+                <svg viewBox="0 0 24 24" style="width: 1rem; height: 1rem; stroke: currentColor; fill: none; stroke-width: 2.5;"><polyline points="20 6 9 17 4 12"/></svg>
+                הבקשה נשלחה
+              </div>
+            <% else %>
+              <%= form_with url: portal_venue_request_path(@portal_token, venue_id: venue.id), method: :post, local: true do |f| %>
+                <%= f.submit "בקש →", class: "btn-gold", style: "width: 100%;" %>
+              <% end %>
+            <% end %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  <% else %>
+    <div class="portal-card" style="text-align: center; color: var(--color-warm-gray); padding: 2rem;">
+      אין שירותים זמינים כרגע
+    </div>
+  <% end %>
+</div>
