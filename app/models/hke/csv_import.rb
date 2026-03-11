@@ -7,6 +7,16 @@ module Hke
     # Enable Turbo Stream broadcasting
     broadcasts
 
+    # Broadcast row updates to the index table
+    after_update_commit -> {
+      broadcast_replace_later_to(
+        "hke_csv_imports",
+        target: dom_id(self),
+        partial: "hke/csv_imports/csv_import_row",
+        locals: { csv_import: self }
+      )
+    }
+
     enum :status, {
       pending: 0,
       processing: 1,
