@@ -79,7 +79,7 @@ group :test do
 end
 
 # Use Redis adapter to run Action Cable in production
-# gem "redis", "~> 5.1"
+gem "redis", "~> 5.1"
 
 # ActionText editor
 gem "lexxy", "~> 0.1.23.beta"
