@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+# Usage: bin/hakhel-dynos [start|stop|status]
+
+APP=hakhel
+
+case "$1" in
+  start)
+    echo "Starting dynos for $APP..."
+    heroku ps:scale web=1 worker=1 --app $APP
+    heroku ps --app $APP
+    ;;
+  stop)
+    echo "Stopping dynos for $APP..."
+    heroku ps:scale web=0 worker=0 --app $APP
+    heroku ps --app $APP
+    ;;
+  status)
+    heroku ps --app $APP
+    ;;
+  *)
+    echo "Usage: bin/hakhel-dynos [start|stop|status]"
+    exit 1
+    ;;
+esac
