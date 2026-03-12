@@ -18,7 +18,7 @@ Rails.application.routes.draw do
   root to: "hke/welcome#index"
 
   # Short link redirect (public)
-  get "/go/:code", to: "hke/short_links#redirect", as: :short_link
+  get "/me/:code", to: "hke/short_links#redirect", as: :short_link
 
   # Contact self-service portal (public, token-based)
   scope "/portal/:portal_token", as: :portal do

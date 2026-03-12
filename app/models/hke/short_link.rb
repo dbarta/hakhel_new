@@ -20,14 +20,14 @@ module Hke
     end
 
     def short_url
-      "#{base_url}/go/#{code}"
+      "#{base_url}/me/#{code}"
     end
 
     private
 
     def generate_code
       self.code ||= loop do
-        token = SecureRandom.alphanumeric(7).downcase
+        token = SecureRandom.alphanumeric(6).downcase
         break token unless ShortLink.exists?(code: token)
       end
     end
