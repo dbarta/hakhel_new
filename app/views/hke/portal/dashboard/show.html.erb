@@ -1,95 +1,140 @@
 <%# Portal Dashboard %>
 
+<%# ── Dark header ───────────────────────────────────────────── %>
+<div style="margin: -1.5rem -1rem 1.5rem; padding: 1.75rem 1.5rem 1.5rem; background: var(--color-navy); color: white;">
+  <div style="font-size: 0.72rem; letter-spacing: 0.12em; color: rgba(255,255,255,0.55); margin-bottom: 0.4rem; text-transform: uppercase;">
+    הקהל &middot; HAKHEL
+  </div>
+  <h1 style="font-family: var(--font-serif); font-size: 2rem; font-weight: 400; margin: 0 0 0.3rem; color: white;">
+    שלום, <%= @contact.first_name %>
+  </h1>
+  <div style="font-size: 0.82rem; color: rgba(255,255,255,0.6);">
+    <%= l(Date.today, format: :long) rescue Date.today.strftime("%d/%m/%Y") %>
+  </div>
+</div>
+
 <div style="display: flex; flex-direction: column; gap: 1.5rem;">
 
-  <%# Header greeting %>
-  <div style="display: flex; align-items: baseline; gap: 0.5rem; flex-wrap: wrap;">
-    <h1 style="font-family: var(--font-serif); font-size: 1.75rem; color: var(--color-navy); margin: 0;">
-      שלום, <%= @contact.first_name %>
-    </h1>
-    <span style="color: var(--color-gold); font-size: 1.1rem;">✡</span>
-  </div>
-
-  <%# Quick links %>
+  <%# ── Quick links ──────────────────────────────────────────── %>
   <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.75rem;">
-    <%= link_to portal_profile_path(@portal_token), class: "portal-card", style: "text-align: center; text-decoration: none; display: flex; flex-direction: column; align-items: center; gap: 0.4rem; padding: 1rem;" do %>
-      <svg viewBox="0 0 24 24" style="width: 1.6rem; height: 1.6rem; stroke: var(--color-navy); fill: none; stroke-width: 1.5;"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
-      <span style="font-size: 0.82rem; color: var(--color-navy); font-weight: 500;">פרופיל שלי</span>
+    <%= link_to portal_profile_path(@portal_token),
+        style: "text-align: center; text-decoration: none; display: flex; flex-direction: column; align-items: center; gap: 0.5rem; padding: 1rem; background: white; border: 1px solid var(--color-border); border-radius: 12px;" do %>
+      <svg viewBox="0 0 24 24" style="width:1.6rem;height:1.6rem;stroke:var(--color-navy);fill:none;stroke-width:1.5;"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+      <span style="font-size: 0.78rem; color: var(--color-navy); font-weight: 500;">פרופיל שלי</span>
     <% end %>
-    <%= link_to portal_preferences_path(@portal_token), class: "portal-card", style: "text-align: center; text-decoration: none; display: flex; flex-direction: column; align-items: center; gap: 0.4rem; padding: 1rem;" do %>
-      <svg viewBox="0 0 24 24" style="width: 1.6rem; height: 1.6rem; stroke: var(--color-navy); fill: none; stroke-width: 1.5;"><line x1="4" y1="6" x2="20" y2="6"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="18" x2="20" y2="18"/><circle cx="9" cy="6" r="2" fill="white" stroke="var(--color-navy)"/><circle cx="15" cy="12" r="2" fill="white" stroke="var(--color-navy)"/><circle cx="9" cy="18" r="2" fill="white" stroke="var(--color-navy)"/></svg>
-      <span style="font-size: 0.82rem; color: var(--color-navy); font-weight: 500;">העדפות</span>
+    <%= link_to portal_preferences_path(@portal_token),
+        style: "text-align: center; text-decoration: none; display: flex; flex-direction: column; align-items: center; gap: 0.5rem; padding: 1rem; background: white; border: 1px solid var(--color-border); border-radius: 12px;" do %>
+      <svg viewBox="0 0 24 24" style="width:1.6rem;height:1.6rem;stroke:var(--color-navy);fill:none;stroke-width:1.5;"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
+      <span style="font-size: 0.78rem; color: var(--color-navy); font-weight: 500;">העדפות</span>
     <% end %>
-    <%= link_to portal_venues_path(@portal_token), class: "portal-card", style: "text-align: center; text-decoration: none; display: flex; flex-direction: column; align-items: center; gap: 0.4rem; padding: 1rem;" do %>
-      <svg viewBox="0 0 24 24" style="width: 1.6rem; height: 1.6rem; stroke: var(--color-gold); fill: none; stroke-width: 1.5;"><polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26"/></svg>
-      <span style="font-size: 0.82rem; color: var(--color-navy); font-weight: 500;">שירותים</span>
+    <%= link_to portal_venues_path(@portal_token),
+        style: "text-align: center; text-decoration: none; display: flex; flex-direction: column; align-items: center; gap: 0.5rem; padding: 1rem; background: white; border: 1px solid var(--color-border); border-radius: 12px;" do %>
+      <svg viewBox="0 0 24 24" style="width:1.6rem;height:1.6rem;stroke:var(--color-gold);fill:none;stroke-width:1.5;"><path d="M3 22V8l9-6 9 6v14"/><path d="M9 22V12h6v10"/><path d="M3 22h18"/></svg>
+      <span style="font-size: 0.78rem; color: var(--color-navy); font-weight: 500;">שירותי הקהילה</span>
     <% end %>
   </div>
 
-  <%# Deceased relations section %>
-  <% if @relations.any? %>
-    <section>
-      <div class="section-heading">
-        <span>🕯️</span> הנפטרים שלי
-      </div>
-      <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 0.875rem;">
-        <% @relations.each do |relation| %>
-          <% dp = relation.deceased_person %>
-          <% fm = relation.future_messages.first %>
-          <div class="portal-card" style="display: flex; flex-direction: column; gap: 0.6rem;">
-            <div style="display: flex; justify-content: space-between; align-items: flex-start;">
-              <div>
-                <div style="font-family: var(--font-serif); font-size: 1.05rem; font-weight: 500; color: var(--color-navy);">
-                  <%= dp.first_name %> <%= dp.last_name %>
-                </div>
-                <div style="font-size: 0.8rem; color: var(--color-warm-gray); margin-top: 0.15rem;">
-                  <%= t("hke.relations.relation_types.#{relation.relations_selections.first&.selection&.relation_type}", default: "") rescue "" %>
-                </div>
-              </div>
-              <a href="#" style="font-size: 0.75rem; color: var(--color-navy); text-decoration: none; padding: 0.25rem 0.6rem; border: 1px solid var(--color-border); border-radius: 6px; display: flex; align-items: center; gap: 0.3rem;">
-                <svg viewBox="0 0 24 24" style="width: 0.85rem; height: 0.85rem; stroke: currentColor; fill: none; stroke-width: 2;"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
-                ערוך
-              </a>
-            </div>
+  <%# ── Letter card (for first upcoming relation) ────────────── %>
+  <% primary = @relations.min_by { |r| r.future_messages.map(&:send_date).compact.min || Date.today + 999 } %>
+  <% if primary %>
+    <% dp = primary.deceased_person %>
+    <% salutation = generate_salutation(@contact.gender) rescue "" %>
+    <% welcome = generate_welcome(@contact.gender) rescue "" %>
+    <% relation_word = conjugated_relationship(dp.gender, @contact.gender, primary.relation_of_deceased_to_contact) rescue nil %>
+    <% d_sal = generate_salutation(dp.gender) rescue "" %>
+    <% alav = generate_alav_hashalom(dp.gender) rescue "" %>
+    <% days_till = num_days_till_yahrzeit(dp) rescue nil %>
+    <% heb_date = hebrew_date_of_yahrzeit(dp) rescue "" %>
 
-            <% if fm.present? %>
-              <div style="background: #f5f0e8; border-radius: 8px; padding: 0.6rem 0.75rem; font-size: 0.82rem;">
-                <div style="color: var(--color-warm-gray); margin-bottom: 0.2rem;">יארצייט הבא</div>
-                <div style="color: var(--color-navy); font-weight: 500;">
-                  <%= l(fm.send_date, format: :long) rescue fm.send_date.strftime("%d/%m/%Y") %>
-                </div>
-              </div>
-            <% end %>
-          </div>
-        <% end %>
+    <div style="background: white; border: 1px solid var(--color-border); border-radius: 12px; overflow: hidden;">
+      <%# Card header %>
+      <div style="background: #f5f0e8; padding: 0.6rem 1.25rem; border-bottom: 1px solid var(--color-border);">
+        <span style="font-size: 0.75rem; color: var(--color-gold); font-weight: 600; letter-spacing: 0.04em;">
+          <%= @contact.community.name %>
+        </span>
       </div>
-    </section>
-  <% else %>
-    <div class="portal-card" style="text-align: center; color: var(--color-warm-gray); padding: 2rem;">
-      אין נפטרים מקושרים לחשבון זה
+
+      <%# Letter body %>
+      <div style="padding: 1.25rem; font-size: 0.92rem; line-height: 1.8; color: #2c2825;">
+        <p style="font-weight: 600; margin: 0 0 0.5rem;">
+          <%= salutation %> <%= @contact.first_name %> <%= @contact.last_name %> שלום וברכה,
+        </p>
+        <p style="margin: 0 0 0.75rem;">
+          <%= welcome %> לאתר יזכור של <%= @contact.community.name %>.
+          <% if relation_word.present? %>
+            לפניך מספר אפשרויות לציון יום הפטירה של <%= relation_word %> <%= d_sal %> <%= dp.first_name %> <%= dp.last_name %> <%= alav %>:
+          <% end %>
+        </p>
+
+        <ul style="margin: 0 1.25rem 0.75rem; padding: 0; list-style: disc; display: flex; flex-direction: column; gap: 0.3rem;">
+          <li>אמירת קדיש בבית הכנסת על ידי אחד המתפללים</li>
+          <li>עלייה לקבר, הדלקת נר נשמה ואמירת תהילים לזכר המנוח</li>
+          <li>קידוש לשבת בבית הכנסת</li>
+          <li>תרומת סעודה שלישית בבית הכנסת</li>
+        </ul>
+      </div>
+
+      <%# Yahrzeit badge %>
+      <% if days_till %>
+        <div style="margin: 0 1.25rem 1.25rem; background: #f5f0e8; border-radius: 8px; padding: 0.65rem 1rem; display: flex; align-items: center; gap: 0.5rem; font-size: 0.85rem;">
+          <span>🕯️</span>
+          <span style="font-weight: 600; color: var(--color-navy);"><%= dp.first_name %> <%= dp.last_name %></span>
+          <span style="color: var(--color-warm-gray);">·</span>
+          <span style="color: var(--color-warm-gray);">יארצייט <%= heb_date %></span>
+          <span style="margin-right: auto; background: var(--color-navy); color: white; border-radius: 20px; padding: 0.15rem 0.6rem; font-size: 0.75rem;">
+            <% if days_till == 0 %>היום
+            <% elsif days_till == 1 %>מחר
+            <% else %>עוד <%= days_till %> ימים<% end %>
+          </span>
+        </div>
+      <% end %>
     </div>
   <% end %>
 
-  <%# Upcoming messages %>
-  <% upcoming = @relations.flat_map { |r| r.future_messages }.select { |m| m.send_date >= Date.today }.sort_by(&:send_date).first(5) %>
-  <% if upcoming.any? %>
+  <%# ── Deceased section ─────────────────────────────────────── %>
+  <% if @relations.any? %>
     <section>
-      <div class="section-heading">
-        <span>📬</span> הודעות קרובות
-      </div>
-      <div class="portal-card" style="padding: 0; overflow: hidden;">
-        <% upcoming.each_with_index do |msg, i| %>
-          <div style="display: flex; align-items: center; gap: 0.75rem; padding: 0.85rem 1.25rem; <%= i > 0 ? 'border-top: 1px solid var(--color-border);' : '' %>">
-            <div style="font-size: 1.2rem;">
-              <%= msg.delivery_method == "email" ? "✉️" : msg.delivery_method == "whatsapp" ? "💬" : "📱" %>
+      <div class="section-heading">הנפטרים שלי</div>
+      <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 0.875rem;">
+        <% @relations.each do |relation| %>
+          <% dp = relation.deceased_person %>
+          <% fm = relation.future_messages.min_by(&:send_date) %>
+          <% days = num_days_till_yahrzeit(dp) rescue nil %>
+          <% initial = dp.first_name.to_s[0] || "?" %>
+          <div style="background: white; border: 1px solid var(--color-border); border-radius: 12px; display: flex; gap: 0.875rem; padding: 1rem; align-items: flex-start;">
+            <%# Avatar %>
+            <div style="width: 2.75rem; height: 2.75rem; border-radius: 50%; background: var(--color-navy); color: white; display: flex; align-items: center; justify-content: center; font-family: var(--font-serif); font-size: 1.1rem; flex-shrink: 0;">
+              <%= initial %>
             </div>
-            <div style="flex: 1;">
-              <div style="font-size: 0.9rem; color: var(--color-navy);">
-                <%= msg.messageable.deceased_person.first_name %> <%= msg.messageable.deceased_person.last_name %>
+
+            <%# Info %>
+            <div style="flex: 1; min-width: 0;">
+              <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 0.5rem;">
+                <div style="font-family: var(--font-serif); font-size: 1rem; color: var(--color-navy); font-weight: 500;">
+                  <%= dp.first_name %> <%= dp.last_name %>
+                </div>
+                <a href="#" style="font-size: 0.72rem; color: var(--color-navy); text-decoration: none; padding: 0.2rem 0.5rem; border: 1px solid var(--color-border); border-radius: 6px; white-space: nowrap; display: flex; align-items: center; gap: 0.25rem; flex-shrink: 0;">
+                  <svg viewBox="0 0 24 24" style="width:0.7rem;height:0.7rem;stroke:currentColor;fill:none;stroke-width:2;"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                  ערוך
+                </a>
               </div>
-              <div style="font-size: 0.78rem; color: var(--color-warm-gray);">
-                <%= l(msg.send_date, format: :long) rescue msg.send_date.strftime("%d/%m/%Y") %>
-              </div>
+
+              <% if fm.present? %>
+                <div style="margin-top: 0.5rem; background: #f5f0e8; border-radius: 6px; padding: 0.4rem 0.6rem; font-size: 0.78rem; display: flex; justify-content: space-between; align-items: center;">
+                  <span style="color: var(--color-warm-gray);">
+                    <%= hebrew_date_of_yahrzeit(dp) rescue "" %>
+                    &nbsp;—&nbsp;
+                    <%= l(fm.send_date, format: :short) rescue fm.send_date.strftime("%d/%m") %>
+                  </span>
+                  <% if days %>
+                    <span style="background: var(--color-navy); color: white; border-radius: 12px; padding: 0.1rem 0.5rem; font-size: 0.7rem;">
+                      <% if days == 0 %>היום
+                      <% elsif days == 1 %>מחר
+                      <% else %>עוד <%= days %> ימים<% end %>
+                    </span>
+                  <% end %>
+                </div>
+              <% end %>
             </div>
           </div>
         <% end %>

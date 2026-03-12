@@ -4,6 +4,7 @@ module Hke
       layout "hke/portal"
 
       helper Hke::PortalHelper
+      helper Hke::ApplicationHelper
 
       before_action :set_portal_contact
       before_action :set_locale_hebrew
