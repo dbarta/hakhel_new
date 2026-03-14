@@ -28,7 +28,10 @@ module Hke
           @yahrzeit_hebrew = "#{d.hebrew_day_of_death} #{d.hebrew_month_of_death}"
           @yahrzeit_day_of_week = HEBREW_DAYS[yahrzeit_date.wday]
           send_heb = Hke::Heb.g2h(d.name, @send_date)
-          @send_date_hebrew = send_heb ? "#{send_heb['hd']} #{send_heb['hm']}" : nil
+          if send_heb
+            heb_month = Hke::Heb.english_month_to_hebrew(send_heb['hm'].to_sym) || send_heb['hm']
+            @send_date_hebrew = "#{send_heb['hd']} #{heb_month}"
+          end
           @send_date_day_of_week = HEBREW_DAYS[@send_date.wday]
           short_link = Hke::ShortLink.find_or_create_by!(contact_person: contact, via_token: nil)
           snippets = generate_hebrew_snippets(relation, [:sms], reference_date: @send_date, portal_url: short_link.short_url)
