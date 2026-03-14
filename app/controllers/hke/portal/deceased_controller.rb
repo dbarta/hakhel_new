@@ -7,12 +7,15 @@ module Hke
       before_action :set_deceased_person
 
       def show
+        authorize @deceased
       end
 
       def edit
+        authorize @deceased
       end
 
       def update
+        authorize @deceased
         if @deceased.update(deceased_params)
           redirect_to portal_dashboard_path(@portal_token), notice: "הפרטים עודכנו בהצלחה"
         else
@@ -21,6 +24,8 @@ module Hke
       end
 
       def destroy
+        authorize @deceased
+        # In portal context: remove the relation (not the deceased record itself)
         @relation.destroy
         redirect_to portal_dashboard_path(@portal_token), notice: "הנפטר הוסר מרשימתך"
       end
@@ -28,11 +33,12 @@ module Hke
       private
 
       def set_deceased_person
-        @relation = @contact.relations.includes(:deceased_person).find_by(deceased_person_id: params[:id])
-        unless @relation
+        @deceased = Hke::DeceasedPerson.find_by(id: params[:id])
+        unless @deceased
           render plain: "נפטר לא נמצא", status: :not_found and return
         end
-        @deceased = @relation.deceased_person
+        # Load the relation for use in destroy; policy checks authorization
+        @relation = @contact.relations.find_by(deceased_person_id: @deceased.id)
       end
 
       def deceased_params

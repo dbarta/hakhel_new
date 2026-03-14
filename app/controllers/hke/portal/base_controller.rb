@@ -3,11 +3,19 @@ module Hke
     class BaseController < ActionController::Base
       layout "hke/portal"
 
+      include Pundit::Authorization
+
       helper Hke::PortalHelper
       helper Hke::ApplicationHelper
 
       before_action :set_portal_contact
       before_action :set_locale_hebrew
+
+      # Pundit user is the portal contact person (ContactPerson), not a Devise user.
+      # Policies can branch on user.is_a?(Hke::ContactPerson) vs AccountUser.
+      def pundit_user
+        @contact
+      end
 
       private
 
