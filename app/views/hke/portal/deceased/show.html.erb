@@ -1,0 +1,127 @@
+<%# ── Back nav ──────────────────────────────────────────────── %>
+<div style="margin: -1.5rem -1rem 0; padding: 0.75rem 1rem; background: white; border-bottom: 1px solid var(--color-border);">
+  <%= link_to portal_dashboard_path(@portal_token),
+      style: "display: inline-flex; align-items: center; gap: 0.4rem; font-size: 0.82rem; color: var(--color-navy); text-decoration: none;" do %>
+    <svg viewBox="0 0 24 24" style="width:1rem;height:1rem;stroke:currentColor;fill:none;stroke-width:2;transform:scaleX(-1);"><polyline points="9 18 15 12 9 6"/></svg>
+    חזרה
+  <% end %>
+</div>
+
+<%# ── Memorial header ───────────────────────────────────────── %>
+<div style="margin: 0 -1rem 1.75rem; padding: 2rem 1.5rem 1.75rem; background: var(--color-navy); color: white; position: relative; overflow: hidden;">
+  <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; opacity: 0.04; background-image: repeating-linear-gradient(45deg, white 0, white 1px, transparent 0, transparent 50%); background-size: 20px 20px;"></div>
+  <div style="position: relative;">
+    <div style="font-size: 0.7rem; letter-spacing: 0.12em; color: rgba(255,255,255,0.45); margin-bottom: 0.5rem; text-transform: uppercase;">לזכר עולם</div>
+    <h1 style="font-family: var(--font-serif); font-size: 2rem; font-weight: 400; margin: 0 0 0.5rem; color: white; letter-spacing: 0.01em;">
+      <%= @deceased.first_name %> <%= @deceased.last_name %>
+    </h1>
+    <div style="display: flex; align-items: center; gap: 0.75rem; font-size: 0.85rem; color: rgba(255,255,255,0.65);">
+      <span><%= generate_alav_hashalom(@deceased.gender) rescue "ז״ל" %></span>
+      <% heb = hebrew_date_of_yahrzeit(@deceased) rescue nil %>
+      <% if heb.present? %>
+        <span style="color: rgba(255,255,255,0.3);">·</span>
+        <span>יארצייט: <%= heb %></span>
+      <% end %>
+    </div>
+    <div style="margin-top: 1rem;">
+      <%= link_to portal_edit_deceased_path(@portal_token, @deceased),
+          style: "display: inline-flex; align-items: center; gap: 0.4rem; font-size: 0.8rem; color: rgba(255,255,255,0.85); text-decoration: none; border: 1px solid rgba(255,255,255,0.3); border-radius: 8px; padding: 0.4rem 0.9rem; background: rgba(255,255,255,0.08);" do %>
+        <svg viewBox="0 0 24 24" style="width:0.85rem;height:0.85rem;stroke:currentColor;fill:none;stroke-width:2;"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+        עריכה
+      <% end %>
+    </div>
+  </div>
+</div>
+
+<div style="display: flex; flex-direction: column; gap: 1rem;">
+
+  <%# ── Yahrzeit countdown ────────────────────────────────────── %>
+  <% days = num_days_till_yahrzeit(@deceased) rescue nil %>
+  <% if days %>
+    <div style="background: #f5f0e8; border: 1px solid var(--color-border); border-radius: 12px; padding: 1rem 1.25rem; display: flex; align-items: center; justify-content: space-between;">
+      <div style="display: flex; align-items: center; gap: 0.6rem;">
+        <span style="font-size: 1.3rem;">🕯️</span>
+        <div>
+          <div style="font-size: 0.78rem; color: var(--color-warm-gray); margin-bottom: 0.1rem;">יום הזיכרון הקרוב</div>
+          <div style="font-size: 0.9rem; font-weight: 600; color: var(--color-navy);"><%= heb %></div>
+        </div>
+      </div>
+      <div style="background: var(--color-navy); color: white; border-radius: 20px; padding: 0.25rem 0.85rem; font-size: 0.8rem; font-weight: 500;">
+        <% if days == 0 %>היום
+        <% elsif days == 1 %>מחר
+        <% else %>עוד <%= days %> ימים<% end %>
+      </div>
+    </div>
+  <% end %>
+
+  <%# ── Details card ──────────────────────────────────────────── %>
+  <div style="background: white; border: 1px solid var(--color-border); border-radius: 12px; overflow: hidden;">
+
+    <div style="padding: 0.6rem 1.25rem; border-bottom: 1px solid var(--color-border); background: #fafaf8;">
+      <span style="font-family: var(--font-serif); font-size: 0.9rem; color: var(--color-navy); font-weight: 500;">פרטים אישיים</span>
+    </div>
+
+    <dl style="padding: 1.25rem; display: grid; grid-template-columns: 1fr 1fr; gap: 1rem 1.5rem;">
+      <% def detail_pair(label, value); end %>
+
+      <div>
+        <dt style="font-size: 0.72rem; color: var(--color-warm-gray); margin-bottom: 0.2rem; letter-spacing: 0.03em;">שם פרטי</dt>
+        <dd style="font-size: 0.95rem; color: #2c2825; font-weight: 500;"><%= @deceased.first_name %></dd>
+      </div>
+      <div>
+        <dt style="font-size: 0.72rem; color: var(--color-warm-gray); margin-bottom: 0.2rem; letter-spacing: 0.03em;">שם משפחה</dt>
+        <dd style="font-size: 0.95rem; color: #2c2825; font-weight: 500;"><%= @deceased.last_name %></dd>
+      </div>
+      <div>
+        <dt style="font-size: 0.72rem; color: var(--color-warm-gray); margin-bottom: 0.2rem; letter-spacing: 0.03em;">מגדר</dt>
+        <dd style="font-size: 0.95rem; color: #2c2825;"><%= t(@deceased.gender) rescue @deceased.gender %></dd>
+      </div>
+      <% if @deceased.date_of_death.present? %>
+      <div>
+        <dt style="font-size: 0.72rem; color: var(--color-warm-gray); margin-bottom: 0.2rem; letter-spacing: 0.03em;">תאריך לועזי</dt>
+        <dd style="font-size: 0.95rem; color: #2c2825;"><%= @deceased.date_of_death.strftime("%d/%m/%Y") rescue @deceased.date_of_death %></dd>
+      </div>
+      <% end %>
+      <div style="grid-column: 1 / -1;">
+        <dt style="font-size: 0.72rem; color: var(--color-warm-gray); margin-bottom: 0.2rem; letter-spacing: 0.03em;">תאריך עברי</dt>
+        <dd style="font-size: 0.95rem; color: #2c2825;">
+          <%= @deceased.hebrew_day_of_death %> <%= @deceased.hebrew_month_of_death %> <%= @deceased.hebrew_year_of_death %>
+        </dd>
+      </div>
+    </dl>
+
+    <% extras = [
+      ["מקצוע", @deceased.occupation],
+      ["ארגון", @deceased.organization],
+      ["דת", @deceased.religion],
+      ["שם האב", @deceased.father_first_name],
+      ["שם האם", @deceased.mother_first_name],
+      ["מקום פטירה", @deceased.location_of_death],
+      ["שעת פטירה", @deceased.time_of_death]
+    ].select { |_, v| v.present? } %>
+    <% if extras.any? %>
+      <div style="border-top: 1px solid var(--color-border); padding: 0.6rem 1.25rem; background: #fafaf8;">
+        <span style="font-family: var(--font-serif); font-size: 0.9rem; color: var(--color-navy); font-weight: 500;">פרטים נוספים</span>
+      </div>
+      <dl style="padding: 1.25rem; display: grid; grid-template-columns: 1fr 1fr; gap: 1rem 1.5rem;">
+        <% extras.each do |label, val| %>
+          <div>
+            <dt style="font-size: 0.72rem; color: var(--color-warm-gray); margin-bottom: 0.2rem; letter-spacing: 0.03em;"><%= label %></dt>
+            <dd style="font-size: 0.95rem; color: #2c2825;"><%= val %></dd>
+          </div>
+        <% end %>
+      </dl>
+    <% end %>
+  </div>
+
+  <%# ── Relation ───────────────────────────────────────────────── %>
+  <div style="background: white; border: 1px solid var(--color-border); border-radius: 12px; padding: 1rem 1.25rem; display: flex; justify-content: space-between; align-items: center;">
+    <div>
+      <div style="font-size: 0.72rem; color: var(--color-warm-gray); margin-bottom: 0.2rem;">הקשר שלך</div>
+      <div style="font-size: 0.9rem; color: var(--color-navy); font-weight: 500;">
+        <%= t("hke.#{@relation.relation_of_deceased_to_contact}") rescue @relation.relation_of_deceased_to_contact %>
+      </div>
+    </div>
+  </div>
+
+</div>

@@ -31,6 +31,10 @@ Rails.application.routes.draw do
     patch "/preferences/relation/:relation_id", to: "hke/portal/preferences#update_relation_preference", as: :relation_preference
     get "/venues", to: "hke/portal/venues#index", as: :venues
     post "/venues/:venue_id/request", to: "hke/portal/venues#request_venue", as: :venue_request
+    get  "/deceased/:id",      to: "hke/portal/deceased#show",    as: :deceased
+    get  "/deceased/:id/edit", to: "hke/portal/deceased#edit",    as: :edit_deceased
+    patch "/deceased/:id",     to: "hke/portal/deceased#update",   as: :update_deceased
+    delete "/deceased/:id",    to: "hke/portal/deceased#destroy",  as: :destroy_deceased
   end
 
   # HKE routes (inlined from engine)

@@ -1,0 +1,270 @@
+<%# ── Back nav ──────────────────────────────────────────────── %>
+<div style="margin: -1.5rem -1rem 0; padding: 0.75rem 1rem; background: white; border-bottom: 1px solid var(--color-border);">
+  <%= link_to portal_deceased_path(@portal_token, @deceased),
+      style: "display: inline-flex; align-items: center; gap: 0.4rem; font-size: 0.82rem; color: var(--color-navy); text-decoration: none;" do %>
+    <svg viewBox="0 0 24 24" style="width:1rem;height:1rem;stroke:currentColor;fill:none;stroke-width:2;transform:scaleX(-1);"><polyline points="9 18 15 12 9 6"/></svg>
+    חזרה
+  <% end %>
+</div>
+
+<%# ── Header ─────────────────────────────────────────────────── %>
+<div style="margin: 0 -1rem 1.75rem; padding: 1.75rem 1.5rem 1.5rem; background: var(--color-navy); color: white; position: relative; overflow: hidden;">
+  <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; opacity: 0.04; background-image: repeating-linear-gradient(45deg, white 0, white 1px, transparent 0, transparent 50%); background-size: 20px 20px;"></div>
+  <div style="position: relative;">
+    <div style="font-size: 0.7rem; letter-spacing: 0.12em; color: rgba(255,255,255,0.45); margin-bottom: 0.4rem; text-transform: uppercase;">עריכת פרטים</div>
+    <h1 style="font-family: var(--font-serif); font-size: 1.75rem; font-weight: 400; margin: 0; color: white;">
+      <%= @deceased.first_name %> <%= @deceased.last_name %>
+    </h1>
+  </div>
+</div>
+
+<% if @deceased.errors.any? %>
+  <div style="background: #fef2f2; border: 1px solid #fca5a5; border-radius: 10px; padding: 1rem 1.25rem; margin-bottom: 1.25rem;">
+    <p style="font-weight: 600; color: #dc2626; margin: 0 0 0.5rem; font-size: 0.88rem;">נמצאו שגיאות, אנא תקן:</p>
+    <ul style="margin: 0; padding-right: 1.25rem; color: #dc2626; font-size: 0.84rem; display: flex; flex-direction: column; gap: 0.2rem;">
+      <% @deceased.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+    </ul>
+  </div>
+<% end %>
+
+<style>
+  .portal-form-section {
+    background: white;
+    border: 1px solid var(--color-border);
+    border-radius: 12px;
+    overflow: hidden;
+    margin-bottom: 1rem;
+  }
+  .portal-form-section-header {
+    padding: 0.65rem 1.25rem;
+    border-bottom: 1px solid var(--color-border);
+    background: #fafaf8;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .portal-form-section-title {
+    font-family: var(--font-serif);
+    font-size: 0.92rem;
+    color: var(--color-navy);
+    font-weight: 500;
+  }
+  .portal-form-body {
+    padding: 1.25rem;
+    display: grid;
+    gap: 1.1rem;
+  }
+  .portal-form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+  }
+  .portal-form-field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+  }
+  .portal-form-field.full-width {
+    grid-column: 1 / -1;
+  }
+  .portal-form-label {
+    font-size: 0.72rem;
+    color: var(--color-warm-gray);
+    letter-spacing: 0.04em;
+    font-weight: 500;
+  }
+  .portal-form-label.required::after {
+    content: " *";
+    color: var(--color-gold);
+  }
+  .portal-form-input {
+    width: 100%;
+    padding: 0.55rem 0.75rem;
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    font-size: 0.9rem;
+    font-family: var(--font-sans);
+    color: #2c2825;
+    background: white;
+    outline: none;
+    transition: border-color 0.15s, box-shadow 0.15s;
+    box-sizing: border-box;
+  }
+  .portal-form-input:focus {
+    border-color: var(--color-navy);
+    box-shadow: 0 0 0 2px rgba(30, 58, 95, 0.08);
+  }
+  .portal-form-select {
+    width: 100%;
+    padding: 0.55rem 0.75rem;
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    font-size: 0.9rem;
+    font-family: var(--font-sans);
+    color: #2c2825;
+    background: white;
+    outline: none;
+    cursor: pointer;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'%3E%3Cpolyline points='6 9 12 15 18 9' fill='none' stroke='%236b6560' stroke-width='2'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: left 0.5rem center;
+    background-size: 1rem;
+    transition: border-color 0.15s;
+  }
+  .portal-form-select:focus {
+    border-color: var(--color-navy);
+    box-shadow: 0 0 0 2px rgba(30, 58, 95, 0.08);
+  }
+  .portal-hint {
+    font-size: 0.7rem;
+    color: var(--color-warm-gray);
+    opacity: 0.75;
+  }
+</style>
+
+<%= form_with model: @deceased,
+    url: portal_update_deceased_path(@portal_token, @deceased.id),
+    method: :patch,
+    local: true do |f| %>
+
+  <%# ── Section 1: שם ומגדר ─────────────────────────────────── %>
+  <div class="portal-form-section">
+    <div class="portal-form-section-header">
+      <svg viewBox="0 0 24 24" style="width:0.95rem;height:0.95rem;stroke:var(--color-gold);fill:none;stroke-width:1.8;"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      <span class="portal-form-section-title">שם ומגדר</span>
+    </div>
+    <div class="portal-form-body">
+      <div class="portal-form-row">
+        <div class="portal-form-field">
+          <%= f.label :first_name, "שם פרטי", class: "portal-form-label required" %>
+          <%= f.text_field :first_name, class: "portal-form-input", dir: "rtl" %>
+        </div>
+        <div class="portal-form-field">
+          <%= f.label :last_name, "שם משפחה", class: "portal-form-label required" %>
+          <%= f.text_field :last_name, class: "portal-form-input", dir: "rtl" %>
+        </div>
+      </div>
+      <div class="portal-form-field" style="max-width: 50%;">
+        <%= f.label :gender, "מגדר", class: "portal-form-label required" %>
+        <%= f.select :gender, gender_select, {}, class: "portal-form-select" %>
+      </div>
+    </div>
+  </div>
+
+  <%# ── Section 2: תאריך פטירה ──────────────────────────────── %>
+  <div class="portal-form-section">
+    <div class="portal-form-section-header">
+      <svg viewBox="0 0 24 24" style="width:0.95rem;height:0.95rem;stroke:var(--color-gold);fill:none;stroke-width:1.8;"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+      <span class="portal-form-section-title">תאריך פטירה</span>
+    </div>
+    <div class="portal-form-body">
+      <div>
+        <div style="font-size: 0.72rem; color: var(--color-warm-gray); margin-bottom: 0.6rem; letter-spacing: 0.04em; font-weight: 500;">תאריך עברי</div>
+        <div style="display: grid; grid-template-columns: 2fr 2fr 1fr; gap: 0.75rem;">
+          <div class="portal-form-field">
+            <%= f.label :hebrew_month_of_death, "חודש", class: "portal-form-label required" %>
+            <%= f.select :hebrew_month_of_death, hebrew_month_select, { include_blank: "— חודש —" }, class: "portal-form-select" %>
+          </div>
+          <div class="portal-form-field">
+            <%= f.label :hebrew_day_of_death, "יום", class: "portal-form-label required" %>
+            <%= f.select :hebrew_day_of_death, hebrew_day_select, { include_blank: "—" }, class: "portal-form-select" %>
+          </div>
+          <div class="portal-form-field">
+            <%= f.label :hebrew_year_of_death, "שנה", class: "portal-form-label required" %>
+            <%= f.text_field :hebrew_year_of_death, class: "portal-form-input", placeholder: "תשפ״ה", dir: "rtl" %>
+          </div>
+        </div>
+      </div>
+      <div class="portal-form-field" style="max-width: 55%;">
+        <%= f.label :date_of_death, "תאריך לועזי", class: "portal-form-label" %>
+        <%= f.date_field :date_of_death, class: "portal-form-input" %>
+        <span class="portal-hint">אופציונלי</span>
+      </div>
+    </div>
+  </div>
+
+  <%# ── Section 3: פרטי חיים ────────────────────────────────── %>
+  <div class="portal-form-section">
+    <div class="portal-form-section-header">
+      <svg viewBox="0 0 24 24" style="width:0.95rem;height:0.95rem;stroke:var(--color-gold);fill:none;stroke-width:1.8;"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+      <span class="portal-form-section-title">פרטי חיים</span>
+    </div>
+    <div class="portal-form-body">
+      <div class="portal-form-row">
+        <div class="portal-form-field">
+          <%= f.label :occupation, "מקצוע", class: "portal-form-label" %>
+          <%= f.text_field :occupation, class: "portal-form-input", dir: "rtl" %>
+        </div>
+        <div class="portal-form-field">
+          <%= f.label :organization, "ארגון / קהילה", class: "portal-form-label" %>
+          <%= f.text_field :organization, class: "portal-form-input", dir: "rtl" %>
+        </div>
+      </div>
+      <div class="portal-form-row">
+        <div class="portal-form-field">
+          <%= f.label :religion, "דת / זרם", class: "portal-form-label" %>
+          <%= f.text_field :religion, class: "portal-form-input", dir: "rtl" %>
+        </div>
+        <div class="portal-form-field">
+          <%= f.label :location_of_death, "מקום פטירה", class: "portal-form-label" %>
+          <%= f.text_field :location_of_death, class: "portal-form-input", dir: "rtl" %>
+        </div>
+      </div>
+      <div class="portal-form-field" style="max-width: 50%;">
+        <%= f.label :time_of_death, "שעת פטירה", class: "portal-form-label" %>
+        <%= f.text_field :time_of_death, class: "portal-form-input", placeholder: "לדוגמה: 14:30", dir: "rtl" %>
+      </div>
+    </div>
+  </div>
+
+  <%# ── Section 4: הורים ────────────────────────────────────── %>
+  <div class="portal-form-section">
+    <div class="portal-form-section-header">
+      <svg viewBox="0 0 24 24" style="width:0.95rem;height:0.95rem;stroke:var(--color-gold);fill:none;stroke-width:1.8;"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
+      <span class="portal-form-section-title">הורים</span>
+    </div>
+    <div class="portal-form-body">
+      <div class="portal-form-row">
+        <div class="portal-form-field">
+          <%= f.label :father_first_name, "שם האב", class: "portal-form-label" %>
+          <%= f.text_field :father_first_name, class: "portal-form-input", dir: "rtl" %>
+        </div>
+        <div class="portal-form-field">
+          <%= f.label :mother_first_name, "שם האם", class: "portal-form-label" %>
+          <%= f.text_field :mother_first_name, class: "portal-form-input", dir: "rtl" %>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <%# ── Action buttons ──────────────────────────────────────── %>
+  <div style="display: flex; gap: 0.75rem; align-items: center; margin-bottom: 1.5rem;">
+    <%= f.submit "שמור שינויים",
+        style: "flex: 1; padding: 0.75rem 1.5rem; background: var(--color-navy); color: white; border: none; border-radius: 10px; font-family: var(--font-sans); font-size: 0.9rem; font-weight: 600; cursor: pointer; letter-spacing: 0.02em;" %>
+    <%= link_to "ביטול", portal_deceased_path(@portal_token, @deceased),
+        style: "flex: 0 0 auto; padding: 0.75rem 1.25rem; background: white; color: var(--color-warm-gray); border: 1px solid var(--color-border); border-radius: 10px; font-size: 0.88rem; text-decoration: none; text-align: center;" %>
+  </div>
+
+<% end %>
+
+<%# ── Danger zone ─────────────────────────────────────────── %>
+<div style="border: 1px solid #fca5a5; border-radius: 12px; overflow: hidden;">
+  <div style="padding: 0.65rem 1.25rem; border-bottom: 1px solid #fca5a5; background: #fef9f9; display: flex; align-items: center; gap: 0.5rem;">
+    <svg viewBox="0 0 24 24" style="width:0.9rem;height:0.9rem;stroke:#dc2626;fill:none;stroke-width:2;"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+    <span style="font-family: var(--font-serif); font-size: 0.9rem; color: #dc2626; font-weight: 500;">הסרת נפטר</span>
+  </div>
+  <div style="padding: 1.25rem;">
+    <p style="font-size: 0.84rem; color: var(--color-warm-gray); margin: 0 0 1rem; line-height: 1.6;">
+      הסרה תנתק את <%= @deceased.first_name %> <%= @deceased.last_name %> מרשימתך האישית. הפרטים לא יימחקו מהמערכת.
+    </p>
+    <%= button_to portal_destroy_deceased_path(@portal_token, @deceased),
+        method: :delete,
+        form: { data: { turbo_confirm: "האם אתה בטוח שברצונך להסיר את #{@deceased.first_name} #{@deceased.last_name} מרשימתך?" } },
+        style: "padding: 0.6rem 1.25rem; background: white; color: #dc2626; border: 1px solid #fca5a5; border-radius: 8px; font-size: 0.84rem; cursor: pointer; font-family: var(--font-sans);" do %>
+      הסרת <%= @deceased.first_name %> מרשימתי
+    <% end %>
+  </div>
+</div>
