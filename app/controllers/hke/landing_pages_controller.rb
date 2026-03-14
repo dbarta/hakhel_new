@@ -19,12 +19,12 @@ module Hke
         relation = Relation.find_by_token(@token)
         if relation
           d = relation.deceased_person
-          yahrzeit_date = Hke::Heb.yahrzeit_date(d.name, d.hebrew_month_of_death, d.hebrew_day_of_death)
-          send_date = yahrzeit_date - 1.week
-          send_date = Date.today if send_date < Date.today
           contact = relation.contact_person
-          preview_portal_url = contact&.portal_token.present? ? portal_dashboard_url(portal_token: contact.portal_token) : nil
-          snippets = generate_hebrew_snippets(relation, [:sms], reference_date: send_date, portal_url: preview_portal_url)
+          yahrzeit_date = Hke::Heb.yahrzeit_date(d.name, d.hebrew_month_of_death, d.hebrew_day_of_death)
+          @send_date = yahrzeit_date - 1.week
+          @yahrzeit_date = yahrzeit_date
+          short_link = Hke::ShortLink.find_or_create_by!(contact_person: contact, via_token: nil)
+          snippets = generate_hebrew_snippets(relation, [:sms], reference_date: @send_date, portal_url: short_link.short_url)
           @sms_text = snippets[:sms]
           @contact_name = contact&.name
           @deceased_name = d.name
