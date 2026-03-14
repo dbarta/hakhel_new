@@ -81,7 +81,11 @@ Rails.application.routes.draw do
     end
 
     resources :message_management, only: [:index, :show]
-    resources :landing_pages
+    resources :landing_pages do
+      collection do
+        get :sms_preview
+      end
+    end
 
     resources :contact_people do
       collection do
