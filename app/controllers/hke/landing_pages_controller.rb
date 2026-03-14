@@ -5,9 +5,8 @@ module Hke
     include Hke::ApplicationHelper
     include Hke::MessageGenerator
 
-    # Uncomment to enforce Pundit authorization
-    # after_action :verify_authorized
-    # rescue_from Pundit::NotAuthorizedError, with: :user_not_authorized
+    skip_after_action :verify_authorized, only: [:show, :sms_preview]
+    skip_after_action :verify_policy_scoped, only: [:show, :sms_preview]
 
     # GET /landing_pages
     def index
