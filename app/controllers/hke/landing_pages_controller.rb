@@ -13,6 +13,8 @@ module Hke
 
     end
 
+    HEBREW_DAYS = { 0 => "ראשון", 1 => "שני", 2 => "שלישי", 3 => "רביעי", 4 => "חמישי", 5 => "שישי", 6 => "שבת" }.freeze
+
     def sms_preview
       @token = params[:token]
       if @token
@@ -23,6 +25,11 @@ module Hke
           yahrzeit_date = Hke::Heb.yahrzeit_date(d.name, d.hebrew_month_of_death, d.hebrew_day_of_death)
           @send_date = yahrzeit_date - 1.week
           @yahrzeit_date = yahrzeit_date
+          @yahrzeit_hebrew = "#{d.hebrew_day_of_death} #{d.hebrew_month_of_death}"
+          @yahrzeit_day_of_week = HEBREW_DAYS[yahrzeit_date.wday]
+          send_heb = Hke::Heb.g2h(d.name, @send_date)
+          @send_date_hebrew = send_heb ? "#{send_heb['hd']} #{send_heb['hm']}" : nil
+          @send_date_day_of_week = HEBREW_DAYS[@send_date.wday]
           short_link = Hke::ShortLink.find_or_create_by!(contact_person: contact, via_token: nil)
           snippets = generate_hebrew_snippets(relation, [:sms], reference_date: @send_date, portal_url: short_link.short_url)
           @sms_text = snippets[:sms]

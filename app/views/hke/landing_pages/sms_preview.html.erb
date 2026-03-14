@@ -1,14 +1,20 @@
 <div class="py-16 max-w-xl mx-auto text-right" dir="rtl">
   <% if @sms_text.present? %>
-    <h2 class="text-xl font-bold mb-2">תצוגה מקדימה של הודעת SMS</h2>
+    <h2 class="text-xl font-bold mb-4">תצוגה מקדימה של הודעת SMS</h2>
     <p class="text-sm text-gray-600 mb-1">
       איש קשר: <strong><%= @contact_name %></strong> &nbsp;|&nbsp; נפטר: <strong><%= @deceased_name %></strong>
     </p>
     <p class="text-sm text-gray-500 mb-1">
       תאריך יארציט: <strong><%= @yahrzeit_date&.strftime("%d/%m/%Y") %></strong>
+      <% if @yahrzeit_hebrew.present? %>
+        (<%= @yahrzeit_hebrew %><% if @yahrzeit_day_of_week %>, יום <%= @yahrzeit_day_of_week %><% end %>)
+      <% end %>
     </p>
     <p class="text-sm text-blue-600 mb-6">
       ההודעה תישלח בתאריך: <strong><%= @send_date&.strftime("%d/%m/%Y") %></strong>
+      <% if @send_date_hebrew.present? %>
+        (<%= @send_date_hebrew %><% if @send_date_day_of_week %>, יום <%= @send_date_day_of_week %><% end %>)
+      <% end %>
       — ותכיל את הנוסח הבא:
     </p>
     <div class="bg-green-50 border border-green-200 rounded-xl p-6 whitespace-pre-wrap font-mono text-sm leading-relaxed text-gray-800 shadow">
