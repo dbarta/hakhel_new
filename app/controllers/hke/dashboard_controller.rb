@@ -36,6 +36,10 @@ module Hke
 
       @pending_approvals = Hke::FutureMessage.pending_approval.limit(10)
 
+      # Message stats for last 30 days
+      @sent_30_days = Hke::SentMessage.where(created_at: 30.days.ago..Time.current).count
+      @failed_30_days = Hke::NotSentMessage.where(created_at: 30.days.ago..Time.current).count
+
       # Calculate stats with existing SentMessage structure
       @stats = {
         total_sent_this_week: defined?(Hke::SentMessage) ? Hke::SentMessage.where(created_at: 1.week.ago..Time.current).count : 0,

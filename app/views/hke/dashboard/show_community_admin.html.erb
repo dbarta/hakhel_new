@@ -1,6 +1,18 @@
 
 <div class="container mx-auto p-4" style="direction: rtl;">
 
+  <!-- 30-day message stats -->
+  <div class="flex gap-6 mb-4 text-sm text-gray-600">
+    <div>
+      <span class="font-semibold text-green-700 text-base"><%= @sent_30_days %></span>
+      <span class="mr-1">הודעות נשלחו ב-30 ימים אחרונים</span>
+    </div>
+    <div>
+      <span class="font-semibold text-red-700 text-base"><%= @failed_30_days %></span>
+      <span class="mr-1">כשלונות</span>
+    </div>
+  </div>
+
   <!-- Message Approval Dashboard -->
   <div class="bg-white rounded-lg shadow-sm p-6 mb-8">
     <div class="flex items-center justify-between mb-6">

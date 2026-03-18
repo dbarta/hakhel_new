@@ -23,25 +23,25 @@
         <% end %>
       </div>
 
+      <% if user_signed_in? && community_mode %>
+        <div class="flex items-center gap-2 pr-4 border-r border-gray-200">
+          <% if current_community&.logo&.attached? %>
+            <%= image_tag current_community.logo, class: "h-8 w-8 rounded object-cover", alt: current_community.name %>
+          <% end %>
+          <span class="font-semibold text-gray-800"><%= current_community&.name %></span>
+        </div>
+      <% end %>
+
       <% if user_signed_in? %>
         <% if system_admin_mode %>
           <%= link_to "קהילות", hke_admin_communities_path %>
           <%= link_to "משתמשים", hke_users_path %>
           <%= link_to "העדפות", hke_system_preferences_path %>
         <% elsif community_mode %>
-          <%= link_to t("community_admin.navbar.message_approval"),
-          hke_root_path,
-          class: "text-green-600 font-semibold" %>
+          <%= link_to "הודעות", hke_root_path %>
           <%= link_to t("community_admin.navbar.deceased_people"), hke_deceased_people_path %>
           <%= link_to t("community_admin.navbar.contact_people"), hke_contact_people_path %>
-          <%= link_to t("community_admin.navbar.import_csv"), hke_csv_imports_path %>
-          <%= link_to t("community_admin.navbar.message_management"),
-          hke_message_management_index_path %>
-          <%= link_to t(
-            "community_admin.navbar.logs",
-            default: '\u05dc\u05d5\u05d2\u05d9\u05dd',
-          ),
-          hke_logs_path %>
+          <%= link_to "העלאת נתונים", hke_csv_imports_path %>
           <%= link_to "העדפות", hke_community_preferences_path %>
 
         <% end %>
