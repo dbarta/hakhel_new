@@ -131,6 +131,11 @@
             <%= link_to t("profile"),
             profile_hke_users_path,
             class: "block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" %>
+            <% if current_user.system_admin? %>
+              <%= link_to t("community_admin.navbar.logs", default: "לוגים"),
+              hke_logs_path,
+              class: "block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" %>
+            <% end %>
             <%= link_to t("logout"),
             main_app.destroy_user_session_path,
             data: {
