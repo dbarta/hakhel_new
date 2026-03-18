@@ -86,6 +86,11 @@ module Hke
     #   end
     # end
 
+    def current_community
+      current_user&.community || hardwired_community
+    end
+    helper_method :current_community
+
     def authenticate_admin
       puts "in  authenticate_admin, #{true_user}"
       redirect_to "/", alert: t("unauthorized") unless user_signed_in? && (current_user.system_admin? || current_user.community_admin?)

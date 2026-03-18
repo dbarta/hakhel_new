@@ -34,6 +34,14 @@
         <%= form.label :email_address, t('admin.communities.index.email_address'), class: "block text-sm font-medium text-gray-700" %>
         <%= form.email_field :email_address, class: "mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500" %>
       </div>
+
+      <div class="field">
+        <%= form.label :logo, "לוגו", class: "block text-sm font-medium text-gray-700" %>
+        <% if form.object.logo.attached? %>
+          <%= image_tag form.object.logo, style: "height: 48px; width: auto; margin-bottom: 0.5rem; border-radius: 4px;" %>
+        <% end %>
+        <%= form.file_field :logo, accept: "image/*", class: "mt-1 block w-full text-sm" %>
+      </div>
     </div>
   </div>
 </div>

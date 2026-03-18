@@ -5,6 +5,8 @@ module Hke
     include Hke::Addressable
     include Hke::Preferring
 
+    has_one_attached :logo
+
     enum :community_type, {synagogue: "synagogue", school: "school"}
 
     validates :name, presence: true
