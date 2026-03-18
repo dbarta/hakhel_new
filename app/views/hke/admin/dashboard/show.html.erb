@@ -37,4 +37,63 @@
       </div>
     </div>
   </div>
+
+  <!-- Message Management Section -->
+  <div class="mb-4">
+    <h2 class="text-xl font-bold mb-4"><%= t("message_management.index.title") %></h2>
+
+    <!-- Stats -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+      <div class="bg-green-100 p-6 rounded-lg">
+        <h3 class="text-lg font-semibold text-green-800"><%= t("message_management.stats.total_sent") %></h3>
+        <p class="text-3xl font-bold text-green-600"><%= @msg_stats[:total_sent] %></p>
+      </div>
+      <div class="bg-red-100 p-6 rounded-lg">
+        <h3 class="text-lg font-semibold text-red-800"><%= t("message_management.stats.total_failed") %></h3>
+        <p class="text-3xl font-bold text-red-600"><%= @msg_stats[:total_failed] %></p>
+      </div>
+      <div class="bg-blue-100 p-6 rounded-lg">
+        <h3 class="text-lg font-semibold text-blue-800"><%= t("message_management.stats.success_rate") %></h3>
+        <p class="text-3xl font-bold text-blue-600"><%= @msg_stats[:success_rate] %>%</p>
+      </div>
+    </div>
+
+    <!-- Time Filter -->
+    <div class="bg-white rounded-lg shadow-sm p-4 mb-4 flex items-center gap-4">
+      <label class="text-sm font-medium text-gray-700"><%= t("message_management.filters.time_period") %>:</label>
+      <%= form_with url: hke_admin_root_path, method: :get, data: { turbo: false } do |form| %>
+        <%= hidden_field_tag :tab, @tab %>
+        <%= form.select :time_filter,
+          options_for_select([
+            [t("message_management.filters.last_7_days"), "last_7_days"],
+            [t("message_management.filters.last_30_days"), "last_30_days"],
+            [t("message_management.filters.last_90_days"), "last_90_days"],
+            [t("message_management.filters.this_year"), "this_year"],
+          ], @time_filter),
+          {},
+          { class: "rounded border-gray-300 text-sm", onchange: "this.form.submit();" } %>
+      <% end %>
+    </div>
+
+    <!-- Tabs + Table -->
+    <div class="bg-white rounded-lg shadow-sm">
+      <div class="border-b border-gray-200">
+        <nav class="flex -mb-px">
+          <%= link_to t("message_management.tabs.sent", count: @msg_stats[:total_sent]),
+            hke_admin_root_path(time_filter: @time_filter, tab: "sent"),
+            class: "px-6 py-3 border-b-2 text-sm font-medium #{@tab == "sent" ? "border-green-500 text-green-700" : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"}" %>
+          <%= link_to t("message_management.tabs.not_sent", count: @msg_stats[:total_failed]),
+            hke_admin_root_path(time_filter: @time_filter, tab: "not_sent"),
+            class: "px-6 py-3 border-b-2 text-sm font-medium #{@tab == "not_sent" ? "border-red-500 text-red-700" : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"}" %>
+        </nav>
+      </div>
+      <div>
+        <% if @tab == "sent" %>
+          <%= render partial: "hke/message_management/messages_table", locals: { messages: @sent_messages } %>
+        <% else %>
+          <%= render partial: "hke/message_management/not_sent_table", locals: { messages: @not_sent_messages } %>
+        <% end %>
+      </div>
+    </div>
+  </div>
 </div>

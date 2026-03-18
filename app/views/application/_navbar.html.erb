@@ -2,7 +2,7 @@
   dir="rtl"
   class="
     w-full px-4 py-2 bg-white dark:bg-gray-900 border-b border-gray-200
-    dark:border-gray-800 text-sm font-medium
+    dark:border-gray-800 text-base font-medium
   "
   data-controller="toggle"
 >
@@ -25,16 +25,8 @@
 
       <% if user_signed_in? %>
         <% if system_admin_mode %>
-          <%= link_to "מנהל מערכת", hke_admin_root_path, class: "text-blue-600 font-semibold" %>
           <%= link_to "קהילות", hke_admin_communities_path %>
           <%= link_to "משתמשים", hke_users_path %>
-          <%= link_to t("community_admin.navbar.message_management"),
-          hke_message_management_index_path %>
-          <%= link_to t(
-            "community_admin.navbar.logs",
-            default: '\u05dc\u05d5\u05d2\u05d9\u05dd',
-          ),
-          hke_logs_path %>
           <%= link_to "העדפות", hke_system_preferences_path %>
         <% elsif community_mode %>
           <%= link_to t("community_admin.navbar.message_approval"),
@@ -397,6 +389,12 @@
                     turbo: false,
                   } %>
                 <% end %>
+              <% end %>
+              <% if current_user.system_admin? %>
+                <%= link_to t("community_admin.navbar.logs", default: "לוגים"),
+                hke_logs_path,
+                class:
+                  "text-gray-800 bg-white hover:bg-primary-50 dark:text-gray-50 dark:bg-gray-800 dark:hover_bg-primary-800 transition ease-in-out duration-200 whitespace-nowrap no-underline block px-6 py-3" %>
               <% end %>
               <%= button_to t(".sign_out"),
               main_app.destroy_user_session_path,

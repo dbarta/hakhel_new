@@ -29,7 +29,41 @@ module Hke
           @messages_sent_30_days = Hke::SentMessage.where(created_at: thirty_days_ago..Time.current).count
           @messages_to_send_30_days = Hke::FutureMessage.where(send_date: Time.current..thirty_days_from_now).count
         end
+
+        # Message management section
+        @time_filter = params[:time_filter] || "last_30_days"
+        @tab = params[:tab] || "sent"
+        date_range = resolve_date_range(@time_filter)
+
+        ActsAsTenant.without_tenant do
+          @sent_messages = Hke::SentMessage.where(created_at: date_range).order(created_at: :desc).limit(100)
+          @not_sent_messages = Hke::NotSentMessage.where(created_at: date_range).order(created_at: :desc).limit(100)
+
+          sent_count = Hke::SentMessage.where(created_at: date_range).count
+          not_sent_count = Hke::NotSentMessage.where(created_at: date_range).count
+          total = sent_count + not_sent_count
+
+          @msg_stats = {
+            total_sent: sent_count,
+            total_failed: not_sent_count,
+            success_rate: (total > 0) ? (sent_count.to_f / total * 100).round(1) : 0
+          }
+        end
       end
+
+      private
+
+      def resolve_date_range(filter)
+        case filter
+        when "last_7_days" then 7.days.ago..Time.current
+        when "last_30_days" then 30.days.ago..Time.current
+        when "last_90_days" then 90.days.ago..Time.current
+        when "this_year" then Date.current.beginning_of_year..Time.current
+        else 30.days.ago..Time.current
+        end
+      end
+
+      public
 
       def switch_to_community
         unless current_user.system_admin?
