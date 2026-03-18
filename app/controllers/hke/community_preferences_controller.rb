@@ -21,9 +21,6 @@ class Hke::CommunityPreferencesController < Hke::PreferencesBaseController
   # end
 
   def set_preferring
-    id = session[:selected_community_id]
-    raise "No selected community in session" if id.blank?
-
-    @preferring = Hke::Community.find(id)
+    @preferring = ActsAsTenant.current_tenant
   end
 end

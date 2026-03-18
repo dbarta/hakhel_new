@@ -23,13 +23,16 @@
         <% end %>
       </div>
 
-      <% if user_signed_in? && community_mode %>
-        <div class="flex items-center gap-2 pr-4 border-r border-gray-200">
-          <% if current_community&.logo&.attached? %>
-            <%= image_tag current_community.logo, class: "h-8 w-8 rounded object-cover", alt: current_community.name %>
-          <% end %>
-          <span class="font-semibold text-gray-800"><%= current_community&.name %></span>
-        </div>
+      <% if user_signed_in? && community_mode && respond_to?(:current_community) %>
+        <% _comm = current_community %>
+        <% if _comm %>
+          <div class="flex items-center gap-2 pr-4 border-r border-gray-200">
+            <% if _comm.logo&.attached? %>
+              <%= image_tag _comm.logo, class: "h-8 w-8 rounded object-cover", alt: _comm.name %>
+            <% end %>
+            <span class="font-semibold text-gray-800"><%= _comm.name %></span>
+          </div>
+        <% end %>
       <% end %>
 
       <% if user_signed_in? %>
