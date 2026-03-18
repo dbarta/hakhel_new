@@ -55,11 +55,13 @@ module Hke
     # Single source of truth for tenant scoping across all HKE controllers
     def set_community_as_current_tenant
       return unless user_signed_in?
-      ActsAsTenant.current_tenant = hardwired_community if defined?(ActsAsTenant)
-    end
-
-    def hardwired_community
-      @hardwired_community ||= Hke::Community.find_by!(name: "Kfar Vradim Synagogue")
+      return unless defined?(ActsAsTenant)
+      community = if current_user.system_admin? && session[:selected_community_id].present?
+        Hke::Community.find_by(id: session[:selected_community_id])
+      else
+        current_user.community
+      end
+      ActsAsTenant.current_tenant = community if community
     end
 
     # def set_community_as_current_tenant
@@ -87,7 +89,11 @@ module Hke
     # end
 
     def current_community
-      current_user&.community || hardwired_community
+      if current_user&.system_admin? && session[:selected_community_id].present?
+        Hke::Community.find_by(id: session[:selected_community_id])
+      else
+        current_user&.community
+      end
     end
     helper_method :current_community
 
