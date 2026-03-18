@@ -30,7 +30,11 @@
             <% if _comm.logo&.attached? %>
               <%= image_tag _comm.logo, class: "h-8 w-8 rounded object-cover", alt: _comm.name %>
             <% end %>
-            <span class="font-semibold text-gray-800"><%= _comm.name %></span>
+            <% if _comm.website_url.present? %>
+              <%= link_to _comm.name, _comm.website_url, target: "_blank", rel: "noopener", class: "font-semibold text-gray-800 hover:text-blue-600" %>
+            <% else %>
+              <span class="font-semibold text-gray-800"><%= _comm.name %></span>
+            <% end %>
           </div>
         <% end %>
       <% end %>
