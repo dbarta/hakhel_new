@@ -43,7 +43,7 @@
       <div class="field">
         <%= form.label :logo, "לוגו", class: "block text-sm font-medium text-gray-700" %>
         <% if form.object.logo.attached? %>
-          <%= image_tag form.object.logo, style: "height: 48px; width: auto; margin-bottom: 0.5rem; border-radius: 4px;" %>
+          <%= image_tag form.object.logo, style: "height: 48px; width: auto; margin-bottom: 0.5rem; border-radius: 4px;", loading: "lazy" %>
         <% end %>
         <%= form.file_field :logo, accept: "image/*", class: "mt-1 block w-full text-sm" %>
       </div>
