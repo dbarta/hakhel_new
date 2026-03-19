@@ -79,7 +79,7 @@
 
         <!-- Submit Button -->
 		  <div class="flex justify-end space-x-3 space-x-reverse">
-		    <%= link_to t('cancel'), hke_root_path, class: "px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50" %>
+		    <%= link_to t('cancel'), hke_root_path, class: "px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50", data: { turbo: true } %>
           <%= form.submit t('csv_imports.new.upload_and_process'),
               class: "px-4 py-2 bg-blue-600 text-white rounded-md text-sm font-medium hover:bg-blue-700 disabled:opacity-50",
               id: "submit_btn",
