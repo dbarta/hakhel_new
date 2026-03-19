@@ -21,6 +21,10 @@ class Hke::CommunityPreferencesController < Hke::PreferencesBaseController
   # end
 
   def set_preferring
-    @preferring = ActsAsTenant.current_tenant
+    @preferring = if current_user.system_admin? && session[:selected_community_id].present?
+      Hke::Community.find_by(id: session[:selected_community_id])
+    else
+      current_user.community
+    end
   end
 end
