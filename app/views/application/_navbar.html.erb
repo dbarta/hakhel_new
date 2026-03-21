@@ -45,7 +45,20 @@
           <%= link_to "משתמשים", hke_users_path %>
           <%= link_to "העדפות", hke_system_preferences_path %>
         <% elsif community_mode %>
-          <%= link_to "הודעות", hke_root_path %>
+          <div class="relative group">
+            <button class="flex items-center gap-1 hover:text-gray-600">
+              הודעות
+              <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+              </svg>
+            </button>
+            <div class="absolute right-0 mt-1 w-44 bg-white border border-gray-200 rounded shadow-lg z-50 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-150">
+              <%= link_to "אישור הודעות", approve_hke_future_messages_path,
+                  class: "block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50" %>
+              <%= link_to "ניהול הודעות", hke_message_management_index_path,
+                  class: "block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50" %>
+            </div>
+          </div>
           <%= link_to t("community_admin.navbar.deceased_people"), hke_deceased_people_path %>
           <%= link_to t("community_admin.navbar.contact_people"), hke_contact_people_path %>
           <%= link_to "העלאת נתונים", hke_csv_imports_path %>
