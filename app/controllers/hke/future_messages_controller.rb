@@ -73,6 +73,7 @@ module Hke
 
     # GET /future_messages/approve
     def approve
+      authorize Hke::FutureMessage, :bulk_approve?
       @messages = Hke::FutureMessage.pending_approval.includes(:messageable, :approved_by).order(:send_date)
       render 'approve'
     end
