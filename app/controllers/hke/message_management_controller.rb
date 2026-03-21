@@ -59,10 +59,17 @@ module Hke
       not_sent_count = policy_scope(Hke::NotSentMessage).where(created_at: date_range).count
       total = sent_count + not_sent_count
 
+      delivered_count = policy_scope(Hke::SentMessage)
+        .where(created_at: date_range, delivery_status: "delivered").count
+      delivery_failure_count = policy_scope(Hke::SentMessage)
+        .where(created_at: date_range, delivery_status: Hke::SentMessage::TWILIO_FAILED_STATUSES).count
+
       @stats = {
         total_sent: sent_count,
         total_failed: not_sent_count,
         total_messages: total,
+        delivered_confirmed: delivered_count,
+        delivery_failures: delivery_failure_count,
         success_rate: (total > 0) ? (sent_count.to_f / total * 100).round(1) : 0,
         most_common_errors: get_common_errors(date_range)
       }

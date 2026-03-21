@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_03_12_100004) do
+ActiveRecord::Schema[8.1].define(version: 2026_03_21_163014) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -168,6 +168,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_12_100004) do
     t.string "name", null: false
     t.string "phone_number"
     t.datetime "updated_at", null: false
+    t.string "website_url"
     t.index ["account_id"], name: "index_hke_communities_on_account_id"
   end
 
@@ -387,6 +388,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_12_100004) do
     t.string "deceased_first_name"
     t.string "deceased_last_name"
     t.integer "delivery_method"
+    t.string "delivery_status"
     t.string "email"
     t.text "full_message"
     t.string "hebrew_day_of_death"
@@ -400,9 +402,12 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_12_100004) do
     t.string "relation_of_deceased_to_contact"
     t.datetime "send_date"
     t.string "token"
+    t.string "twilio_error_code"
+    t.string "twilio_error_message"
     t.string "twilio_message_sid"
     t.datetime "updated_at", null: false
     t.index ["community_id"], name: "index_hke_sent_messages_on_community_id"
+    t.index ["delivery_status"], name: "index_hke_sent_messages_on_delivery_status"
     t.index ["messageable_type", "messageable_id"], name: "index_hke_sent_messages_on_messageable"
     t.index ["token"], name: "index_hke_sent_messages_on_token", unique: true
     t.index ["twilio_message_sid"], name: "index_hke_sent_messages_on_twilio_message_sid", unique: true

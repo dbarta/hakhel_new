@@ -35,6 +35,15 @@ module Hke
                             sms: 2,
                             whatsapp: 4}
 
+    # Twilio delivery statuses in chronological order.
+    # undelivered / failed = terminal failure states.
+    TWILIO_STATUSES = %w[queued sending sent delivered undelivered failed].freeze
+    TWILIO_FAILED_STATUSES = %w[undelivered failed].freeze
+
+    def delivery_confirmed? = delivery_status == "delivered"
+    def delivery_failed?    = TWILIO_FAILED_STATUSES.include?(delivery_status)
+    def delivery_pending?   = delivery_status.blank? || !delivery_confirmed? && !delivery_failed?
+
     validates :send_date, presence: true
     validates :delivery_method, presence: true
     validates :full_message, presence: true

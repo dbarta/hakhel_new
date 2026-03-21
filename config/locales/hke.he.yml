@@ -472,8 +472,10 @@ he:
       error_count: "%{count} פעמים"
       no_messages: "לא נמצאו הודעות בתקופה זו"
     stats:
-      total_sent: "סה״כ נשלחו"
-      total_failed: "סה״כ נכשלו"
+      total_sent: "יצאו לשליחה"
+      total_failed: "לא נשלחו כלל"
+      delivered_confirmed: "נמסרו (אושר)"
+      delivery_failures: "כשלון מסירה"
       success_rate: "אחוז הצלחה"
       pending_approval: "ממתינות לאישור"
     filters:
@@ -510,6 +512,22 @@ he:
       sent: "נשלח"
       failed: "נכשל"
       pending: "ממתין"
+    delivery_statuses:
+      queued: "ממתין לשליחה"
+      sending: "בשליחה"
+      sent: "הועבר לספק"
+      delivered: "נמסר ✓"
+      undelivered: "לא נמסר"
+      failed: "שגיאה"
+      unknown: "לא ידוע"
+    remediation:
+      "30003": "המכשיר אינו זמין או מחוץ לטווח"
+      "30004": "ההודעה נחסמה — ייתכן שהנמען ביטל קבלת הודעות"
+      "30005": "המספר אינו תקין — בדוק את מספר הטלפון של הנמען"
+      "30006": "זהו מספר של טלפון קווי — לא ניתן לשלוח SMS"
+      "30007": "ספק הסלולר חסם את ההודעה"
+      "30008": "שגיאה לא ידועה בצד ספק הסלולר"
+      default: "שגיאת שליחה — פנה לתמיכה טכנית"
     users:
       index:
         title: "ניהול משתמשים"

@@ -27,8 +27,10 @@ module Hke
     # Returns { method: :sms, sid: "SM..." }
     # Raises if every method in the list fails.
     def send_message(methods:, phone:, email:, message_text:)
-      # DEBUG OVERRIDE – route all messages to a known number
-      phone = "+972584579444"
+      # DEBUG OVERRIDE – route all messages to a known number when set.
+      # Set TWILIO_DEBUG_PHONE in .env (local) or Heroku config vars.
+      # Leave unset in production to send to real recipients.
+      phone = ENV["TWILIO_DEBUG_PHONE"] if ENV["TWILIO_DEBUG_PHONE"].present?
 
       candidates = methods.select { |m| MODALITIES.include?(m) }
       raise ArgumentError, "No valid delivery methods in #{methods.inspect}" if candidates.empty?
@@ -131,10 +133,13 @@ module Hke
     # -------------------------
 
     def webhook_url(modality)
-      host = ENV["WEBHOOK_HOST"] ||
-        Rails.application.routes.default_url_options[:host]
-      return nil if host.blank? || host.include?("localhost")
-      "#{host}/hke/api/v1/twilio/sms/status?modality=#{modality}"
+      # Prefer explicit WEBHOOK_HOST (set for ngrok in dev, or override in prod).
+      # Fall back to HAKHEL_BASE_URL (always has scheme, set on Heroku).
+      # Return nil for localhost so Twilio doesn't try to reach a private address.
+      base = ENV["WEBHOOK_HOST"].presence ||
+             ENV["HAKHEL_BASE_URL"].presence
+      return nil if base.blank? || base.include?("localhost")
+      "#{base.chomp("/")}/hke/api/v1/twilio/sms/status?modality=#{modality}"
     end
 
     def current_community_phone

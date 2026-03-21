@@ -23,6 +23,8 @@ class Hke::CommunityPreferencesController < Hke::PreferencesBaseController
   def set_preferring
     @preferring = if current_user.system_admin? && session[:selected_community_id].present?
       Hke::Community.find_by(id: session[:selected_community_id])
+    elsif current_user.system_admin?
+      redirect_to hke_admin_communities_path, alert: "יש לבחור קהילה תחילה" and return
     else
       current_user.community
     end

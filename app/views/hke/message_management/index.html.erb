@@ -8,22 +8,30 @@
       class: "px-4 py-2 border border-gray-300 rounded text-sm hover:bg-gray-50" %>
     </div>
     <!-- Statistics Dashboard -->
-    <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-      <div class="bg-green-100 p-6 rounded-lg">
-        <h3 class="text-lg font-semibold text-green-800"><%= t("message_management.stats.total_sent") %></h3>
-        <p class="text-3xl font-bold text-green-600"><%= @stats[:total_sent] %></p>
+    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-8">
+      <div class="bg-blue-50 border border-blue-200 p-4 rounded-lg text-center">
+        <p class="text-2xl font-bold text-blue-700"><%= @stats[:total_sent] %></p>
+        <p class="text-xs font-medium text-blue-600 mt-1"><%= t("message_management.stats.total_sent") %></p>
       </div>
-      <div class="bg-red-100 p-6 rounded-lg">
-        <h3 class="text-lg font-semibold text-red-800"><%= t("message_management.stats.total_failed") %></h3>
-        <p class="text-3xl font-bold text-red-600"><%= @stats[:total_failed] %></p>
+      <div class="bg-green-50 border border-green-200 p-4 rounded-lg text-center">
+        <p class="text-2xl font-bold text-green-700"><%= @stats[:delivered_confirmed] %></p>
+        <p class="text-xs font-medium text-green-600 mt-1"><%= t("message_management.stats.delivered_confirmed") %></p>
       </div>
-      <div class="bg-blue-100 p-6 rounded-lg">
-        <h3 class="text-lg font-semibold text-blue-800"><%= t("message_management.stats.success_rate") %></h3>
-        <p class="text-3xl font-bold text-blue-600"><%= @stats[:success_rate] %>%</p>
+      <div class="bg-amber-50 border border-amber-200 p-4 rounded-lg text-center">
+        <p class="text-2xl font-bold text-amber-700"><%= @stats[:delivery_failures] %></p>
+        <p class="text-xs font-medium text-amber-600 mt-1"><%= t("message_management.stats.delivery_failures") %></p>
       </div>
-      <div class="bg-yellow-100 p-6 rounded-lg">
-        <h3 class="text-lg font-semibold text-yellow-800"><%= t("message_management.stats.pending_approval") %></h3>
-        <p class="text-3xl font-bold text-yellow-600"><%= @future_stats[:pending_approval] %></p>
+      <div class="bg-red-50 border border-red-200 p-4 rounded-lg text-center">
+        <p class="text-2xl font-bold text-red-700"><%= @stats[:total_failed] %></p>
+        <p class="text-xs font-medium text-red-600 mt-1"><%= t("message_management.stats.total_failed") %></p>
+      </div>
+      <div class="bg-slate-50 border border-slate-200 p-4 rounded-lg text-center">
+        <p class="text-2xl font-bold text-slate-700"><%= @stats[:success_rate] %>%</p>
+        <p class="text-xs font-medium text-slate-600 mt-1"><%= t("message_management.stats.success_rate") %></p>
+      </div>
+      <div class="bg-yellow-50 border border-yellow-200 p-4 rounded-lg text-center">
+        <p class="text-2xl font-bold text-yellow-700"><%= @future_stats[:pending_approval] %></p>
+        <p class="text-xs font-medium text-yellow-600 mt-1"><%= t("message_management.stats.pending_approval") %></p>
       </div>
     </div>
     <!-- Time Filter -->
