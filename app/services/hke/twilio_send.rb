@@ -144,12 +144,12 @@ module Hke
 
     def current_community_phone
       return nil unless ActsAsTenant.current_tenant.is_a?(Hke::Community)
-      ActsAsTenant.current_tenant.phone_number
+      ActsAsTenant.current_tenant.phone_number.presence
     end
 
     def current_community_email
       return nil unless ActsAsTenant.current_tenant.is_a?(Hke::Community)
-      ActsAsTenant.current_tenant.email_address
+      ActsAsTenant.current_tenant.email_address.presence
     end
   end
 end
