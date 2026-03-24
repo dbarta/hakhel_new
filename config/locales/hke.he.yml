@@ -875,6 +875,9 @@ he:
   activerecord:
     models:
       user: "משתמש"
+      hke/contact_person: "איש קשר"
+      hke/deceased_person: "נפטר"
+      hke/relation: "קשר"
     attributes:
       user:
         first_name: "שם פרטי"
@@ -886,6 +889,20 @@ he:
         community_admin: "מנהל קהילה"
         community_user: "משתמש קהילה"
         community_id: "קהילה"
+      hke/contact_person:
+        first_name: "שם פרטי"
+        last_name: "שם משפחה"
+        email: "דואר אלקטרוני"
+        phone: "טלפון"
+        gender: "מין"
+      hke/deceased_person:
+        first_name: "שם פרטי"
+        last_name: "שם משפחה"
+        gender: "מין"
+        hebrew_year_of_death: "שנת פטירה"
+        hebrew_month_of_death: "חודש פטירה"
+        hebrew_day_of_death: "יום פטירה"
+        date_of_death: "תאריך פטירה"
       hke/preference:
           daily_sweep_job_time: "שעת הסריקה היומית"
           send_window_start_time: "תחילת חלון שליחה"
@@ -895,6 +912,34 @@ he:
       models:
         user:
           must_have_at_least_one_role: "יש להקצות למשתמש לפחות תפקיד אחד"
+        hke/contact_person:
+          attributes:
+            first_name:
+              presence: "שם פרטי הוא שדה חובה"
+            last_name:
+              presence: "שם משפחה הוא שדה חובה"
+            phone:
+              presence: "טלפון הוא שדה חובה"
+            gender:
+              presence: "מין הוא שדה חובה"
+              gender_invalid: "מין לא תקין. צריך להיות זכר או נקבה."
+              inclusion: "מין לא תקין. צריך להיות זכר או נקבה."
+        hke/deceased_person:
+          attributes:
+            first_name:
+              presence: "שם פרטי הוא שדה חובה"
+            last_name:
+              presence: "שם משפחה הוא שדה חובה"
+            gender:
+              presence: "מין הוא שדה חובה"
+              gender_invalid: "מין לא תקין. צריך להיות זכר או נקבה."
+              inclusion: "מין לא תקין. צריך להיות זכר או נקבה."
+            hebrew_year_of_death:
+              presence: "שנת פטירה היא שדה חובה"
+            hebrew_month_of_death:
+              presence: "חודש פטירה הוא שדה חובה"
+            hebrew_day_of_death:
+              presence: "יום פטירה הוא שדה חובה"
         hke/preference:
           attributes:
             daily_sweep_job_time:
