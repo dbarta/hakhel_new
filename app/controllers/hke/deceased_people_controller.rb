@@ -110,7 +110,7 @@ module Hke
 
     # Only allow a list of trusted parameters through.
     def deceased_person_params
-      params.require(:deceased_person).permit(:first_name, :last_name, :gender, :occupation,
+      params.require(:hke_deceased_person).permit(:first_name, :last_name, :gender, :occupation,
         :organization, :religion, :father_first_name, :mother_first_name,
         :hebrew_year_of_death, :hebrew_month_of_death, :hebrew_day_of_death,
         :date_of_death, :time_of_death, :location_of_death,

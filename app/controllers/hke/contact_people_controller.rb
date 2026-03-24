@@ -109,7 +109,7 @@ module Hke
 
     # Only allow a list of trusted parameters through.
     def contact_person_params
-      params.require(:contact_person).permit(:first_name, :last_name, :email, :phone, :gender,
+      params.require(:hke_contact_person).permit(:first_name, :last_name, :email, :phone, :gender,
         relations_attributes: [:id, :relation_of_deceased_to_contact, :_destroy,
           deceased_person_attributes: [:id, :first_name, :last_name, :gender, :occupation,
             :organization, :religion, :father_first_name, :mother_first_name,
