@@ -15,6 +15,8 @@ module Hke
 
     has_secure_token :portal_token, length: 24
 
+    enum :email_status, {ok: 0, bounced: 1, unsubscribed: 2}, prefix: :email
+
     validates :first_name, :last_name, :gender, :phone, presence: {message: :presence}
     validates :gender, inclusion: {in: ["male", "female"], message: :gender_invalid}
     accepts_nested_attributes_for :relations, allow_destroy: true, reject_if: :all_blank

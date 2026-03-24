@@ -114,6 +114,7 @@ Rails.application.routes.draw do
     namespace :api, defaults: {format: :json} do
       namespace :v1 do
         post "twilio/sms/status", to: "twilio_callback#sms_status"
+        post "sendgrid/events",  to: "sendgrid_callback#events"
         resource :system, only: [:show, :edit, :update, :create]
         resources :cemeteries
         resources :communities

@@ -240,7 +240,7 @@ module Hke
           return
         end
 
-        Hke::SentMessage.create!(
+        attrs = {
           messageable_type: future_message.messageable_type,
           messageable_id: future_message.messageable_id,
           send_date: future_message.send_date,
@@ -250,9 +250,14 @@ module Hke
           email: future_message.email,
           phone: future_message.phone,
           token: future_message.token,
-          community_id: future_message.community_id,
-          twilio_message_sid: delivery_result[:sid]
-        )
+          community_id: future_message.community_id
+        }
+        if delivery_result[:method] == :email
+          attrs[:sendgrid_message_id] = delivery_result[:sid]
+        else
+          attrs[:twilio_message_sid] = delivery_result[:sid]
+        end
+        Hke::SentMessage.create!(attrs)
 
         # SentMessage is immutable audit log; delete intent only after commit.
         future_message.destroy!

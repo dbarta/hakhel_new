@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_03_21_163014) do
+ActiveRecord::Schema[8.1].define(version: 2026_03_24_175355) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -188,6 +188,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_21_163014) do
     t.bigint "community_id", null: false
     t.datetime "created_at", null: false
     t.string "email"
+    t.integer "email_status", default: 0, null: false
     t.string "first_name"
     t.string "gender"
     t.string "last_name"
@@ -401,6 +402,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_21_163014) do
     t.string "phone"
     t.string "relation_of_deceased_to_contact"
     t.datetime "send_date"
+    t.string "sendgrid_message_id"
     t.string "token"
     t.string "twilio_error_code"
     t.string "twilio_error_message"
@@ -409,6 +411,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_21_163014) do
     t.index ["community_id"], name: "index_hke_sent_messages_on_community_id"
     t.index ["delivery_status"], name: "index_hke_sent_messages_on_delivery_status"
     t.index ["messageable_type", "messageable_id"], name: "index_hke_sent_messages_on_messageable"
+    t.index ["sendgrid_message_id"], name: "index_hke_sent_messages_on_sendgrid_message_id"
     t.index ["token"], name: "index_hke_sent_messages_on_token", unique: true
     t.index ["twilio_message_sid"], name: "index_hke_sent_messages_on_twilio_message_sid", unique: true
   end

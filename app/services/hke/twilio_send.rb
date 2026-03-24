@@ -131,7 +131,8 @@ module Hke
         raise "SendGrid failed with status #{response.status_code}: #{response.body}"
       end
 
-      "email-#{SecureRandom.hex(6)}"
+      # X-Message-Id is the SendGrid message ID we use to correlate webhook events.
+      response.headers["X-Message-Id"].presence || "email-#{SecureRandom.hex(6)}"
     end
 
     # -------------------------
