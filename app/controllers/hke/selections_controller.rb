@@ -135,7 +135,7 @@ module Hke
 
     # Only allow a list of trusted parameters through.
     def selection_params
-      params.require(:selection).permit(:name, :purpose)
+      params.require(:hke_selection).permit(:name, :purpose)
 
       # Uncomment to use Pundit permitted attributes
       # params.require(:selection).permit(policy(@selection).permitted_attributes)

@@ -79,7 +79,7 @@ module Hke
 
     # Only allow a list of trusted parameters through.
     def cemetery_params
-      params.require(:cemetery).permit(
+      params.require(:hke_cemetery).permit(
         :name,
         :description,
         address_attributes: [:id, :city, :country, :description, :name, :region, :street, :zipcode]

@@ -54,7 +54,7 @@ module Hke
 
       # Only allow a list of trusted parameters through.
       def address_params
-        params.require(:address).permit(:name, :description, :street, :city, :region, :country, :zipcode, :addressable_id)
+        params.require(:hke_address).permit(:name, :description, :street, :city, :region, :country, :zipcode, :addressable_id)
       end
   end
 end

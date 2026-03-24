@@ -42,7 +42,7 @@ module Hke
       end
 
       def deceased_params
-        params.require(:deceased_person).permit(
+        params.require(:hke_deceased_person).permit(
           :first_name, :last_name, :gender,
           :hebrew_year_of_death, :hebrew_month_of_death, :hebrew_day_of_death,
           :date_of_death, :occupation, :organization, :religion,

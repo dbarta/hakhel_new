@@ -18,7 +18,7 @@ module Hke
       private
 
       def profile_params
-        params.require(:contact_person).permit(:first_name, :last_name, :phone, :email)
+        params.require(:hke_contact_person).permit(:first_name, :last_name, :phone, :email)
       end
     end
   end

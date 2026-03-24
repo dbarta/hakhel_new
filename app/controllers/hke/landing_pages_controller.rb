@@ -125,7 +125,7 @@ module Hke
 
     # Only allow a list of trusted parameters through.
     def landing_page_params
-      params.require(:landing_page).permit(:name, :body, :user_id)
+      params.require(:hke_landing_page).permit(:name, :body, :user_id)
 
       # Uncomment to use Pundit permitted attributes
       # params.require(:landing_page).permit(policy(@landing_page).permitted_attributes)
