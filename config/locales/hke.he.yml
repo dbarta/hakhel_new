@@ -126,6 +126,7 @@ he:
   landing_page_validation: "בדיקת תקינות דף נחיתה"
   sms_message_validation: "בדיקת תקינות הודעת SMS"
   sms_preview: "בדיקת הודעה"
+  send_test_email: "שליחת אימייל"
   search_by_first_or_last_name: "חיפוש לפי שם פרטי או משפחה"
   selection: "בחירה"
   selections: "בחירות"

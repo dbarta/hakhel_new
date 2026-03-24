@@ -88,6 +88,7 @@ Rails.application.routes.draw do
     resources :landing_pages do
       collection do
         get :sms_preview
+        get :send_test_email
       end
     end
 

@@ -21,6 +21,7 @@
     <% end %>
     <% if rel_form.object.persisted? %>
       <%= link_to t("sms_preview"), sms_preview_hke_landing_pages_path(token: rel_form.object.token), target: "_blank" %>&nbsp;&nbsp;
+      <%= link_to t("send_test_email"), send_test_email_hke_landing_pages_path(token: rel_form.object.token), data: { turbo_method: :get } %>&nbsp;&nbsp;
     <% end %>
   </div>
 

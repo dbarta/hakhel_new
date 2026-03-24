@@ -4,9 +4,10 @@ module Hke
     layout "hke/landing", only: :show
     include Hke::ApplicationHelper
     include Hke::MessageGenerator
+    include Hke::TwilioSend
 
-    skip_after_action :verify_authorized, only: [:show, :sms_preview]
-    skip_after_action :verify_policy_scoped, only: [:show, :sms_preview]
+    skip_after_action :verify_authorized, only: [:show, :sms_preview, :send_test_email]
+    skip_after_action :verify_policy_scoped, only: [:show, :sms_preview, :send_test_email]
 
     # GET /landing_pages
     def index
@@ -58,6 +59,36 @@ module Hke
           @landing_page_preview = snippets[:web]
         end
       end
+    end
+
+    TEST_EMAIL_RECIPIENT = "david@odeca.net"
+
+    def send_test_email
+      token = params[:token]
+      relation = Relation.find_by_token(token) if token
+
+      unless relation
+        redirect_back fallback_location: hke_contact_people_path, alert: "Relation not found"
+        return
+      end
+
+      reference_date = Time.zone.today
+      short_link = Hke::ShortLink.find_or_create_by!(contact_person: relation.contact_person, via_token: nil)
+      portal_url = short_link.short_url
+
+      text = Hke::MessageRenderer.render(relation: relation, delivery_method: :email,
+               reference_date: reference_date, portal_url: portal_url).to_s
+      html = Hke::MessageRenderer.render(relation: relation, delivery_method: :email_html,
+               reference_date: reference_date, portal_url: portal_url).to_s
+
+      send_message(methods: [:email], phone: nil,
+        email: TEST_EMAIL_RECIPIENT, message_text: text, html_text: html.presence)
+
+      redirect_back fallback_location: hke_contact_people_path,
+        notice: "Test email sent to #{TEST_EMAIL_RECIPIENT}"
+    rescue => e
+      redirect_back fallback_location: hke_contact_people_path,
+        alert: "Failed to send test email: #{e.message}"
     end
 
     # GET /landing_pages/new
