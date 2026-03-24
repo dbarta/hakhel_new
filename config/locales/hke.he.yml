@@ -520,6 +520,9 @@ he:
       delivered: "נמסר ✓"
       undelivered: "לא נמסר"
       failed: "שגיאה"
+      bounced: "חזר ✗"
+      blocked: "נחסם"
+      unsubscribed: "הסיר עצמו"
       unknown: "לא ידוע"
     remediation:
       "30003": "המכשיר אינו זמין או מחוץ לטווח"

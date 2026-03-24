@@ -58,6 +58,8 @@
                   when "sending"                 then "bg-blue-50 text-blue-600"
                   when "queued"                  then "bg-gray-100 text-gray-600"
                   when "undelivered", "failed"   then "bg-red-100 text-red-800"
+                  when "bounced", "blocked"      then "bg-orange-100 text-orange-800"
+                  when "unsubscribed"            then "bg-purple-100 text-purple-800"
                   else                                "bg-gray-100 text-gray-400"
                 end
                 label = ds ? t("message_management.delivery_statuses.#{ds}", default: ds) \
