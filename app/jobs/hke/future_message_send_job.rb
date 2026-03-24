@@ -29,6 +29,7 @@ module Hke
         return if already_sent?(future_message, community_id)
 
         rendered_text = render_text(future_message)
+        rendered_html = render_email_html(future_message)
 
         delivery_methods = build_delivery_methods(future_message)
 
@@ -36,7 +37,8 @@ module Hke
           methods: delivery_methods,
           phone: future_message.phone,
           email: future_message.email,
-          message_text: rendered_text
+          message_text: rendered_text,
+          html_text: rendered_html
         )
 
         create_sent_and_delete_future!(future_message, rendered_text, community_id, result)
@@ -175,6 +177,23 @@ module Hke
         reference_date: future_message.send_date || Time.zone.today,
         portal_url: portal_url
       )
+    end
+
+    def render_email_html(future_message)
+      return nil unless future_message.delivery_method.to_sym == :email
+
+      relation = future_message.messageable
+      portal_url = generate_portal_short_url(future_message)
+
+      Hke::MessageRenderer.render(
+        relation: relation,
+        delivery_method: :email_html,
+        reference_date: future_message.send_date || Time.zone.today,
+        portal_url: portal_url
+      )
+    rescue => e
+      log_event("Create Job", details: { text: "HTML email render failed: #{e.message}" })
+      nil
     end
 
     def generate_portal_short_url(future_message)

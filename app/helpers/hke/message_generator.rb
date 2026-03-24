@@ -40,7 +40,8 @@ module Hke::MessageGenerator
     snippets = {}
     snippets[:web] = Hke::LiquidRenderer.render("reminder.html", context, category: "web") if modalities.include?(:web)
     snippets[:sms] = Hke::LiquidRenderer.render("reminder.txt", context, category: "sms") if modalities.include?(:sms)
-    snippets[:email] = Hke::LiquidRenderer.render("reminder.email", context, category: "email") if modalities.include?(:email)
+    snippets[:email]      = Hke::LiquidRenderer.render("reminder.txt",  context, category: "email") if modalities.include?(:email)
+    snippets[:email_html] = Hke::LiquidRenderer.render("reminder.html", context, category: "email") if modalities.include?(:email_html)
     snippets[:whatsapp] = Hke::LiquidRenderer.render("reminder.whatsapp", context, category: "whatsapp") if modalities.include?(:whatsapp)
 
     snippets

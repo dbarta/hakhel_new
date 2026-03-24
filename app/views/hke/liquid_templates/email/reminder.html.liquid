@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="he">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body style="margin:0; padding:0; background-color:#f5f5f5; font-family:Arial,sans-serif; direction:rtl;">
+
+<table width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color:#f5f5f5;">
+  <tr>
+    <td align="center" style="padding:20px 10px;">
+
+      <table width="600" cellpadding="0" cellspacing="0" border="0" style="max-width:600px; width:100%; background-color:#ffffff; border-radius:6px; border:1px solid #e0e0e0;">
+
+        <!-- Header -->
+        <tr>
+          <td style="background-color:#2c5282; padding:24px 30px; text-align:center; border-radius:6px 6px 0 0;">
+            <span style="color:#ffffff; font-size:20px; font-weight:bold; letter-spacing:1px;">הנצחת יקיריכם</span>
+          </td>
+        </tr>
+
+        <!-- Body -->
+        <tr>
+          <td style="padding:30px; text-align:right; line-height:1.9; color:#2d2d2d;">
+
+            <p style="margin:0 0 16px; font-size:16px;">
+              {{ c_salutation }} {{ c_first_name }} {{ c_last_name }} שלום וברכה,
+            </p>
+
+            <p style="margin:0 0 16px; font-size:15px;">
+              רצינו להזכיר כי בעוד <strong>{{ num_days_till }} ימים</strong>,
+              ביום {{ day_of_week }} ({{ heb_month_and_day }}),
+              יחול יום השנה ה-{{ yahrzeit_years }}
+              לפטירת {{ relation }} {{ d_salutation }} {{ d_first_name }} {{ d_last_name }} {{ alav }} השלום.
+            </p>
+
+            <p style="margin:0 0 24px; font-size:15px;">
+              הנך {{ muzmenet }} לבית הכנסת לאמירת קדיש ולציון יום {{ petirata }} של {{ relation }} ז״ל.
+            </p>
+
+            {% if portal_url != "" %}
+            <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin:20px 0;">
+              <tr>
+                <td align="center">
+                  <a href="{{ portal_url }}"
+                     style="background-color:#2c5282; color:#ffffff; padding:12px 28px; text-decoration:none; border-radius:4px; font-size:15px; font-weight:bold; display:inline-block;">
+                    לפרטים ואפשרויות נוספות
+                  </a>
+                </td>
+              </tr>
+            </table>
+            {% endif %}
+
+          </td>
+        </tr>
+
+        <!-- Divider -->
+        <tr>
+          <td style="border-top:1px solid #e8e8e8;"></td>
+        </tr>
+
+        <!-- Footer -->
+        <tr>
+          <td style="padding:16px 30px; text-align:center; background-color:#f9f9f9; border-radius:0 0 6px 6px;">
+            <p style="margin:0; font-size:12px; color:#888888; line-height:1.6;">
+              {% if portal_url != "" %}
+              לביטול הרשמה לקבלת תזכורות במייל:
+              <a href="{{ portal_url }}" style="color:#2c5282; text-decoration:underline;">לחץ כאן</a>
+              {% else %}
+              לביטול הרשמה, השב STOP
+              {% endif %}
+            </p>
+          </td>
+        </tr>
+
+      </table>
+
+    </td>
+  </tr>
+</table>
+
+</body>
+</html>

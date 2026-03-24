@@ -20,7 +20,8 @@ module Hke
     rescue_from Pundit::NotAuthorizedError, with: :user_not_authorized
 
     def remove_empty_relations_from(model_name, nested_model_name)
-      x = params[model_name]
+      x = params[model_name] || params["hke_#{model_name}"]
+      return unless x
       relations = x["relations_attributes"]
       # {"1639369042549"=>{"relation_of_deceased_to_contact"=>"",
       #   "contact_person_attributes"=>{"first_name"=>"", "last_name"=>"", "email"=>"", "phone"=>""}, "_destroy"=>"false"}}

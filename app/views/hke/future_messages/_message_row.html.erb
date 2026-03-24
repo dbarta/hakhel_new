@@ -9,12 +9,17 @@
          _portal_url = if _contact&.portal_token.present?
            Hke::ShortLink.find_or_create_by!(contact_person: _contact).short_url
          end %>
-      <% full_text = Hke::MessageRenderer.render(
-	        relation: message.messageable,
-	        delivery_method: message.delivery_method,
-	        reference_date: message.send_date,
-	        portal_url: _portal_url
-	      ).to_s.strip %>
+      <% full_text = begin
+           Hke::MessageRenderer.render(
+             relation: message.messageable,
+             delivery_method: message.delivery_method,
+             reference_date: message.send_date,
+             portal_url: _portal_url
+           ).to_s.strip
+         rescue => e
+           Rails.logger.warn "[MessageRow] render failed for message #{message.id}: #{e.message}"
+           ""
+         end %>
 	      <% preview_text = truncate(full_text, length: preview_limit) %>
       <% show_toggle = full_text.present? && full_text.length > preview_text.length %>
 

@@ -26,7 +26,7 @@ module Hke
     #
     # Returns { method: :sms, sid: "SM..." }
     # Raises if every method in the list fails.
-    def send_message(methods:, phone:, email:, message_text:)
+    def send_message(methods:, phone:, email:, message_text:, html_text: nil)
       # DEBUG OVERRIDE – route all messages to a known number when set.
       # Set TWILIO_DEBUG_PHONE in .env (local) or Heroku config vars.
       # Leave unset in production to send to real recipients.
@@ -56,7 +56,7 @@ module Hke
         sid = case method
         when :sms then deliver_sms(client, phone, message_text)
         when :whatsapp then deliver_whatsapp(client, phone, message_text)
-        when :email then deliver_email(email, message_text)
+        when :email then deliver_email(email, message_text, html_text: html_text)
         end
 
         Rails.logger.info "[TwilioSend] Delivered via #{method}, SID: #{sid}"
@@ -104,17 +104,23 @@ module Hke
       msg.sid
     end
 
-    def deliver_email(to_email, text)
+    def deliver_email(to_email, text, html_text: nil)
       from_addr = current_community_email ||
         ENV["SENDGRID_FROM_EMAIL"] ||
-        "no-reply@hakhel.me"
+        "no-reply@hakhel.net"
 
-      from = SendGrid::Email.new(email: from_addr)
-      to = SendGrid::Email.new(email: to_email)
-      subject = "הודעה מהקהל"
-      content = SendGrid::Content.new(type: "text/plain", value: text)
+      mail = SendGrid::Mail.new
+      mail.from    = SendGrid::Email.new(email: from_addr)
+      mail.subject = "הודעה מהקהל"
 
-      mail = SendGrid::Mail.new(from, subject, to, content)
+      personalization = SendGrid::Personalization.new
+      personalization.add_to(SendGrid::Email.new(email: to_email))
+      mail.add_personalization(personalization)
+
+      # text/plain must come first (RFC 2046)
+      mail.add_content(SendGrid::Content.new(type: "text/plain", value: text))
+      mail.add_content(SendGrid::Content.new(type: "text/html",  value: html_text)) if html_text.present?
+
       sg = SendGrid::API.new(
         api_key: ENV["SENDGRID_API_KEY"] ||
                  Rails.application.credentials.dig(:sendgrid, :api_key)
@@ -122,7 +128,7 @@ module Hke
       response = sg.client.mail._("send").post(request_body: mail.to_json)
 
       unless response.status_code.to_i.between?(200, 299)
-        raise "SendGrid failed with status #{response.status_code}"
+        raise "SendGrid failed with status #{response.status_code}: #{response.body}"
       end
 
       "email-#{SecureRandom.hex(6)}"
