@@ -132,7 +132,7 @@ module Hke
       end
 
       # X-Message-Id is the SendGrid message ID we use to correlate webhook events.
-      response.headers["X-Message-Id"].presence || "email-#{SecureRandom.hex(6)}"
+      response.headers["x-message-id"].presence || "email-#{SecureRandom.hex(6)}"
     end
 
     # -------------------------
