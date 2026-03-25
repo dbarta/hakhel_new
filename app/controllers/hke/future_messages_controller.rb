@@ -61,7 +61,7 @@ module Hke
     def show
     end
 
-    # GET /future_messages/:id/preview (Turbo Frame — renders into modal)
+    # GET /future_messages/:id/preview (Turbo Frame — renders into modal, no layout)
     def preview
       relation = @future_message.messageable
       contact  = relation&.contact_person
@@ -78,6 +78,7 @@ module Hke
       rescue => e
         "שגיאה בעיבוד ההודעה: #{e.message}"
       end
+      render layout: false
     end
 
     # DELETE /deceased_people/1 or /deceased_people/1.json
@@ -90,15 +91,10 @@ module Hke
       end
     end
 
-    # GET /future_messages/approve
+    # GET /future_messages/approve — consolidated into dashboard
     def approve
       authorize Hke::FutureMessage, :bulk_approve?
-      @time_filter = params[:time_filter] || 'one_week'
-      @messages = get_filtered_messages(@time_filter)
-                    .pending_approval
-                    .includes(messageable: [:contact_person, :deceased_person], approved_by: [])
-                    .order(:send_date)
-      render 'approve'
+      redirect_to hke_root_path(time_filter: params[:time_filter])
     end
 
     # POST /future_messages/:id/toggle_approval
@@ -129,7 +125,7 @@ module Hke
       messages_to_update = get_filtered_messages(time_filter).pending_approval
       messages_to_update.each { |message| message.approve!(current_user) }
 
-      redirect_to approve_hke_future_messages_path(time_filter: time_filter)
+      redirect_to hke_root_path(time_filter: time_filter)
     end
 
     # POST /future_messages/disapprove_all
@@ -140,7 +136,7 @@ module Hke
       messages_to_update = get_filtered_messages(time_filter).approved_messages
       messages_to_update.each(&:reset_approval!)
 
-      redirect_to approve_hke_future_messages_path(time_filter: time_filter)
+      redirect_to hke_root_path(time_filter: time_filter)
     end
 
     private

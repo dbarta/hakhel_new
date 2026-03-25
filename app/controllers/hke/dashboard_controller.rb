@@ -33,8 +33,9 @@ module Hke
 
       # Get messages based on time filter using same logic as future_messages controller
       @messages = get_filtered_messages(@time_filter)
-
-      @pending_approvals = Hke::FutureMessage.pending_approval.limit(10)
+                    .pending_approval
+                    .includes(messageable: [:contact_person, :deceased_person], approved_by: [])
+                    .order(:send_date)
 
       # Message stats for last 30 days
       @sent_30_days = Hke::SentMessage.where(created_at: 30.days.ago..Time.current).count
@@ -44,7 +45,7 @@ module Hke
       @stats = {
         total_sent_this_week: defined?(Hke::SentMessage) ? Hke::SentMessage.where(created_at: 1.week.ago..Time.current).count : 0,
         total_failures: 0, # Will implement when we have proper status tracking
-        pending_this_week: @messages.pending_approval.count
+        pending_this_week: @messages.count
       }
 
       # Only respond with turbo_stream for explicit filter changes (time_filter param present).
