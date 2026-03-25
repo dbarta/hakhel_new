@@ -22,7 +22,7 @@
         מריץ את <code>FutureMessageCommunityDailySchedulerJob</code> כולל שחזור הודעות שלא נשלחו,
         ואחר כך שולח הודעות שתאריך השליחה שלהן הוא היום.
       </p>
-      <%= form_with url: hke_admin_advanced_run_scheduler_path, method: :post, local: true do |f| %>
+      <%= form_with url: run_scheduler_hke_admin_advanced_path, method: :post, local: true do |f| %>
         <div class="flex items-center gap-3">
           <%= f.select :community_id,
             options_from_collection_for_select(@communities, :id, :name),
@@ -42,7 +42,7 @@
         מריץ את <code>FutureMessagePastDueRecoveryJob</code> — מטפל בהודעות שתאריך השליחה שלהן עבר:
         ארכיב הודעות שהיארצייט כבר חלף, ותזמון מחדש של הודעות שעדיין ניתן לשלוח.
       </p>
-      <%= form_with url: hke_admin_advanced_run_recovery_path, method: :post, local: true do |f| %>
+      <%= form_with url: run_recovery_hke_admin_advanced_path, method: :post, local: true do |f| %>
         <div class="flex items-center gap-3">
           <%= f.select :community_id,
             options_from_collection_for_select(@communities, :id, :name),
