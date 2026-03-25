@@ -140,19 +140,19 @@ module Hke
       result
     end
 
-    def next_hebrew_date(name, hebrew_month, hebrew_day)
+    def next_hebrew_date(name, hebrew_month, hebrew_day, reference_date: Date.today)
       debug_puts "@@@ in next_hebrew_date, name: #{name}, hebrew_month: #{hebrew_month}, hebrew_day: #{hebrew_day}"
       hy = current_hebrew_year
       gdate = h2g(name, hy, hebrew_month, hebrew_day)
-      hy = (gdate < Date.today) ? hy + 1 : hy
+      hy = (gdate < reference_date) ? hy + 1 : hy
       result = {hy: hy, hm: hebrew_month, hd: hebrew_day}
       debug_puts "@@@ Out of next_hebrew_date, return: #{result}"
       result
     end
 
-    def yahrzeit_date(name, hebrew_month, hebrew_day)
+    def yahrzeit_date(name, hebrew_month, hebrew_day, reference_date: Date.today)
       debug_puts "@@@ in yahrzeit_date, name: #{name}, hebrew_month: #{hebrew_month}, hebrew_day: #{hebrew_day}"
-      hyd = next_hebrew_date(name, hebrew_month, hebrew_day)
+      hyd = next_hebrew_date(name, hebrew_month, hebrew_day, reference_date: reference_date)
       result = h2g(name, hyd[:hy], hyd[:hm], hyd[:hd])
       debug_puts "@@@ Out of yahrzeit_date, return: #{result}"
       result

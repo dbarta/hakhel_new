@@ -58,12 +58,18 @@ module Hke
       end
 
       dp = relation.deceased_person
-      yahrzeit_date = Hke::Heb.yahrzeit_date(dp.name, dp.hebrew_month_of_death, dp.hebrew_day_of_death)
 
-      if yahrzeit_date < today
-        handle_yahrzeit_passed(future_message, relation, yahrzeit_date, community_id)
+      # Use the message's original send_date as the reference so we find the yahrzeit
+      # that this message was targeting — not next year's if that one has since passed.
+      targeted_yahrzeit = Hke::Heb.yahrzeit_date(
+        dp.name, dp.hebrew_month_of_death, dp.hebrew_day_of_death,
+        reference_date: future_message.send_date
+      )
+
+      if targeted_yahrzeit < today
+        handle_yahrzeit_passed(future_message, relation, targeted_yahrzeit, community_id)
       else
-        handle_yahrzeit_upcoming(future_message, relation, yahrzeit_date, today, community_id)
+        handle_yahrzeit_upcoming(future_message, relation, targeted_yahrzeit, today, community_id)
       end
     rescue => e
       log_error("PastDueRecovery", error: e, details: {
