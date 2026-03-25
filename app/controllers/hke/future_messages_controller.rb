@@ -74,7 +74,11 @@ module Hke
     # GET /future_messages/approve
     def approve
       authorize Hke::FutureMessage, :bulk_approve?
-      @messages = Hke::FutureMessage.pending_approval.includes(:messageable, :approved_by).order(:send_date)
+      @time_filter = params[:time_filter] || 'one_week'
+      @messages = get_filtered_messages(@time_filter)
+                    .pending_approval
+                    .includes(messageable: [:contact_person, :deceased_person], approved_by: [])
+                    .order(:send_date)
       render 'approve'
     end
 
@@ -104,10 +108,9 @@ module Hke
 
       time_filter = params[:time_filter] || 'one_week'
       messages_to_update = get_filtered_messages(time_filter).pending_approval
-
       messages_to_update.each { |message| message.approve!(current_user) }
 
-      redirect_back(fallback_location: root_path)
+      redirect_to approve_hke_future_messages_path(time_filter: time_filter)
     end
 
     # POST /future_messages/disapprove_all
@@ -116,10 +119,9 @@ module Hke
 
       time_filter = params[:time_filter] || 'one_week'
       messages_to_update = get_filtered_messages(time_filter).approved_messages
-
       messages_to_update.each(&:reset_approval!)
 
-      redirect_back(fallback_location: root_path)
+      redirect_to approve_hke_future_messages_path(time_filter: time_filter)
     end
 
     private

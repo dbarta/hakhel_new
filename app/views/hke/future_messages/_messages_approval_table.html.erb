@@ -7,9 +7,18 @@
             <%= t('community_admin.dashboard.message_approval.table_headers.send_date') %>
           </th>
           <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
-            <%= t('community_admin.dashboard.message_approval.table_headers.message_preview') %>
+            <%= t('community_admin.dashboard.message_approval.table_headers.contact', default: 'איש קשר') %>
           </th>
           <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+            <%= t('community_admin.dashboard.message_approval.table_headers.deceased', default: 'נפטר / יארצייט') %>
+          </th>
+          <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
+            <%= t('community_admin.dashboard.message_approval.table_headers.method', default: 'ערוץ') %>
+          </th>
+          <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
+            <%= t('community_admin.dashboard.message_approval.table_headers.message_preview') %>
+          </th>
+          <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
             <%= t('community_admin.dashboard.message_approval.table_headers.approve') %>
           </th>
         </tr>
