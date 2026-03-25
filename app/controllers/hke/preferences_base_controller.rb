@@ -63,6 +63,7 @@ class Hke::PreferencesBaseController < ApplicationController
   def pref_params
     params.require(:hke_preference).permit(
       :attempt_to_resend_if_no_sent_on_time,
+      :require_message_approval,
       :daily_sweep_job_time,
       :enable_fallback_delivery_method,
       :send_window_start_time,

@@ -96,6 +96,8 @@ module Hke
         }
       )
 
+      auto_approve = resolved.require_message_approval == false
+
       if future_message
         changes = {}
         changes[:send_date] = send_date if future_message.send_date != send_date
@@ -104,13 +106,15 @@ module Hke
         changes[:phone] = phone if future_message.phone != phone
         future_message.update!(changes) if changes.any?
       else
-        FutureMessage.create!(
+        attrs = {
           messageable: self,
           send_date: send_date,
           delivery_method: delivery_method,
           email: email,
           phone: phone
-        )
+        }
+        attrs[:approval_status] = :approved if auto_approve
+        FutureMessage.create!(attrs)
       end
     end
 

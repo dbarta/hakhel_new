@@ -157,6 +157,12 @@
         <%= f.check_box :enable_fallback_delivery_method %>
         <%= f.label :enable_fallback_delivery_method, t("hke.preferences.labels.fallback") %>
       </div>
+
+      <div class="flex items-center gap-2">
+        <%= f.check_box :require_message_approval %>
+        <%= f.label :require_message_approval,
+                t("hke.preferences.labels.require_message_approval", default: "דרוש אישור הודעות לפני שליחה") %>
+      </div>
     </section>
     <!-- ================= BUTTONS ================= -->
     <div class="pt-4 border-t">

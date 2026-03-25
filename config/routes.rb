@@ -45,6 +45,12 @@ Rails.application.routes.draw do
         resources :users, controller: "community_users"
       end
       post :switch_to_community, to: "dashboard#switch_to_community"
+      resource :advanced, only: [:show], controller: "advanced" do
+        collection do
+          post :run_scheduler
+          post :run_recovery
+        end
+      end
       root to: "dashboard#show"
     end
 
