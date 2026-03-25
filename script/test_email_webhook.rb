@@ -14,8 +14,8 @@
 #
 # Test messages are identifiable in the UI by email: david+sgtest@hakhel.net
 
-TEST_EMAIL = "david+sgtest@hakhel.net"
-count      = (ARGV.first || 1).to_i
+TEST_EMAIL = "david@odeca.net"
+count = (ARGV.first || 1).to_i
 
 candidates = Hke::FutureMessage
   .approved_messages
@@ -37,18 +37,18 @@ candidates.each do |original|
 
   ActsAsTenant.with_tenant(community) do
     dup = Hke::FutureMessage.new(
-      messageable:     original.messageable,
-      message_type:    original.message_type,
-      community_id:    original.community_id,
-      send_date:       Date.today,
+      messageable: original.messageable,
+      message_type: original.message_type,
+      community_id: original.community_id,
+      send_date: Date.today,
       delivery_method: :email,
-      email:           TEST_EMAIL,
-      phone:           nil,
+      email: TEST_EMAIL,
+      phone: nil,
       approval_status: :approved
     )
 
     unless dup.save
-      puts "  Could not create duplicate for FutureMessage ##{original.id}: #{dup.errors.full_messages.join(', ')}"
+      puts "  Could not create duplicate for FutureMessage ##{original.id}: #{dup.errors.full_messages.join(", ")}"
       next
     end
 
@@ -81,7 +81,7 @@ end
 
 # Clean up any duplicates the job didn't consume
 if duplicate_ids.any?
-  puts "\nCleaning up #{duplicate_ids.size} unconsumed duplicate(s): #{duplicate_ids.join(', ')}"
+  puts "\nCleaning up #{duplicate_ids.size} unconsumed duplicate(s): #{duplicate_ids.join(", ")}"
   Hke::FutureMessage.where(id: duplicate_ids).delete_all
 end
 
