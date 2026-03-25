@@ -69,6 +69,7 @@ Rails.application.routes.draw do
       member do
         post :blast
         post :toggle_approval
+        get  :preview
       end
       collection do
         get :approve

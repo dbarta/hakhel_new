@@ -1,0 +1,13 @@
+<turbo-frame id="message_preview_frame">
+  <div class="p-6" style="direction: rtl;">
+    <div class="flex justify-between items-center mb-4">
+      <h3 class="text-lg font-semibold text-gray-900">תצוגת הודעה</h3>
+      <button type="button"
+              data-action="click->modal#close"
+              class="text-gray-400 hover:text-gray-600 text-2xl leading-none">&times;</button>
+    </div>
+    <div class="bg-gray-50 rounded p-4 text-sm text-gray-800 whitespace-pre-wrap leading-relaxed">
+<%= @preview_text %>
+    </div>
+  </div>
+</turbo-frame>

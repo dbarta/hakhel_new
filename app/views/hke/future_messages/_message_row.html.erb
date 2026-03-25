@@ -32,14 +32,15 @@
     </span>
   </td>
 
-  <%# Preview link %>
+  <%# Preview link — loads into Turbo Frame inside the modal %>
   <td class="px-6 py-4 whitespace-nowrap text-sm text-center">
-    <% if message.messageable&.token.present? %>
-      <%= link_to t('community_admin.dashboard.message_approval.toggle.show_all', default: 'הצג הודעה'),
-          sms_preview_hke_landing_pages_path(token: message.messageable.token),
-          target: "_blank",
-          class: "text-blue-600 hover:text-blue-800 text-sm" %>
-    <% end %>
+    <%= link_to "הצג הודעה",
+        preview_hke_future_message_path(message),
+        data: {
+          turbo_frame: "message_preview_frame",
+          action: "click->modal#open"
+        },
+        class: "text-blue-600 hover:text-blue-800 text-sm" %>
   </td>
 
   <%# Approval toggle %>

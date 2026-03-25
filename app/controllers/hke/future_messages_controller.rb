@@ -4,7 +4,7 @@ module Hke
     before_action :set_community_as_current_tenant
     before_action :authenticate_user!
     before_action :authorize_community_admin!
-    before_action :set_future_message, only: [:show, :destroy, :blast]
+    before_action :set_future_message, only: [:show, :destroy, :blast, :preview]
 
     # GET /future_messages index
     # POST /future_messages search
@@ -59,6 +59,25 @@ module Hke
 
     # GET /future_messages/1 or /future_messages/1.json
     def show
+    end
+
+    # GET /future_messages/:id/preview (Turbo Frame — renders into modal)
+    def preview
+      relation = @future_message.messageable
+      contact  = relation&.contact_person
+      portal_url = if contact&.portal_token.present?
+        Hke::ShortLink.find_or_create_by!(contact_person: contact).short_url
+      end
+      @preview_text = begin
+        Hke::MessageRenderer.render(
+          relation: relation,
+          delivery_method: @future_message.delivery_method.to_sym,
+          reference_date: @future_message.send_date || Date.today,
+          portal_url: portal_url
+        ).to_s.strip
+      rescue => e
+        "שגיאה בעיבוד ההודעה: #{e.message}"
+      end
     end
 
     # DELETE /deceased_people/1 or /deceased_people/1.json
