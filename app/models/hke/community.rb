@@ -27,8 +27,6 @@ module Hke
     end
 
     def schedule_daily_job
-      puts "@@@@@@@@@@@@@@@@@ Scheduling daily job for community #{id}"
-
       job_name = "daily_for_community_#{id}"
 
       resolved = Hke::PreferenceResolver.resolve(preferring: self)

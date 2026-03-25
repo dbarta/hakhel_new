@@ -179,8 +179,6 @@ module Hke
         ex_wife:  {dm_cm: "בעלך לשעבר", dm_cf: "בעלך לשעבר", df_cm: "אשתך לשעבר", df_cf: "אשתך לשעבר"},
         ex_husband: {dm_cm: "בעלך לשעבר", dm_cf: "בעלך לשעבר", df_cm: "אשתך לשעבר", df_cf: "אשתך לשעבר"},
       }
-      puts "@@@@@  relationship_of_contact_to_deceased.to_sym: #{relationship_of_contact_to_deceased.to_sym}"
-      puts "@@@@@  key.to_sym: #{key.to_sym}"
       tr[relationship_of_contact_to_deceased.to_sym][key.to_sym]
     end
 

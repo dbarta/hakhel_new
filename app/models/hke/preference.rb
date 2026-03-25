@@ -164,7 +164,6 @@ module Hke
     ].freeze
 
     def impactful_rebuild_change?
-      puts "@@@@@@@@@@@@@@@@ in impactful_rebuild_change? keys: #{changes_to_save.keys} IMPACT_FIELDS: #{IMPACT_FIELDS}"
       (changes_to_save.keys & IMPACT_FIELDS).any?
     end
 

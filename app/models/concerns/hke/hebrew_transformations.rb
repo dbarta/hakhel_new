@@ -8,9 +8,7 @@ module Hke
     # end
 
     def transform_gender
-      puts "@@@@@ 1 #{gender}"
       self.gender = english_gender(gender)
-      puts "@@@@@ 2 #{gender}"
       if gender.nil?
         errors.add(:gender, :gender_invalid)
       end
@@ -42,9 +40,7 @@ module Hke
     end
 
     def calculate_gregorian_date_of_death
-      # puts "@@@@@@@@ in calculate_gregorian_date_of_death: #{name}, #{hebrew_year_of_death}, #{hebrew_month_of_death}, #{hebrew_day_of_death}"
       self.date_of_death = Hke::Heb.h2g name, hebrew_year_of_death, hebrew_month_of_death, hebrew_day_of_death
-      # puts "@@@@@@@@ after calculate_gregorian_date_of_death: #{date_of_death}"
     end
 
     def english_gender hebrew_gender
