@@ -12,6 +12,9 @@ module Hke
       ActsAsTenant.current_tenant = community
       today = Date.current
       total_messages = Hke::FutureMessage.where(community_id: community.id).count
+      # Recover past-due messages before processing today's sends
+      Hke::FutureMessagePastDueRecoveryJob.new.perform(community.id)
+
       todays_messages = Hke::FutureMessage.where(community_id: community.id, send_date: today)
       log_event("Daily Scheduler", details: {
         text: "Job started",

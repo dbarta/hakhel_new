@@ -9,6 +9,7 @@ module Hke
       :daily_sweep_job_time,
       :send_window_start_time,
       :time_zone,
+      :attempt_to_resend_if_no_sent_on_time,
       keyword_init: true
     ) do
       DEFAULT_TZ = "Asia/Jerusalem"
@@ -56,7 +57,8 @@ module Hke
         enable_fallback_delivery_method: pick(prefs, :enable_fallback_delivery_method),
         daily_sweep_job_time: pick(prefs, :daily_sweep_job_time),
         send_window_start_time: pick(prefs, :send_window_start_time),
-        time_zone: pick(prefs, :time_zone)
+        time_zone: pick(prefs, :time_zone),
+        attempt_to_resend_if_no_sent_on_time: pick(prefs, :attempt_to_resend_if_no_sent_on_time)
       )
     end
 

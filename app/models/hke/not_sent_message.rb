@@ -7,7 +7,9 @@ module Hke
       delivery_failed: 1,
       no_contact_info: 2,
       opt_out: 3,
-      no_delivery_method: 4
+      no_delivery_method: 4,
+      missed_yahrzeit: 5,
+      missed_send_window: 6
     }
 
     enum :delivery_method, {
