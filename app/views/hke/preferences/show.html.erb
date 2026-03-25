@@ -172,6 +172,16 @@
 		              </div>
 		            <% end %>
           </div>
+
+          <div class="rounded-md border p-3">
+            <div class="text-sm text-gray-600"><%= t("hke.preferences.labels.require_message_approval", default: "דרוש אישור הודעות לפני שליחה") %></div>
+            <div class="font-medium"><%= yes_no.call(preference.require_message_approval) %></div>
+            <% if community_has_own_preference && system_preference.present? %>
+              <div class="text-xs text-gray-500">
+                <%= t("hke.preferences.help.system_default_prefix", value: yes_no.call(system_preference.require_message_approval)) %>
+              </div>
+            <% end %>
+          </div>
         </div>
       </section>
 
