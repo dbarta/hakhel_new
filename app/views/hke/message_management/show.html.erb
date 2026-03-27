@@ -1,0 +1,76 @@
+<turbo-frame id="message_management_preview_frame">
+  <div class="p-6" style="direction: rtl;">
+    <%
+      tz   = current_community&.preference&.time_zone.presence || "Jerusalem"
+      ds   = @message.delivery_status.presence
+      badge_class = case ds
+        when "delivered"             then "bg-green-100 text-green-800"
+        when "sent"                  then "bg-blue-100 text-blue-800"
+        when "sending"               then "bg-blue-50 text-blue-600"
+        when "queued"                then "bg-gray-100 text-gray-600"
+        when "undelivered", "failed" then "bg-red-100 text-red-800"
+        when "bounced", "blocked"    then "bg-orange-100 text-orange-800"
+        when "unsubscribed"          then "bg-purple-100 text-purple-800"
+        else                              "bg-gray-100 text-gray-400"
+      end
+      status_label = ds ? t("message_management.delivery_statuses.#{ds}", default: ds) \
+                        : t("message_management.delivery_statuses.unknown")
+    %>
+
+    <!-- Header -->
+    <div class="flex justify-between items-center mb-5">
+      <h3 class="text-lg font-semibold text-gray-900">פרטי הודעה</h3>
+      <button type="button"
+              data-action="click->modal#close"
+              class="text-gray-400 hover:text-gray-600 text-2xl leading-none">&times;</button>
+    </div>
+
+    <!-- Meta grid -->
+    <div class="grid grid-cols-2 gap-3 mb-5 text-sm">
+      <div class="bg-gray-50 rounded p-3">
+        <div class="text-xs text-gray-500 mb-1">נשלח ב</div>
+        <div class="font-medium"><%= @message.created_at.in_time_zone(tz).strftime("%d/%m/%Y %H:%M") %></div>
+      </div>
+      <div class="bg-gray-50 rounded p-3">
+        <div class="text-xs text-gray-500 mb-1">סטטוס</div>
+        <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium <%= badge_class %>">
+          <%= status_label %>
+        </span>
+        <% if @message.twilio_error_code.present? %>
+          <div class="text-xs text-red-600 mt-1">
+            (<%= @message.twilio_error_code %>)
+            <%= t("message_management.remediation.#{@message.twilio_error_code}", default: t("message_management.remediation.default")) %>
+          </div>
+        <% end %>
+      </div>
+      <div class="bg-gray-50 rounded p-3">
+        <div class="text-xs text-gray-500 mb-1">שיטה</div>
+        <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium
+          <%= @message.delivery_method == 'email' ? 'bg-green-100 text-green-800' : 'bg-blue-100 text-blue-800' %>">
+          <%= @message.delivery_method&.upcase %>
+        </span>
+      </div>
+      <div class="bg-gray-50 rounded p-3">
+        <div class="text-xs text-gray-500 mb-1">נמען</div>
+        <div class="font-medium text-sm break-all">
+          <%= @message.email.presence || @message.phone.presence || "—" %>
+        </div>
+      </div>
+    </div>
+
+    <!-- Full message -->
+    <div class="text-xs text-gray-500 mb-1">תוכן ההודעה</div>
+    <div class="bg-gray-50 rounded p-4 text-sm text-gray-800 whitespace-pre-wrap leading-relaxed max-h-64 overflow-y-auto">
+      <%= @message.full_message.presence || "—" %>
+    </div>
+
+    <!-- Close button -->
+    <div class="mt-5 flex justify-start">
+      <button type="button"
+              data-action="click->modal#close"
+              class="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 text-sm font-medium rounded">
+        סגור
+      </button>
+    </div>
+  </div>
+</turbo-frame>

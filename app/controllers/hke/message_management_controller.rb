@@ -47,8 +47,9 @@ module Hke
     end
 
     def show
-      @sent_message = Hke::SentMessage.find(params[:id])
-      authorize @sent_message
+      @message = Hke::SentMessage.find(params[:id])
+      authorize @message
+      render layout: false
     end
 
     def send_bounce_notifications

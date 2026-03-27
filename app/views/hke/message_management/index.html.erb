@@ -1,3 +1,14 @@
+<div data-controller="modal">
+
+<%# Modal overlay for message preview %>
+<div data-modal-target="overlay"
+     class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/50"
+     data-action="click->modal#backdropClose">
+  <div class="bg-white rounded-lg shadow-xl w-full max-w-lg mx-4">
+    <turbo-frame id="message_management_preview_frame"></turbo-frame>
+  </div>
+</div>
+
 <div class="container mx-auto p-4" style="direction: rtl;">
   <div class="max-w-7xl mx-auto">
     <!-- Header -->
@@ -134,3 +145,4 @@
     <% end %>
   </div>
 </div>
+</div><%# closes data-controller="modal" %>
