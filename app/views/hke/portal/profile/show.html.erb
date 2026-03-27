@@ -23,6 +23,18 @@
     <div>
       <div style="font-size: 0.78rem; color: var(--color-warm-gray); margin-bottom: 0.2rem;">אימייל</div>
       <div style="font-size: 1rem; color: var(--color-navy);"><%= @contact.email.presence || "—" %></div>
+      <% if @contact.email_bounced? %>
+        <div style="margin-top: 0.4rem; padding: 0.5rem 0.75rem; background: #fff7ed; border: 1px solid #fb923c; border-radius: 6px; font-size: 0.82rem; color: #9a3412;">
+          <%= t("hke.portal.profile.email_bounced_warning") %>
+          <%= link_to t("hke.portal.profile.update_email"), portal_new_email_verification_path(@portal_token),
+                style: "color: #c2410c; font-weight: 600; margin-right: 0.5rem;" %>
+        </div>
+      <% end %>
+      <% if @contact.pending_email.present? %>
+        <div style="margin-top: 0.4rem; font-size: 0.8rem; color: #92400e;">
+          ממתין לאימות: <strong><%= @contact.pending_email %></strong>
+        </div>
+      <% end %>
     </div>
   </div>
 </div>

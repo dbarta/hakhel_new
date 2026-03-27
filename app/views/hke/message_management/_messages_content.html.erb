@@ -1,6 +1,16 @@
 <% if tab == 'sent' %>
-  <%= render partial: "messages_table", locals: { messages: sent_messages } %>
+  <!-- Status sub-filter -->
+  <div class="flex gap-2 p-4 border-b border-gray-100">
+    <% [["all", t("message_management.filters.status_all")],
+        ["delivered", t("message_management.filters.status_delivered")],
+        ["failed", t("message_management.filters.status_failed")],
+        ["pending", t("message_management.filters.status_pending")]].each do |value, label| %>
+      <%= link_to label,
+          hke_message_management_index_path(time_filter: time_filter, tab: "sent", status_filter: value),
+          class: "px-3 py-1 rounded-full text-xs font-medium #{status_filter == value ? 'bg-gray-800 text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}" %>
+    <% end %>
+  </div>
+  <%= render partial: "messages_table", locals: { messages: sent_messages, time_filter: time_filter, status_filter: status_filter } %>
 <% else %>
   <%= render partial: "not_sent_table", locals: { messages: not_sent_messages } %>
 <% end %>
-

@@ -35,6 +35,10 @@ Rails.application.routes.draw do
     get  "/deceased/:id/edit", to: "hke/portal/deceased#edit",    as: :edit_deceased
     patch "/deceased/:id",     to: "hke/portal/deceased#update",   as: :update_deceased
     delete "/deceased/:id",    to: "hke/portal/deceased#destroy",  as: :destroy_deceased
+
+    get  "/email_verification/new",    to: "hke/portal/email_verifications#new",    as: :new_email_verification
+    post "/email_verification",        to: "hke/portal/email_verifications#create", as: :email_verification
+    get  "/email_verification/verify", to: "hke/portal/email_verifications#verify", as: :verify_email_verification
   end
 
   # HKE routes (inlined from engine)
@@ -91,7 +95,11 @@ Rails.application.routes.draw do
       end
     end
 
-    resources :message_management, only: [:index, :show]
+    resources :message_management, only: [:index, :show] do
+      collection do
+        post :send_bounce_notifications
+      end
+    end
     resources :landing_pages do
       collection do
         get :sms_preview

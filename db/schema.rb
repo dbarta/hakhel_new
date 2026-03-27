@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_03_25_144938) do
+ActiveRecord::Schema[8.1].define(version: 2026_03_27_100000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -185,17 +185,22 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_25_144938) do
   end
 
   create_table "hke_contact_people", force: :cascade do |t|
+    t.datetime "bounce_sms_sent_at"
     t.bigint "community_id", null: false
     t.datetime "created_at", null: false
     t.string "email"
     t.integer "email_status", default: 0, null: false
+    t.datetime "email_verification_sent_at"
+    t.string "email_verification_token"
     t.string "first_name"
     t.string "gender"
     t.string "last_name"
+    t.string "pending_email"
     t.string "phone"
     t.string "portal_token"
     t.datetime "updated_at", null: false
     t.index ["community_id"], name: "index_hke_contact_people_on_community_id"
+    t.index ["email_verification_token"], name: "index_hke_contact_people_on_email_verification_token", unique: true
     t.index ["portal_token"], name: "index_hke_contact_people_on_portal_token", unique: true
   end
 

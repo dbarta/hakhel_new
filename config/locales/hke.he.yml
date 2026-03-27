@@ -489,6 +489,10 @@ he:
       all_messages: "כל ההודעות"
       successful_only: "הצליחו בלבד"
       failed_only: "נכשלו בלבד"
+      status_all: "הכל"
+      status_delivered: "נמסרו"
+      status_failed: "נכשלו"
+      status_pending: "ממתינים"
     tabs:
       sent: "נשלחו (%{count})"
       not_sent: "לא נשלחו (%{count})"
@@ -499,6 +503,8 @@ he:
       status: "סטטוס"
       message_preview: "תוכן ההודעה"
       view_error: "צפה בשגיאה"
+      fix_email: "עדכן מייל"
+      fix_phone: "עדכן טלפון"
     not_sent:
       reason: "סיבה"
       error_details: "פרטי שגיאה"
@@ -509,6 +515,8 @@ he:
       no_contact_info: "חסר מידע ליצירת קשר"
       opt_out: "ביטול הרשמה"
       no_delivery_method: "אין שיטת שליחה"
+      missed_yahrzeit: "היארצייט עבר"
+      missed_send_window: "חלון השליחה עבר"
     statuses:
       sent: "נשלח"
       failed: "נכשל"
@@ -1101,6 +1109,24 @@ he:
     portal:
       profile:
         saved: "הפרופיל עודכן בהצלחה"
+        email_bounced_warning: "כתובת המייל שלך חזרה — ההודעות לא הגיעו. עדכן את כתובת המייל שלך."
+        update_email: "עדכן כתובת מייל"
+      email_verification:
+        title: "עדכון כתובת מייל"
+        enter_new_email: "הזן כתובת מייל חדשה"
+        email_label: "כתובת מייל"
+        submit: "שלח אימות"
+        pending_title: "בדוק את תיבת הדואר שלך"
+        pending_body: "שלחנו קישור אימות לכתובת %{email}. לחץ על הקישור לאישור."
+        verified_title: "המייל אומת בהצלחה"
+        verified_body: "כתובת המייל שלך עודכנה ל-%{email}."
+        invalid_token: "קישור האימות אינו תקין או שפג תוקפו."
+        already_verified: "כתובת המייל כבר אומתה."
+    bounce_notifications:
+      bulk_send_button: "שלח SMS לאנשי קשר עם מייל שנחזר (%{count})"
+      bulk_sent_notice: "נשלחו %{count} הודעות SMS"
+      no_phone_warning: "%{count} אנשי קשר עם מייל שנחזר ללא מספר טלפון — לא ניתן להודיע להם"
+      sms_body: "שלום %{name}, המייל שלך (%{email}) לא הצליח להגיע. לעדכון: %{url}"
         title: "פרופיל שלי"
       preferences:
         saved: "ההעדפות נשמרו בהצלחה"

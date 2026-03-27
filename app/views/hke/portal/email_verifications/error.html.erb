@@ -1,0 +1,11 @@
+<%# Portal — Verification error %>
+<div style="display: flex; flex-direction: column; gap: 1.25rem; text-align: center;">
+  <div style="font-size: 3rem;">⚠️</div>
+  <h1 style="font-family: var(--font-serif); font-size: 1.5rem; color: var(--color-navy); margin: 0;">
+    שגיאה באימות
+  </h1>
+  <div class="portal-card">
+    <p style="color: #9a3412; font-size: 0.95rem;"><%= @error %></p>
+  </div>
+  <%= link_to "נסה שוב", portal_new_email_verification_path(@portal_token), class: "btn-primary" %>
+</div>

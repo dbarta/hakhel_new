@@ -7,6 +7,7 @@
       hke_root_path,
       class: "px-4 py-2 border border-gray-300 rounded text-sm hover:bg-gray-50" %>
     </div>
+
     <!-- Statistics Dashboard -->
     <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-8">
       <div class="bg-blue-50 border border-blue-200 p-4 rounded-lg text-center">
@@ -34,6 +35,30 @@
         <p class="text-xs font-medium text-yellow-600 mt-1"><%= t("message_management.stats.pending_approval") %></p>
       </div>
     </div>
+
+    <!-- Bounce Notification Panel -->
+    <% if @bounced_with_phone > 0 || @bounced_no_phone > 0 %>
+      <div class="bg-orange-50 border border-orange-200 rounded-lg p-4 mb-6">
+        <div class="flex items-center justify-between flex-wrap gap-3">
+          <div>
+            <p class="font-semibold text-orange-800 mb-1">אנשי קשר עם מייל שנחזר</p>
+            <% if @bounced_no_phone > 0 %>
+              <p class="text-sm text-orange-600">
+                <%= t("hke.bounce_notifications.no_phone_warning", count: @bounced_no_phone) %>
+              </p>
+            <% end %>
+          </div>
+          <% if @bounced_with_phone > 0 %>
+            <%= button_to t("hke.bounce_notifications.bulk_send_button", count: @bounced_with_phone),
+                send_bounce_notifications_hke_message_management_index_path,
+                method: :post,
+                data: { confirm: "לשלוח SMS ל-#{@bounced_with_phone} אנשי קשר?" },
+                class: "px-4 py-2 bg-orange-600 text-white text-sm font-medium rounded hover:bg-orange-700" %>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+
     <!-- Time Filter -->
     <div class="bg-white rounded-lg shadow-sm p-6 mb-6">
       <div class="flex items-center justify-between">
@@ -41,6 +66,7 @@
         <%= form_with url: hke_message_management_index_path, method: :get, local: false,
             data: { turbo_stream: true }, class: "inline flex items-center space-x-2 space-x-reverse" do |form| %>
           <%= hidden_field_tag :tab, @tab %>
+          <%= hidden_field_tag :status_filter, @status_filter %>
           <label class="text-sm font-medium text-gray-700"><%= t("message_management.filters.time_period") %>:</label>
           <%= form.select :time_filter,
                       options_for_select(
@@ -60,12 +86,13 @@
         <% end %>
       </div>
     </div>
+
     <!-- Tabs: Sent / Not Sent -->
     <div class="bg-white rounded-lg shadow-sm">
       <div class="border-b border-gray-200">
         <nav class="flex -mb-px">
           <%= link_to t("message_management.tabs.sent", count: @stats[:total_sent]),
-          hke_message_management_index_path(time_filter: @time_filter, tab: "sent"),
+          hke_message_management_index_path(time_filter: @time_filter, tab: "sent", status_filter: @status_filter),
           class:
             "px-6 py-3 border-b-2 text-sm font-medium #{@tab == "sent" ? "border-green-500 text-green-700" : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"}" %>
           <%= link_to t("message_management.tabs.not_sent", count: @stats[:total_failed]),
@@ -81,9 +108,12 @@
           sent_messages: @sent_messages,
           not_sent_messages: @not_sent_messages,
           tab: @tab,
+          status_filter: @status_filter,
+          time_filter: @time_filter
         } %>
       </div>
     </div>
+
     <!-- Common Errors Section -->
     <% if @stats[:most_common_errors].any? %>
       <div class="mt-8 bg-red-50 rounded-lg p-6">
@@ -92,11 +122,7 @@
         </h3>
         <div class="space-y-2">
           <% @stats[:most_common_errors].each do |error_data| %>
-            <div
-              class="
-                flex justify-between items-center p-3 bg-white rounded border-r-4 border-red-400
-              "
-            >
+            <div class="flex justify-between items-center p-3 bg-white rounded border-r-4 border-red-400">
               <span class="text-sm text-gray-900"><%= error_data[:error] %></span>
               <span class="text-xs text-red-600 font-medium">
                 <%= t("message_management.index.error_count", count: error_data[:count]) %>

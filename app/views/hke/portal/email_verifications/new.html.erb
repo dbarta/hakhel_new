@@ -1,0 +1,43 @@
+<%# Portal — Update Email (bounce recovery) %>
+<div style="display: flex; flex-direction: column; gap: 1.25rem;">
+  <h1 style="font-family: var(--font-serif); font-size: 1.5rem; color: var(--color-navy); margin: 0;">
+    <%= t("hke.portal.email_verification.title") %>
+  </h1>
+
+  <% if @contact.email_bounced? %>
+    <div class="portal-card" style="background: #fff7ed; border: 1.5px solid #fb923c; padding: 1rem; border-radius: 10px;">
+      <p style="color: #9a3412; font-size: 0.92rem; margin: 0;">
+        <%= t("hke.portal.profile.email_bounced_warning") %>
+      </p>
+      <% if @contact.email.present? %>
+        <p style="color: #9a3412; font-size: 0.85rem; margin-top: 0.4rem;">
+          כתובת קיימת: <strong><%= @contact.email %></strong>
+        </p>
+      <% end %>
+    </div>
+  <% end %>
+
+  <%= form_with url: portal_email_verification_path(@portal_token), method: :post, local: true do |f| %>
+    <div class="portal-card" style="display: flex; flex-direction: column; gap: 1rem;">
+
+      <% if flash[:alert].present? %>
+        <div class="flash-alert"><%= flash[:alert] %></div>
+      <% end %>
+
+      <div>
+        <label style="display: block; font-size: 0.82rem; color: var(--color-warm-gray); margin-bottom: 0.3rem;">
+          <%= t("hke.portal.email_verification.email_label") %>
+        </label>
+        <%= f.email_field :email,
+              value: params[:email],
+              placeholder: "your@email.com",
+              style: "width: 100%; border: 1.5px solid var(--color-border); border-radius: 8px; padding: 0.5rem 0.75rem; font-family: var(--font-sans); font-size: 0.95rem; direction: ltr; text-align: right;" %>
+      </div>
+
+      <div style="display: flex; gap: 0.75rem; justify-content: flex-end; padding-top: 0.5rem;">
+        <%= link_to "ביטול", portal_profile_path(@portal_token), class: "btn-outline" %>
+        <%= f.submit t("hke.portal.email_verification.submit"), class: "btn-primary" %>
+      </div>
+    </div>
+  <% end %>
+</div>

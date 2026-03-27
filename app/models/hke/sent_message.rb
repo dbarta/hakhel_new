@@ -38,11 +38,13 @@ module Hke
     # Twilio delivery statuses in chronological order.
     # undelivered / failed = terminal failure states.
     TWILIO_STATUSES = %w[queued sending sent delivered undelivered failed].freeze
-    TWILIO_FAILED_STATUSES = %w[undelivered failed].freeze
+    FAILED_STATUSES = %w[undelivered failed bounced blocked].freeze
 
-    def delivery_confirmed? = delivery_status == "delivered"
-    def delivery_failed?    = TWILIO_FAILED_STATUSES.include?(delivery_status)
-    def delivery_pending?   = delivery_status.blank? || !delivery_confirmed? && !delivery_failed?
+    def delivery_confirmed?  = delivery_status == "delivered"
+    def delivery_failed?     = FAILED_STATUSES.include?(delivery_status)
+    def delivery_pending?    = delivery_status.blank? || (!delivery_confirmed? && !delivery_failed?)
+    def delivery_bounced?    = delivery_status == "bounced"
+    def delivery_unsubscribed? = delivery_status == "unsubscribed"
 
     validates :send_date, presence: true
     validates :delivery_method, presence: true
