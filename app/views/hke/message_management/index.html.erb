@@ -1,9 +1,9 @@
-<div data-controller="modal">
+<div data-controller="preview-modal">
 
 <%# Modal overlay for message preview %>
-<div data-modal-target="overlay"
+<div data-preview-modal-target="overlay"
      class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/50"
-     data-action="click->modal#backdropClose">
+     data-action="click->preview-modal#backdropClose">
   <div class="bg-white rounded-lg shadow-xl w-full max-w-lg mx-4">
     <turbo-frame id="message_management_preview_frame"></turbo-frame>
   </div>
@@ -145,4 +145,4 @@
     <% end %>
   </div>
 </div>
-</div><%# closes data-controller="modal" %>
+</div><%# closes data-controller="preview-modal" %>

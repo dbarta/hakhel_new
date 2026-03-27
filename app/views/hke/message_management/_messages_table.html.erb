@@ -90,7 +90,7 @@
               <div class="flex flex-col gap-1 items-end">
                 <%= link_to t('show'),
                     hke_message_management_path(message),
-                    data: { turbo_frame: "message_management_preview_frame", action: "click->modal#open" },
+                    data: { turbo_frame: "message_management_preview_frame", action: "click->preview-modal#open" },
                     class: "text-blue-600 hover:text-blue-900" %>
                 <%
                   contact = message.messageable&.contact_person rescue nil
