@@ -1122,12 +1122,7 @@ he:
         verified_body: "כתובת המייל שלך עודכנה ל-%{email}."
         invalid_token: "קישור האימות אינו תקין או שפג תוקפו."
         already_verified: "כתובת המייל כבר אומתה."
-    bounce_notifications:
-      bulk_send_button: "שלח SMS לאנשי קשר עם מייל שנחזר (%{count})"
-      bulk_sent_notice: "נשלחו %{count} הודעות SMS"
-      no_phone_warning: "%{count} אנשי קשר עם מייל שנחזר ללא מספר טלפון — לא ניתן להודיע להם"
-      sms_body: "שלום %{name}, המייל שלך (%{email}) לא הצליח להגיע. לעדכון: %{url}"
-        title: "פרופיל שלי"
+      profile_title: "פרופיל שלי"
       preferences:
         saved: "ההעדפות נשמרו בהצלחה"
         save_failed: "שגיאה בשמירת ההעדפות"
@@ -1139,3 +1134,8 @@ he:
         title: "שירותים קהילתיים"
       dashboard:
         title: "ראשי"
+    bounce_notifications:
+      bulk_send_button: "שלח SMS לאנשי קשר עם מייל שנחזר (%{count})"
+      bulk_sent_notice: "נשלחו %{count} הודעות SMS"
+      no_phone_warning: "%{count} אנשי קשר עם מייל שנחזר ללא מספר טלפון — לא ניתן להודיע להם"
+      sms_body: "שלום %{name}, המייל שלך (%{email}) לא הצליח להגיע. לעדכון: %{url}"
