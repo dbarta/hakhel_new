@@ -54,24 +54,24 @@
             <% other_fields.each do |field| %>
               <td class="p-2 "><%= item.send field[:data] %></td>
             <% end %>
-            <td class="flex items-center gap-1">
+            <td class="flex items-center gap-1" onclick="event.stopPropagation();">
               <% actions.each do |action| %>
                 <% is_delete = action[:name] == "action_delete" %>
-                <%= button_to send(action[:path], item),
-                method: action[:method] || :get,
-                class: "p-1 rounded hover:bg-gray-100 #{is_delete ? 'text-red-500 hover:text-red-700' : 'text-gray-500 hover:text-gray-800'}",
-                title: t(action[:name]),
-                form: {
-                  data: {
-                    turbo_confirm: action[:confirm] ? t("are_you_sure") : nil,
-                  },
-                  onclick: "event.stopPropagation();",
-                } do %>
-                  <% if is_delete %>
+                <% action_path = send(action[:path], item) %>
+                <% if is_delete %>
+                  <%= button_to action_path,
+                  method: :delete,
+                  class: "p-1 rounded hover:bg-gray-100 text-red-500 hover:text-red-700",
+                  title: t(action[:name]),
+                  form: { data: { turbo_confirm: action[:confirm] ? t("are_you_sure") : nil } } do %>
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                     </svg>
-                  <% else %>
+                  <% end %>
+                <% else %>
+                  <%= link_to action_path,
+                  class: "p-1 rounded hover:bg-gray-100 text-gray-500 hover:text-gray-800",
+                  title: t(action[:name]) do %>
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                     </svg>

@@ -40,15 +40,12 @@ module Hke
             end
           end
         end
-        puts "2222222222 keys_to_remove: #{keys_to_remove}"
-        keys_to_remove.each {|k| relations.delete k}
-        puts "3333333333 relations: #{relations}"
+          keys_to_remove.each {|k| relations.delete k}
         if relations.empty?
           params[actual_key].delete "relations_attributes"
         else
           params[actual_key]["relations_attributes"] = relations
         end
-        puts "4444444444 params: #{params}"
       end
     end
 
@@ -100,7 +97,6 @@ module Hke
     helper_method :current_community
 
     def authenticate_admin
-      puts "in  authenticate_admin, #{true_user}"
       redirect_to "/", alert: t("unauthorized") unless user_signed_in? && (current_user.system_admin? || current_user.community_admin?)
     end
   end
