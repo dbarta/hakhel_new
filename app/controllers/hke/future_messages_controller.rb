@@ -94,6 +94,7 @@ module Hke
     # GET /future_messages/approve
     def approve
       authorize Hke::FutureMessage, :bulk_approve?
+      @require_approval = Hke::PreferenceResolver.resolve(preferring: ActsAsTenant.current_tenant).require_message_approval != false
       @time_filter = params[:time_filter] || 'one_week'
       @messages = get_filtered_messages(@time_filter)
     end

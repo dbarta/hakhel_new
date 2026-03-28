@@ -28,23 +28,32 @@
         <% end %>
       </div>
 
-      <% if @messages.any? %>
-        <div class="flex gap-3 mb-4">
-          <%= button_to t('community_admin.dashboard.message_approval.approve_all', default: 'אשר הכל'),
-              approve_all_hke_future_messages_path(time_filter: @time_filter),
-              method: :post,
-              class: "px-4 py-2 bg-green-600 text-white rounded text-sm font-medium hover:bg-green-700" %>
-          <%= button_to t('community_admin.dashboard.message_approval.disapprove_all', default: 'בטל אישור הכל'),
-              disapprove_all_hke_future_messages_path(time_filter: @time_filter),
-              method: :post,
-              class: "px-4 py-2 bg-yellow-500 text-white rounded text-sm font-medium hover:bg-yellow-600" %>
+      <% if @require_approval %>
+        <% if @messages.any? %>
+          <div class="flex gap-3 mb-4">
+            <%= button_to t('community_admin.dashboard.message_approval.approve_all', default: 'אשר הכל'),
+                approve_all_hke_future_messages_path(time_filter: @time_filter),
+                method: :post,
+                class: "px-4 py-2 bg-green-600 text-white rounded text-sm font-medium hover:bg-green-700" %>
+            <%= button_to t('community_admin.dashboard.message_approval.disapprove_all', default: 'בטל אישור הכל'),
+                disapprove_all_hke_future_messages_path(time_filter: @time_filter),
+                method: :post,
+                class: "px-4 py-2 bg-yellow-500 text-white rounded text-sm font-medium hover:bg-yellow-600" %>
+          </div>
+        <% end %>
+
+        <div id="messages_table" class="bg-white rounded-lg shadow-sm">
+          <%= render partial: "hke/future_messages/messages_approval_table",
+                     locals: { messages: @messages } %>
+        </div>
+      <% else %>
+        <div class="py-6 text-center text-gray-500 text-sm">
+          אישור הודעות לפני שליחה אינו מופעל עבור קהילה זו.
+          כדי להציג את טבלת האישור, יש להפעיל את ההעדפה
+          <strong>"דרוש אישור הודעות לפני שליחה"</strong>
+          <%= link_to "בהגדרות הקהילה", hke_community_preferences_path, class: "text-blue-600 hover:underline" %>.
         </div>
       <% end %>
-
-      <div id="messages_table" class="bg-white rounded-lg shadow-sm">
-        <%= render partial: "hke/future_messages/messages_approval_table",
-                   locals: { messages: @messages } %>
-      </div>
 
     </div>
   </div>
