@@ -48,10 +48,10 @@
         </div>
       <% else %>
         <div class="py-6 text-center text-gray-500 text-sm">
-          אישור הודעות לפני שליחה אינו מופעל עבור קהילה זו.
-          כדי להציג את טבלת האישור, יש להפעיל את ההעדפה
-          <strong>"דרוש אישור הודעות לפני שליחה"</strong>
-          <%= link_to "בהגדרות הקהילה", hke_community_preferences_path, class: "text-blue-600 hover:underline" %>.
+          <%= t('community_admin.dashboard.message_approval.approval_disabled_html',
+                link: link_to(t('community_admin.dashboard.message_approval.approval_disabled_link'),
+                              hke_community_preferences_path,
+                              class: "text-blue-600 hover:underline")).html_safe %>
         </div>
       <% end %>
 

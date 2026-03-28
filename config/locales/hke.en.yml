@@ -157,6 +157,8 @@ en:
           disapprove_all: "Disapprove all"
           submit: "Submit"
         no_messages: "No messages to approve for this time period"
+        approval_disabled_html: "Message approval before sending is not enabled for this community. To display the approval table, enable the <strong>\"Require message approval before sending\"</strong> preference %{link}."
+        approval_disabled_link: "in the community preferences"
         toggle:
           show_all: "Show all..."
           show_less: "Show less"

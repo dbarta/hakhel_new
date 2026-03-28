@@ -371,6 +371,8 @@ he:
           disapprove_all: "בטל אישור הכל"
           submit: "שלח לעדכון"
         no_messages: "אין הודעות לאישור בתקופה זו"
+        approval_disabled_html: "אישור הודעות לפני שליחה אינו מופעל עבור קהילה זו. כדי להציג את טבלת האישור, יש להפעיל את ההעדפה <strong>\"דרוש אישור הודעות לפני שליחה\"</strong> %{link}."
+        approval_disabled_link: "בהגדרות הקהילה"
         toggle:
           show_all: "הראה הכל..."
           show_less: "הראה פחות"
