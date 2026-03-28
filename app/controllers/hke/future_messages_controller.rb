@@ -91,10 +91,11 @@ module Hke
       end
     end
 
-    # GET /future_messages/approve — consolidated into dashboard
+    # GET /future_messages/approve
     def approve
       authorize Hke::FutureMessage, :bulk_approve?
-      redirect_to hke_root_path(time_filter: params[:time_filter])
+      @time_filter = params[:time_filter] || 'one_week'
+      @messages = get_filtered_messages(@time_filter)
     end
 
     # POST /future_messages/:id/toggle_approval
@@ -121,22 +122,28 @@ module Hke
     def approve_all
       authorize Hke::FutureMessage, :bulk_approve?
 
-      time_filter = params[:time_filter] || 'one_week'
-      messages_to_update = get_filtered_messages(time_filter).pending_approval
-      messages_to_update.each { |message| message.approve!(current_user) }
+      @time_filter = params[:time_filter] || 'one_week'
+      get_filtered_messages(@time_filter).pending_approval.each { |message| message.approve!(current_user) }
+      @messages = get_filtered_messages(@time_filter)
 
-      redirect_to hke_root_path(time_filter: time_filter)
+      respond_to do |format|
+        format.turbo_stream { render :bulk_approval_update }
+        format.html { redirect_to hke_root_path(time_filter: @time_filter) }
+      end
     end
 
     # POST /future_messages/disapprove_all
     def disapprove_all
       authorize Hke::FutureMessage, :bulk_approve?
 
-      time_filter = params[:time_filter] || 'one_week'
-      messages_to_update = get_filtered_messages(time_filter).approved_messages
-      messages_to_update.each(&:reset_approval!)
+      @time_filter = params[:time_filter] || 'one_week'
+      get_filtered_messages(@time_filter).approved_messages.each(&:reset_approval!)
+      @messages = get_filtered_messages(@time_filter)
 
-      redirect_to hke_root_path(time_filter: time_filter)
+      respond_to do |format|
+        format.turbo_stream { render :bulk_approval_update }
+        format.html { redirect_to hke_root_path(time_filter: @time_filter) }
+      end
     end
 
     private

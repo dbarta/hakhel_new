@@ -1,0 +1,11 @@
+<%= turbo_stream.update "bulk_actions" do %>
+  <%= render partial: "hke/dashboard/bulk_actions", locals: { time_filter: @time_filter } %>
+<% end %>
+
+<%= turbo_stream.update "messages_table" do %>
+  <%= render partial: "hke/dashboard/messages_approval_table", locals: { messages: @messages, time_filter: @time_filter } %>
+<% end %>
+
+<%= turbo_stream.update "stats_line" do %>
+  <%= render partial: "hke/dashboard/stats_line", locals: { messages: @messages, time_filter: @time_filter } %>
+<% end %>

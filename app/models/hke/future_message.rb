@@ -40,7 +40,7 @@ module Hke
     scope :future_messages,  -> { where('send_date >= ?', Time.current) }
 
     validates :send_date, presence: true
-    validate  :send_date_must_be_in_the_future
+    validate  :send_date_must_be_in_the_future, on: :create
     validates :delivery_method, presence: true
     validates :email, presence: true, if: -> { delivery_method == "email" }
     validates :email, format: { with: URI::MailTo::EMAIL_REGEXP }, if: -> { email.present? }

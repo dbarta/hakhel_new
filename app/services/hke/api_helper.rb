@@ -69,14 +69,19 @@ module Hke
     def check_response(request_body, response, raise: true)
       if !response.success?
         log_error "Failed call, code: #{response.code} with: #{request_body}"
-        if response.body["errors"]
-          response.body["errors"].each do |field, messages|
-            messages.each { |message| log_error "#{field.capitalize}: #{message}" }
+        parsed = response.parsed_response
+        errors = parsed.is_a?(Hash) ? parsed["errors"] : nil
+        if errors.is_a?(Array)
+          errors.each { |message| log_error message }
+        elsif errors.is_a?(Hash)
+          errors.each do |field, messages|
+            Array(messages).each { |message| log_error "#{field.capitalize}: #{message}" }
           end
+        else
+          log_error "Response body: #{response.body}"
         end
         raise "@@@ RAISED: API call failed." if raise
       end
-      # log_info "Successful Api call with #{request_body}. response: #{response.inspect}"
       response
     end
 
@@ -99,6 +104,22 @@ module Hke
       response = post("#{@hakhel_url}/auth", {email: "david@odeca.net", password: "odeca111"})
       @headers["Authorization"] = "Bearer #{response["token"]}"
       @csrf_headers = fetch_csrf_headers
+      log_selected_community
+    end
+
+    def log_selected_community
+      community_name = ENV["COMMUNITY_NAME"].presence
+      communities = HTTParty.get("#{@hke_url}/communities", headers: @headers, format: :json).parsed_response
+      community = if community_name
+        Array(communities).find { |c| c["name"].to_s.downcase.start_with?(community_name.downcase) }
+      else
+        Array(communities).first
+      end
+      if community
+        log_info "@@@ Using community: '#{community["name"]}'"
+      else
+        raise "@@@ No community found matching '#{community_name}'. Available: #{Array(communities).map { |c| c["name"] }.join(", ")}"
+      end
     end
 
     def init_urls

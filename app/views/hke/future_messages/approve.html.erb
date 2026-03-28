@@ -41,7 +41,7 @@
         </div>
       <% end %>
 
-      <div class="bg-white rounded-lg shadow-sm">
+      <div id="messages_table" class="bg-white rounded-lg shadow-sm">
         <%= render partial: "hke/future_messages/messages_approval_table",
                    locals: { messages: @messages } %>
       </div>

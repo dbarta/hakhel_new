@@ -15,6 +15,9 @@ module Hke
       return unless defined?(ActsAsTenant)
       community = if current_user.system_admin? && session[:selected_community_id].present?
         Hke::Community.find_by(id: session[:selected_community_id])
+      elsif current_user.system_admin?
+        # API scripts (no session): fall back to first community
+        Hke::Community.first
       else
         current_user.community
       end

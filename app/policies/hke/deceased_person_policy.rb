@@ -41,7 +41,7 @@ module Hke
     private
 
     def admin?
-      user.is_a?(AccountUser)
+      user.is_a?(AccountUser) || user.is_a?(User)
     end
 
     def portal?

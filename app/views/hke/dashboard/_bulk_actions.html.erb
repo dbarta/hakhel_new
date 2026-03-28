@@ -1,0 +1,12 @@
+<div class="flex gap-4 mb-4 p-4 bg-gray-50 rounded-lg border">
+  <%= button_to t('community_admin.dashboard.message_approval.bulk_actions.approve_all'),
+      approve_all_hke_future_messages_path(time_filter: time_filter),
+      method: :post,
+      form: { data: { turbo: true }, class: "inline" },
+      class: "btn btn-secondary" %>
+  <%= button_to t('community_admin.dashboard.message_approval.bulk_actions.disapprove_all'),
+      disapprove_all_hke_future_messages_path(time_filter: time_filter),
+      method: :post,
+      form: { data: { turbo: true }, class: "inline" },
+      class: "btn btn-danger" %>
+</div>
