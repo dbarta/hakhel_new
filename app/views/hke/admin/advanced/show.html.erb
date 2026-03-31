@@ -54,5 +54,18 @@
         </div>
       <% end %>
     </section>
+    <!-- Initialize Database -->
+    <section class="bg-white border border-red-300 rounded-lg p-6">
+      <h2 class="text-lg font-semibold mb-1 text-red-700">אתחול מסד נתונים</h2>
+      <p class="text-sm text-gray-500 mb-4">
+        מוחק את <strong>כל</strong> הנתונים (משתמשים, קהילות, נפטרים, אנשי קשר, הודעות, לוגים) ויוצר מחדש את משתמש המנהל והקהילה
+        הבסיסית. <strong class="text-red-700">פעולה זו אינה הפיכה.</strong>
+      </p>
+      <%= form_with url: run_init_db_hke_admin_advanced_path, method: :post, local: true do |f| %>
+        <%= f.submit "אפס ואתחל מסד נתונים",
+          class: "rounded-md bg-red-600 px-4 py-2 text-white hover:bg-red-700 cursor-pointer",
+          data: { turbo_confirm: "⚠️ כל הנתונים יימחקו לצמיתות! האם אתה בטוח לחלוטין?" } %>
+      <% end %>
+    </section>
   </div>
 </div>

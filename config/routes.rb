@@ -53,6 +53,7 @@ Rails.application.routes.draw do
         collection do
           post :run_scheduler
           post :run_recovery
+          post :run_init_db
         end
       end
       root to: "dashboard#show"

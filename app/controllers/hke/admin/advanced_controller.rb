@@ -31,6 +31,17 @@ module Hke
           alert: "שגיאה: #{e.message}"
       end
 
+      def run_init_db
+        initializer = Hke::DbInitializerService.new
+        initializer.clear_database
+        initializer.create_admin_account_community_system
+        redirect_to hke_admin_advanced_path,
+          notice: "מסד הנתונים אופס ואותחל מחדש עם משתמש מנהל."
+      rescue => e
+        redirect_to hke_admin_advanced_path,
+          alert: "שגיאה באתחול: #{e.message}"
+      end
+
       private
 
       def require_system_admin!
