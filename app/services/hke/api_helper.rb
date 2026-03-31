@@ -22,22 +22,29 @@ module Hke
         end
 
         [
-          Hke::Preference,       # Polymorphic — must precede everything
+          Hke::Preference,           # Polymorphic — must precede everything
+          Hke::ShortLink,            # References ContactPerson
+          Hke::VenueRequest,         # References CommunityVenue, ContactPerson, Relation
           Hke::FutureMessage,
           Hke::SentMessage,
           Hke::NotSentMessage,
-          Hke::Relation,         # References DeceasedPerson/ContactPerson
-          Hke::DeceasedPerson,   # References Cemetery/Community
-          Hke::ContactPerson,    # References Community
-          Hke::Cemetery,         # References Community — must precede Community
+          Hke::RelationsSelection,   # References Relation, Selection
+          Hke::Relation,             # References DeceasedPerson/ContactPerson
+          Hke::Selection,            # References Community
+          Hke::Address,              # Polymorphic — references ContactPerson/DeceasedPerson
+          Hke::DeceasedPerson,       # References Cemetery/Community
+          Hke::ContactPerson,        # References Community
+          Hke::LandingPage,          # References Community, User
+          Hke::CommunityVenue,       # References Community (after VenueRequest)
+          Hke::Cemetery,             # References Community
           Hke::CsvImportLog,
-          Hke::CsvImport,        # References Community
+          Hke::CsvImport,            # References Community
           Hke::System,
           Hke::Log,
-          ApiToken,              # References User
-          AccountUser,           # References Account + User
-          Hke::Community,        # References Account — must precede Account
-          Account,               # References User — must precede User
+          ApiToken,                  # References User
+          AccountUser,               # References Account + User
+          Hke::Community,            # References Account — must precede Account
+          Account,                   # References User — must precede User
           User
         ].each do |model|
           model.delete_all
