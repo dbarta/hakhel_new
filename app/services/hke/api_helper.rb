@@ -15,10 +15,7 @@ module Hke
         log_info "@@@ Found #{users_with_community} users with community assignments."
 
         if users_with_community > 0
-          # Temporarily disable foreign key constraint to allow nullifying
-          ActiveRecord::Base.connection.execute("SET session_replication_role = replica;")
           User.update_all(community_id: nil)
-          ActiveRecord::Base.connection.execute("SET session_replication_role = DEFAULT;")
           log_info "@@@ Cleared community_id for #{users_with_community} users."
         else
           log_info "@@@ No users with community assignments found."
