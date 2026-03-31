@@ -112,9 +112,9 @@ module Hke
     # Returns a Hebrew-style Gregorian date string, e.g. "15 למרץ 2026 יום חמישי"
     def hebrew_gregorian_date(date)
       return nil if date.blank?
-      d = date.is_a?(Date) ? date : Date.parse(date.to_s)
+      d = date.respond_to?(:to_date) ? date.to_date : Date.parse(date.to_s)
       "#{d.day} ל#{HEBREW_MONTHS_GREGORIAN[d.month - 1]} #{d.year} #{HEBREW_WEEKDAYS[d.wday]}"
-    rescue ArgumentError
+    rescue ArgumentError, TypeError
       nil
     end
 
