@@ -12,12 +12,10 @@
       <%= select_fld  form, :hebrew_day_of_death, hebrew_day_select %>
       <div>
         <%= form.label :date_of_death, t('date_of_death'), class: "text-xs" %>
-        <%= form.text_field :date_of_death,
-              value: form.object&.date_of_death&.to_date,
-              class: "form-control text-xs" %>
-        <% if (formatted = hebrew_gregorian_date(form.object&.date_of_death)).present? %>
-          <div class="form-control text-xs bg-gray-50 text-gray-600 mt-1 select-none" dir="rtl"><%= formatted %></div>
-        <% end %>
+        <%= form.hidden_field :date_of_death %>
+        <div class="form-control text-xs bg-gray-50 text-gray-700 select-none" dir="rtl">
+          <%= hebrew_gregorian_date(form.object&.date_of_death).presence || form.object&.date_of_death&.to_date&.to_s %>
+        </div>
       </div>
 
       <%= text_fld_optional form, :occupation %>
