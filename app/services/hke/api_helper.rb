@@ -9,40 +9,40 @@ module Hke
       # Clear Sidekiq queues first to avoid orphaned jobs
       clear_sidekiq
 
-      # Clear any user community assignments to break foreign key constraints
-      if User.table_exists?
-        users_with_community = User.where.not(community_id: nil).count
-        log_info "@@@ Found #{users_with_community} users with community assignments."
-
-        if users_with_community > 0
-          User.update_all(community_id: nil)
-          log_info "@@@ Cleared community_id for #{users_with_community} users."
-        else
-          log_info "@@@ No users with community assignments found."
+      # Bypass acts_as_tenant scoping so ALL records across all communities are deleted.
+      ActsAsTenant.without_tenant do
+        # Nullify user→community FK before deleting communities
+        if User.table_exists?
+          users_with_community = User.where.not(community_id: nil).count
+          log_info "@@@ Found #{users_with_community} users with community assignments."
+          if users_with_community > 0
+            User.update_all(community_id: nil)
+            log_info "@@@ Cleared community_id for #{users_with_community} users."
+          end
         end
-      end
 
-      [
-        Hke::Preference,       # Polymorphic — must precede Relation/Community/System
-        Hke::FutureMessage,    # No dependencies
-        Hke::SentMessage,      # No dependencies
-        Hke::NotSentMessage,   # No dependencies
-        Hke::Relation,         # References DeceasedPerson/ContactPerson
-        Hke::DeceasedPerson,   # References Cemetery/Community
-        Hke::ContactPerson,    # References Community
-        Hke::Cemetery,
-        Hke::CsvImportLog,
-        Hke::CsvImport,         # References Community
-        Hke::System,           # No dependencies
-        Hke::Log,              # No dependencies
-        ApiToken,              # References User
-        AccountUser,           # References Account + User
-        Hke::Community,        # References Account (delete before Account)
-        Account,               # References User (delete before User)
-        User                  # Delete last
-      ].each do |model|
-        model.delete_all
-        log_info "@@@ Database table for: #{model} successfully cleared."
+        [
+          Hke::Preference,       # Polymorphic — must precede everything
+          Hke::FutureMessage,
+          Hke::SentMessage,
+          Hke::NotSentMessage,
+          Hke::Relation,         # References DeceasedPerson/ContactPerson
+          Hke::DeceasedPerson,   # References Cemetery/Community
+          Hke::ContactPerson,    # References Community
+          Hke::Cemetery,         # References Community — must precede Community
+          Hke::CsvImportLog,
+          Hke::CsvImport,        # References Community
+          Hke::System,
+          Hke::Log,
+          ApiToken,              # References User
+          AccountUser,           # References Account + User
+          Hke::Community,        # References Account — must precede Account
+          Account,               # References User — must precede User
+          User
+        ].each do |model|
+          model.delete_all
+          log_info "@@@ Database table for: #{model} successfully cleared."
+        end
       end
       log_info "@@@ All Hakhel database tables successfully cleared."
     end
