@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_03_27_100000) do
+ActiveRecord::Schema[8.1].define(version: 2026_03_31_072356) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -331,6 +331,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_27_100000) do
     t.date "send_date"
     t.string "token"
     t.datetime "updated_at", null: false
+    t.index ["community_id", "created_at"], name: "index_hke_not_sent_messages_on_community_id_and_created_at"
     t.index ["community_id"], name: "index_hke_not_sent_messages_on_community_id"
     t.index ["messageable_type", "messageable_id"], name: "index_hke_not_sent_messages_on_messageable"
     t.index ["reason"], name: "index_hke_not_sent_messages_on_reason"
@@ -414,6 +415,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_27_100000) do
     t.string "twilio_error_message"
     t.string "twilio_message_sid"
     t.datetime "updated_at", null: false
+    t.index ["community_id", "created_at"], name: "index_hke_sent_messages_on_community_id_and_created_at"
     t.index ["community_id"], name: "index_hke_sent_messages_on_community_id"
     t.index ["delivery_status"], name: "index_hke_sent_messages_on_delivery_status"
     t.index ["messageable_type", "messageable_id"], name: "index_hke_sent_messages_on_messageable"
