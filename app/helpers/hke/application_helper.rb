@@ -106,6 +106,18 @@ module Hke
       end
     end
 
+    HEBREW_MONTHS_GREGORIAN = %w[ינואר פברואר מרץ אפריל מאי יוני יולי אוגוסט ספטמבר אוקטובר נובמבר דצמבר].freeze
+    HEBREW_WEEKDAYS         = ["יום ראשון", "יום שני", "יום שלישי", "יום רביעי", "יום חמישי", "יום שישי", "שבת"].freeze
+
+    # Returns a Hebrew-style Gregorian date string, e.g. "15 למרץ 2026 יום חמישי"
+    def hebrew_gregorian_date(date)
+      return nil if date.blank?
+      d = date.is_a?(Date) ? date : Date.parse(date.to_s)
+      "#{d.day} ל#{HEBREW_MONTHS_GREGORIAN[d.month - 1]} #{d.year} #{HEBREW_WEEKDAYS[d.wday]}"
+    rescue ArgumentError
+      nil
+    end
+
     def text_fld_optional(form, name)
       content_tag(:div, "data-visibility-target": "hideable", hidden: true) do
         text_fld(form, name)
