@@ -1,6 +1,9 @@
-class Hke::PreferencesBaseController < ApplicationController
+class Hke::PreferencesBaseController < Hke::ApplicationController
   # This controller is not intended to be routed directly.
   # Subclasses must set @preferring.
+
+  skip_after_action :verify_authorized
+  skip_after_action :verify_policy_scoped
 
   before_action :set_preference
 
