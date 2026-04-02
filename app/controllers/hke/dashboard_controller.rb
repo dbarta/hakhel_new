@@ -32,7 +32,7 @@ module Hke
       @time_filter = params[:time_filter] || "one_week"
 
       # Resolve require_message_approval preference for this community
-      @require_approval = Hke::PreferenceResolver.resolve(preferring: ActsAsTenant.current_tenant).require_message_approval != false
+      @require_approval = Hke::PreferenceResolver.resolve(preferring: ActsAsTenant.current_tenant).require_message_approval == true
 
       # Get messages based on time filter using same logic as future_messages controller
       @messages = get_filtered_messages(@time_filter)

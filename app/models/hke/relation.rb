@@ -96,7 +96,7 @@ module Hke
         }
       )
 
-      auto_approve = resolved.require_message_approval == false
+      auto_approve = resolved.require_message_approval != true
 
       if future_message
         changes = {}

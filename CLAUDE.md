@@ -2,6 +2,12 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## Coding Process
+
+For every request to change code:
+1. Review code thoroughly before making plans
+2. After reviewing code, create a plan and show it. Wait for approval before making changes
+
 ## Overview
 
 Jumpstart Pro Rails is a commercial multi-tenant SaaS starter application built with Rails 8. It provides subscription billing, team management, authentication, and modern Rails patterns for building subscription-based web applications.
