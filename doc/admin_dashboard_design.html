@@ -1,0 +1,787 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>לוח בקרה — מנהל מערכת הקהל</title>
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@400;500;700;900&family=Heebo:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg:        #f5f4f0;
+      --bg-card:   #ffffff;
+      --bg-subtle: #f0ede8;
+      --border:    #e2ded8;
+      --border-2:  #ccc8c0;
+      --gold:      #b8902a;
+      --gold-bg:   rgba(184,144,42,0.08);
+      --gold-border: rgba(184,144,42,0.22);
+      --text:      #1a1a1a;
+      --text-2:    #4a4540;
+      --muted:     #8a8278;
+      --faint:     #c8c2b8;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { font-size: 22px; } /* base bump: +2px from previous 20px */
+
+    body {
+      font-family: 'Heebo', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    .font-display { font-family: 'Frank Ruhl Libre', serif; }
+
+    /* ── Top Nav ── */
+    .topnav {
+      background: var(--bg-card);
+      border-bottom: 1px solid var(--border);
+      padding: 0 2rem;
+      height: 54px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 50;
+    }
+
+    /* Right side: brand + nav links */
+    .topnav-right {
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+    }
+    .topnav-brand {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-family: 'Frank Ruhl Libre', serif;
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: var(--text);
+      text-decoration: none;
+    }
+    .topnav-links {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+    }
+    .topnav-links a {
+      font-size: 0.8125rem;
+      color: var(--muted);
+      text-decoration: none;
+      transition: color 0.15s;
+    }
+    .topnav-links a:hover { color: var(--text); }
+
+    /* Left side: community switcher + user */
+    .topnav-left {
+      display: flex;
+      align-items: center;
+      gap: 1.25rem;
+    }
+
+    /* Community switcher — the key nav element for system admin */
+    .community-switcher {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .community-switcher label {
+      font-size: 0.75rem;
+      color: var(--muted);
+      white-space: nowrap;
+    }
+    .community-switcher select {
+      font-family: 'Heebo', sans-serif;
+      font-size: 0.8125rem;
+      color: var(--text);
+      background: var(--bg-subtle);
+      border: 1px solid var(--border-2);
+      border-radius: 6px;
+      padding: 0.3rem 0.625rem 0.3rem 1.75rem;
+      /* arrow on the left (RTL) */
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%238a8278' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: left 0.5rem center;
+      cursor: pointer;
+      min-width: 180px;
+      transition: border-color 0.15s;
+      direction: rtl;
+    }
+    .community-switcher select:hover { border-color: var(--gold); }
+    .community-switcher select:focus { outline: none; border-color: var(--gold); }
+
+    .topnav-user {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.8rem;
+      color: var(--muted);
+      padding-right: 1.25rem;
+      border-right: 1px solid var(--border);
+    }
+    .avatar {
+      width: 28px; height: 28px;
+      border-radius: 50%;
+      background: var(--gold);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.6rem;
+      font-weight: 700;
+      color: white;
+    }
+
+    /* ── Main ── */
+    .main {
+      max-width: 1560px;
+      margin: 0 auto;
+      padding: 1.75rem 2rem 3rem;
+    }
+
+    /* ── Page header ── */
+    .page-header {
+      margin-bottom: 1.75rem;
+      animation: rise 0.4s ease both;
+    }
+    .page-header h1 {
+      font-family: 'Frank Ruhl Libre', serif;
+      font-size: 29px; /* fixed px so title stays same size regardless of base */
+      font-weight: 700;
+      color: var(--text);
+      line-height: 1;
+    }
+    .page-header .subtitle {
+      font-size: 0.78rem;
+      color: var(--muted);
+      margin-top: 0.2rem;
+    }
+
+    /* ── Health Bar ── */
+    .health-bar {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 0.875rem;
+      margin-bottom: 1.25rem;
+    }
+    .stat-tile {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1.125rem 1.25rem 1rem;
+      position: relative;
+      overflow: hidden;
+      transition: box-shadow 0.2s, border-color 0.2s;
+      animation: rise 0.45s ease both;
+    }
+    .stat-tile:hover {
+      box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+      border-color: var(--border-2);
+    }
+    /* gold top border accent */
+    .stat-tile::before {
+      content: '';
+      position: absolute;
+      top: 0; right: 0; left: 0;
+      height: 2px;
+      background: var(--gold);
+      opacity: 0.45;
+    }
+    .stat-tile .label {
+      font-size: 0.67rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 0.5rem;
+    }
+    .stat-tile .value {
+      font-family: Arial, sans-serif;
+      font-size: 2.07rem; /* 2.25rem - 4px at 22px base */
+      font-weight: 400;
+      color: var(--text);
+      line-height: 1;
+    }
+    .stat-tile .footnote {
+      font-size: 0.67rem;
+      color: var(--muted);
+      margin-top: 0.3rem;
+    }
+    .stat-tile.dimmed { opacity: 0.45; }
+
+    .rate-green  { color: #16a34a !important; }
+    .rate-yellow { color: #d97706 !important; }
+    .rate-red    { color: #dc2626 !important; }
+
+    /* ── Attention Panel ── */
+    .attention {
+      background: var(--gold-bg);
+      border: 1px solid var(--gold-border);
+      border-radius: 10px;
+      padding: 0.875rem 1.125rem;
+      margin-bottom: 1.25rem;
+      animation: rise 0.45s 0.1s ease both;
+      opacity: 0;
+    }
+    .attention-header {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 0.625rem;
+    }
+    .attention-header span {
+      font-size: 0.67rem;
+      font-weight: 700;
+      letter-spacing: 0.09em;
+      text-transform: uppercase;
+      color: var(--gold);
+    }
+    .attention-row {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.475rem 0;
+      border-bottom: 1px solid rgba(184,144,42,0.12);
+      cursor: pointer;
+      transition: opacity 0.15s;
+      width: 100%;
+      background: none;
+      border-left: none;
+      border-right: none;
+      border-top: none;
+      text-align: right;
+    }
+    .attention-row:last-child { border-bottom: none; }
+    .attention-row:hover { opacity: 0.7; }
+    .attention-dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: #dc2626;
+      flex-shrink: 0;
+    }
+    .attention-name {
+      font-size: 0.8375rem;
+      font-weight: 600;
+      color: var(--text);
+      white-space: nowrap;
+    }
+    .attention-desc {
+      font-size: 0.775rem;
+      color: var(--muted);
+      flex: 1;
+    }
+    .attention-arrow {
+      color: var(--faint);
+      flex-shrink: 0;
+      transform: rotate(180deg);
+    }
+
+    /* ── Fleet Table ── */
+    .fleet-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      overflow: hidden;
+      animation: rise 0.45s 0.18s ease both;
+      opacity: 0;
+    }
+    .fleet-card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.875rem 1.25rem;
+      border-bottom: 1px solid var(--border);
+      background: var(--bg-subtle);
+    }
+    .fleet-card-header .title {
+      font-size: 0.67rem;
+      font-weight: 700;
+      letter-spacing: 0.09em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+    .fleet-card-header .count {
+      font-size: 0.75rem;
+      color: var(--faint);
+    }
+
+    table.fleet {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    table.fleet thead tr {
+      background: var(--bg-subtle);
+    }
+    table.fleet th {
+      padding: 0.6rem 1rem;
+      font-size: 0.67rem;
+      font-weight: 600;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+      color: var(--muted);
+      text-align: right;
+      white-space: nowrap;
+      border-bottom: 1px solid var(--border);
+    }
+    table.fleet th:first-child { padding-right: 1.375rem; min-width: 220px; }
+    table.fleet th:last-child  { padding-left: 1.375rem; }
+
+    table.fleet tbody tr {
+      border-bottom: 1px solid var(--border);
+      transition: background 0.12s;
+    }
+    table.fleet tbody tr:last-child { border-bottom: none; }
+    table.fleet tbody tr:hover { background: var(--bg-subtle); }
+
+    table.fleet td {
+      padding: 0.925rem 1rem;
+      font-size: 0.845rem;
+      color: var(--text-2);
+      vertical-align: middle;
+    }
+    table.fleet td:first-child { padding-right: 1.375rem; }
+    table.fleet td:last-child  { padding-left: 1.375rem; }
+
+    /* Community cell: avatar + name + website icon */
+    .community-cell {
+      display: flex;
+      align-items: center;
+      gap: 0.625rem;
+    }
+    .comm-avatar {
+      width: 34px; height: 34px;
+      border-radius: 50%;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.7rem;
+      font-weight: 700;
+      color: white;
+      overflow: hidden;
+    }
+    .comm-avatar img { width: 100%; height: 100%; object-fit: cover; }
+    .comm-name-wrap {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+    .community-btn {
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 0;
+      font-family: 'Frank Ruhl Libre', serif;
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: #1d4ed8;
+      transition: color 0.15s;
+      text-align: right;
+    }
+    .community-btn:hover { color: #1e40af; text-decoration: underline; }
+    .website-icon {
+      color: var(--muted);
+      transition: color 0.15s;
+      flex-shrink: 0;
+      display: inline-flex;
+      align-items: center;
+    }
+    .website-icon:hover { color: var(--gold); }
+
+    a.sort {
+      color: var(--muted);
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.2rem;
+      transition: color 0.15s;
+    }
+    a.sort:hover { color: var(--text); }
+    a.sort.active { color: var(--text-2); }
+
+    /* Pill badges */
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.25rem;
+      padding: 0.2rem 0.6rem;
+      border-radius: 99px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+    .pill-rate-green  { background: #dcfce7; color: #15803d; border: 1px solid #bbf7d0; }
+    .pill-rate-yellow { background: #fef9c3; color: #a16207; border: 1px solid #fef08a; }
+    .pill-rate-red    { background: #fee2e2; color: #b91c1c; border: 1px solid #fecaca; }
+
+    .badge {
+      display: inline-block;
+      padding: 0.175rem 0.55rem;
+      border-radius: 99px;
+      font-size: 0.68rem;
+      font-weight: 600;
+    }
+    .badge-active  { background: #dcfce7; color: #15803d; border: 1px solid #bbf7d0; }
+    .badge-stalled { background: #fee2e2; color: #b91c1c; border: 1px solid #fecaca; }
+    .badge-new     { background: #ede9fe; color: #6d28d9; border: 1px solid #ddd6fe; }
+
+    .date-old { color: var(--muted); }
+    .zero-alert { color: #dc2626; font-weight: 600; }
+
+    /* Animations */
+    @keyframes rise {
+      from { opacity: 0; transform: translateY(8px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .page-header { animation: rise 0.4s ease both; }
+    .stat-tile:nth-child(1) { animation-delay: 0.05s; }
+    .stat-tile:nth-child(2) { animation-delay: 0.09s; }
+    .stat-tile:nth-child(3) { animation-delay: 0.13s; }
+    .stat-tile:nth-child(4) { animation-delay: 0.17s; }
+    .stat-tile:nth-child(5) { animation-delay: 0.21s; }
+    .attention   { animation-delay: 0.28s; }
+    .fleet-card  { animation-delay: 0.35s; }
+
+    table.fleet tbody tr:nth-child(1) { animation: rise 0.35s 0.42s ease both; opacity: 0; }
+    table.fleet tbody tr:nth-child(2) { animation: rise 0.35s 0.49s ease both; opacity: 0; }
+    table.fleet tbody tr:nth-child(3) { animation: rise 0.35s 0.56s ease both; opacity: 0; }
+  </style>
+</head>
+<body>
+
+  <!-- ══════════════════════════════════════════
+       TOP NAV
+  ═══════════════════════════════════════════ -->
+  <nav class="topnav">
+
+    <!-- Right: brand + nav links (in system-admin mode) -->
+    <div class="topnav-right">
+      <a href="#" class="topnav-brand">
+        הקהל
+      </a>
+      <div class="topnav-links">
+        <a href="#">קהילות</a>
+        <a href="#">משתמשים</a>
+        <a href="#">העדפות</a>
+        <a href="#">כלים מתקדמים</a>
+      </div>
+    </div>
+
+    <!-- Left: community switcher + user -->
+    <div class="topnav-left">
+
+      <!--
+        COMMUNITY SWITCHER
+        ERB: form_with url: hke_admin_switch_to_community_path, method: :post do |f|
+          f.select :community_id,
+            options_from_collection_for_select(Hke::Community.order(:name), :id, :name),
+            { prompt: "עבור לניהול קהילה..." },
+            { onchange: "this.form.submit();", dir: "rtl" }
+        end
+      -->
+      <div class="community-switcher">
+        <form method="post" action="/hke/admin/switch_to_community">
+          <select name="community_id" onchange="this.form.submit();" dir="rtl">
+            <option value="">עבור לניהול קהילה...</option>
+            <option value="1">קהילת כפר ורדים</option>
+            <option value="2">בית כנסת השלום</option>
+            <option value="3">קהילת הגולן</option>
+          </select>
+        </form>
+      </div>
+
+      <div class="topnav-user">
+        <div class="avatar">DB</div>
+        David Barta
+      </div>
+    </div>
+
+  </nav>
+
+  <!-- ══════════════════════════════════════════
+       MAIN
+  ═══════════════════════════════════════════ -->
+  <main class="main">
+
+    <!-- Page header -->
+    <div class="page-header">
+      <div style="display:flex; align-items:baseline; gap:0.75rem;">
+        <h1>לוח בקרה</h1>
+        <span class="subtitle">מנהל מערכת</span>
+      </div>
+    </div>
+
+    <!-- ──────────────────────────────────────
+         ZONE 1 — SYSTEM HEALTH BAR
+         ERB instance variables noted inline
+    ─────────────────────────────────────── -->
+    <div class="health-bar">
+
+      <div class="stat-tile">
+        <div class="label">קהילות</div>
+        <!-- @total_communities -->
+        <div class="value">3</div>
+      </div>
+
+      <div class="stat-tile">
+        <div class="label">אנשי קשר</div>
+        <!-- @total_contacts -->
+        <div class="value">142</div>
+      </div>
+
+      <div class="stat-tile">
+        <div class="label">נפטרים</div>
+        <!-- @total_deceased -->
+        <div class="value">209</div>
+      </div>
+
+      <div class="stat-tile">
+        <div class="label">הודעות ב30 יום אחרונים</div>
+        <!-- @messages_sent_30_days -->
+        <div class="value">387</div>
+      </div>
+
+      <!-- Uptime: placeholder until heartbeat tracking is built -->
+      <div class="stat-tile dimmed">
+        <div class="label">זמינות מערכת</div>
+        <div class="value" style="color:var(--faint);">—</div>
+        <div class="footnote">בקרוב</div>
+      </div>
+
+    </div>
+
+    <!-- ──────────────────────────────────────
+         ZONE 2 — ATTENTION PANEL
+         ERB: render only if @communities_needing_attention.any?
+         Each row is a button that POSTs to switch_to_community
+    ─────────────────────────────────────── -->
+    <div class="attention">
+      <div class="attention-header">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none"
+             stroke="#b8902a" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/>
+          <line x1="12" y1="9" x2="12" y2="13"/>
+          <line x1="12" y1="17" x2="12.01" y2="17"/>
+        </svg>
+        <span>דורש תשומת לב</span>
+      </div>
+
+      <!--
+        ERB: @communities_needing_attention.each do |item|
+          item[:community], item[:issues] = ["אחוז הצלחה נמוך (58%)", "אין הודעות מתוכננות"]
+      -->
+      <form method="post" action="/hke/admin/switch_to_community" style="display:block;">
+        <!-- <%= hidden_field_tag :authenticity_token, form_authenticity_token %> -->
+        <input type="hidden" name="community_id" value="2">
+        <button type="submit" class="attention-row">
+          <span class="attention-dot"></span>
+          <span class="attention-name">בית כנסת השלום</span>
+          <span class="attention-desc">אחוז הצלחה נמוך (58%) · אין הודעות מתוכננות</span>
+          <svg class="attention-arrow" width="13" height="13" viewBox="0 0 24 24"
+               fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="9 18 15 12 9 6"/>
+          </svg>
+        </button>
+      </form>
+      <!-- ERB: end -->
+    </div>
+
+    <!-- ──────────────────────────────────────
+         ZONE 3 — COMMUNITY FLEET TABLE
+         Sort: server-side via ?sort=col&dir=asc/desc
+         Row click: POST to switch_to_community (existing endpoint)
+    ─────────────────────────────────────── -->
+    <div class="fleet-card">
+      <div class="fleet-card-header">
+        <span class="title">קהילות — מבט-על</span>
+        <!-- @communities.count -->
+        <span class="count">3 קהילות</span>
+      </div>
+
+      <table class="fleet">
+        <thead>
+          <tr>
+            <th><a href="?sort=name&dir=asc" class="sort">קהילה <span style="opacity:0.4">↕</span></a></th>
+            <th><a href="?sort=contacts&dir=desc" class="sort">אנשי קשר <span style="opacity:0.4">↕</span></a></th>
+            <th><a href="?sort=deceased&dir=desc" class="sort">נפטרים <span style="opacity:0.4">↕</span></a></th>
+            <th><a href="?sort=sent&dir=desc" class="sort">נשלחו (30י׳) <span style="opacity:0.4">↕</span></a></th>
+            <th><a href="?sort=upcoming&dir=desc" class="sort">מתוזמנות (30י׳) <span style="opacity:0.4">↕</span></a></th>
+            <th><a href="?sort=success_rate&dir=asc" class="sort active">הצלחה <span style="opacity:0.7">↑</span></a></th>
+            <th><a href="?sort=last_sent&dir=desc" class="sort">נשלח לאחרונה <span style="opacity:0.4">↕</span></a></th>
+            <th>מנהל קהילה</th>
+            <th>סטטוס</th>
+          </tr>
+        </thead>
+        <tbody>
+
+          <!-- Row: Active, healthy -->
+          <tr>
+            <td>
+              <div class="community-cell">
+                <!--
+                  ERB avatar:
+                  if community.logo.attached?
+                    image_tag community.logo, class: "comm-avatar"
+                  else
+                    div.comm-avatar with bg color derived from community name initials
+                  end
+                -->
+                <div class="comm-avatar" style="background:#2563eb;">כו</div>
+                <div class="comm-name-wrap">
+                  <form method="post" action="/hke/admin/switch_to_community" style="display:inline;">
+                    <!-- <%= hidden_field_tag :authenticity_token, form_authenticity_token %> -->
+                    <input type="hidden" name="community_id" value="1">
+                    <button type="submit" class="community-btn">קהילת כפר ורדים</button>
+                  </form>
+                  <!-- ERB: if community.website_url.present? -->
+                  <a href="https://example.com" target="_blank" rel="noopener" class="website-icon" title="אתר הקהילה">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/>
+                    </svg>
+                  </a>
+                  <!-- ERB: end -->
+                </div>
+              </div>
+            </td>
+            <td>87</td>
+            <td>124</td>
+            <td>34</td>
+            <td>22</td>
+            <td><span class="pill pill-rate-green">● 94%</span></td>
+            <td>היום</td>
+            <td style="color:var(--text-2); font-size:0.82rem;">יוסף לוי</td>
+            <td><span class="badge badge-active">פעיל</span></td>
+          </tr>
+
+          <!-- Row: Stalled, low success — no website -->
+          <tr>
+            <td>
+              <div class="community-cell">
+                <div class="comm-avatar" style="background:#7c3aed;">בכ</div>
+                <div class="comm-name-wrap">
+                  <form method="post" action="/hke/admin/switch_to_community" style="display:inline;">
+                    <input type="hidden" name="community_id" value="2">
+                    <button type="submit" class="community-btn">בית כנסת השלום</button>
+                  </form>
+                  <!-- no website_url → icon not shown -->
+                </div>
+              </div>
+            </td>
+            <td>43</td>
+            <td>67</td>
+            <td>2</td>
+            <td class="zero-alert">0</td>
+            <td><span class="pill pill-rate-red">● 58%</span></td>
+            <td class="date-old">לפני 45 יום</td>
+            <td style="color:var(--text-2); font-size:0.82rem;">רחל כהן</td>
+            <td><span class="badge badge-stalled">מוקפא</span></td>
+          </tr>
+
+          <!-- Row: New community -->
+          <tr>
+            <td>
+              <div class="community-cell">
+                <div class="comm-avatar" style="background:#059669;">קה</div>
+                <div class="comm-name-wrap">
+                  <form method="post" action="/hke/admin/switch_to_community" style="display:inline;">
+                    <input type="hidden" name="community_id" value="3">
+                    <button type="submit" class="community-btn">קהילת הגולן</button>
+                  </form>
+                  <a href="https://example.com" target="_blank" rel="noopener" class="website-icon" title="אתר הקהילה">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/>
+                    </svg>
+                  </a>
+                </div>
+              </div>
+            </td>
+            <td>12</td>
+            <td>18</td>
+            <td style="color:var(--muted)">0</td>
+            <td>8</td>
+            <td style="color:var(--muted); font-size:0.8rem;">—</td>
+            <td class="date-old">לא נשלח</td>
+            <td style="color:var(--muted); font-size:0.82rem;">—</td>
+            <td><span class="badge badge-new">חדש</span></td>
+          </tr>
+
+        </tbody>
+      </table>
+    </div>
+
+  </main>
+
+  <!--
+  ════════════════════════════════════════════════════
+  IMPLEMENTATION NOTES
+  ════════════════════════════════════════════════════
+
+  NAV — COMMUNITY SWITCHER:
+    Already implemented in _navbar.html.erb (lines 87-105).
+    The select submits to hke_admin_switch_to_community_path via POST.
+    In this design it moves to the left side of the nav (RTL "end").
+    No code change needed — just CSS repositioning.
+
+  CONTROLLER — existing variables (no new work):
+    @total_communities     → Hke::Community.count
+    @total_contacts        → Hke::ContactPerson.count (cross-tenant)
+    @total_deceased        → Hke::DeceasedPerson.count (cross-tenant)
+    @messages_sent_30_days → Hke::SentMessage (cross-tenant, 30d)
+
+  CONTROLLER — new queries needed:
+    @communities_with_stats: one struct per community:
+      contacts_count  ContactPerson.count (scoped to community)
+      deceased_count  DeceasedPerson.count (scoped to community)
+      sent_30d        SentMessage last 30 days
+      upcoming_30d    FutureMessage next 30 days (renamed label: "מתוזמנות")
+      success_rate    sent/(sent+not_sent) last 30 days, or nil if no history
+      last_sent_at    SentMessage.maximum(:created_at)
+      admin_name      User.joins(:account_users).where(account_users: { role: :community_admin })
+                        .where(community_id: community.id).pick(:name) — or "—" if none
+      status          "new" | "stalled" | "active"
+                      new     = never sent
+                      stalled = last_sent_at > 30 days ago
+                      active  = otherwise
+
+    @communities_needing_attention: filtered subset with:
+      issues = [] of Hebrew strings, one per problem:
+        "אחוז הצלחה נמוך (X%)"   if success_rate < 75
+        "אין הודעות מתוכננות"      if upcoming_30d == 0 && status != "new"
+        "לא נשלח ב-30 יום"        if stalled
+
+  SUCCESS RATE COLOR (ERB inline or helper):
+    rate.nil?    → no pill, render "—"
+    rate >= 90   → pill-rate-green
+    rate >= 70   → pill-rate-yellow
+    rate < 70    → pill-rate-red
+
+  SORTING:
+    Controller reads params[:sort] and params[:dir]
+    Current sort column gets class="sort active" + directional arrow
+
+  COMMUNITY CELL (avatar + name + website icon):
+    Avatar: if community.logo.attached? → image_tag community.logo
+            else → initials div with a deterministic background color
+            (e.g. derive hue from community.id or name.hash)
+    Website icon: render only if community.website_url.present?
+            link_to community.website_url, target: "_blank", rel: "noopener"
+
+  CSRF:
+    Each community-switch form needs:
+    <%= hidden_field_tag :authenticity_token, form_authenticity_token %>
+
+  UPTIME TILE:
+    Keep dimmed/disabled until heartbeat tracking is built.
+  ════════════════════════════════════════════════════
+  -->
+
+</body>
+</html>
