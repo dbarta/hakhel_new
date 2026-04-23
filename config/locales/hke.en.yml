@@ -632,6 +632,64 @@ en:
             admin:
               cannot_be_removed: "role cannot be removed for the account owner"
 
+  admin:
+    dashboard:
+      title: "Control Panel"
+      system_admin: "System Admin"
+      access_denied: "Access denied."
+      stat:
+        communities: "Communities"
+        contacts: "Contacts"
+        deceased: "Deceased"
+        messages_30d: "Messages (Last 30 Days)"
+        uptime: "System Uptime"
+        coming_soon: "Coming Soon"
+      attention:
+        title: "Needs Attention"
+        low_success_rate: "Low success rate (%{rate}%)"
+        no_upcoming_messages: "No upcoming messages"
+        stalled: "No sends in 30+ days"
+      fleet:
+        title: "Communities — Overview"
+        communities_count:
+          zero: "0 communities"
+          one: "1 community"
+          other: "%{count} communities"
+        col:
+          community: "Community"
+          contacts: "Contacts"
+          deceased: "Deceased"
+          sent_30d: "Sent (30d)"
+          upcoming_30d: "Upcoming (30d)"
+          success_rate: "Success"
+          last_sent: "Last Sent"
+          admin: "Admin"
+          status: "Status"
+        status:
+          active: "Active"
+          stalled: "Stalled"
+          new: "New"
+        today: "Today"
+        days_ago: "%{count} days ago"
+        never_sent: "Never Sent"
+        community_website: "Community Website"
+        no_data: "—"
+    communities:
+      index:
+        title: "Manage Communities"
+        create_new: "New Community"
+        community_name: "Community Name"
+        type: "Type"
+        account: "Account"
+        created: "Created"
+        actions: "Actions"
+        view: "View"
+        edit: "Edit"
+        delete: "Delete"
+        confirm_delete: "Are you sure? This will delete all community data."
+        no_communities: "No communities found."
+        create_first: "Create First Community"
+
   helpers:
     label:
       country: "Country or region"

@@ -297,28 +297,52 @@ he:
 
   admin:
     dashboard:
-      title: "לוח בקרה מנהל מערכת"
+      title: "לוח בקרה"
+      system_admin: "מנהל מערכת"
+      access_denied: "אין הרשאת גישה."
+      stat:
+        communities: "קהילות"
+        contacts: "אנשי קשר"
+        deceased: "נפטרים"
+        messages_30d: "הודעות ב30 יום אחרונים"
+        uptime: "זמינות מערכת"
+        coming_soon: "בקרוב"
+      attention:
+        title: "דורש תשומת לב"
+        low_success_rate: "אחוז הצלחה נמוך (%{rate}%%)"
+        no_upcoming_messages: "אין הודעות מתוכננות"
+        stalled: "לא נשלח ב-30 יום"
+      fleet:
+        title: "קהילות — מבט-על"
+        communities_count:
+          zero: "0 קהילות"
+          one: "קהילה אחת"
+          other: "%{count} קהילות"
+        col:
+          community: "קהילה"
+          contacts: "אנשי קשר"
+          deceased: "נפטרים"
+          sent_30d: "נשלחו (30י׳)"
+          upcoming_30d: "מתוזמנות (30י׳)"
+          success_rate: "הצלחה"
+          last_sent: "נשלח לאחרונה"
+          admin: "מנהל קהילה"
+          status: "סטטוס"
+        status:
+          active: "פעיל"
+          stalled: "מוקפא"
+          new: "חדש"
+        today: "היום"
+        days_ago: "לפני %{count} ימים"
+        never_sent: "לא נשלח"
+        community_website: "אתר הקהילה"
+        no_data: "—"
       management:
         communities: "ניהול קהילות"
         users: "ניהול משתמשים"
         system_preferences: "הגדרת העדפות מערכת"
-      statistics:
-        communities_count:
-          zero: "אין קהילות"
-          one: "סה״כ קהילה אחת"
-          other: "סה״כ %{count} קהילות"
-        users_count:
-          zero: "אין משתמשים"
-          one: "סה״כ משתמש אחד"
-          other: "סה״כ %{count} משתמשים"
-        admins_count:
-          zero: "אין מנהלי קהילות"
-          one: "סה״כ מנהל קהילה אחד"
-          other: "סה״כ %{count} מנהלי קהילות"
-        messages_sent_30_days: "הודעות שנשלחו ב-30 הימים האחרונים"
-        messages_to_send_30_days: "הודעות לשליחה ב-30 הימים הקרובים"
       community_switching:
-        switch_to_community: "עבור לניהול קהילה"
+        switch_to_community: "עבור לניהול קהילה..."
         select_community: "בחר קהילה"
         back_to_system_admin: "חזור למנהל מערכת"
         switched_to_community: "עברת לניהול הקהילה %{community}"

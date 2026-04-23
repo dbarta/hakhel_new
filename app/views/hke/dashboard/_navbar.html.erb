@@ -1,0 +1,72 @@
+<%
+  # Determine context: system admin overview vs community admin
+  dash_system_admin = current_user.system_admin? && session[:selected_community_id].blank?
+  dash_community    = !dash_system_admin
+%>
+
+<nav class="adm-nav">
+
+  <%# ── Start (right in RTL): brand + nav links ── %>
+  <div class="adm-nav-start">
+    <%= link_to "הקהל", dash_system_admin ? hke_admin_root_path : hke_root_path,
+                class: "adm-nav-brand" %>
+
+    <div class="adm-nav-links">
+      <% if dash_system_admin %>
+        <%= link_to t("admin.dashboard.management.communities"), hke_admin_communities_path %>
+        <%= link_to t("admin.dashboard.management.users"),       hke_users_path %>
+        <%= link_to t("admin.dashboard.management.system_preferences"), hke_system_preferences_path %>
+        <%= link_to t("admin.advanced.title", default: "כלים מתקדמים"), hke_admin_advanced_path %>
+      <% else %>
+        <%# Community admin links — extend here for community dashboard %>
+        <%= link_to t("community_admin.navbar.deceased_people"), hke_deceased_people_path %>
+        <%= link_to t("community_admin.navbar.contact_people"),  hke_contact_people_path %>
+        <%= link_to "העדפות", hke_community_preferences_path %>
+      <% end %>
+    </div>
+  </div>
+
+  <%# ── End (left in RTL): community switcher + user ── %>
+  <div class="adm-nav-end">
+
+    <% if dash_system_admin %>
+      <div class="adm-nav-switcher">
+        <%= form_with url: hke_admin_switch_to_community_path, method: :post, local: true do |f| %>
+          <%= f.select :community_id,
+              options_from_collection_for_select(Hke::Community.order(:name), :id, :name, nil),
+              { prompt: t("admin.dashboard.community_switching.switch_to_community") },
+              { dir: "rtl", autocomplete: "off", onchange: "this.form.submit();" } %>
+        <% end %>
+      </div>
+    <% elsif dash_community %>
+      <%# Back to system admin link if the current user is a system admin %>
+      <% if current_user.system_admin? %>
+        <%= form_with url: hke_admin_switch_to_community_path, method: :post, local: true do |f| %>
+          <%= f.hidden_field :community_id, value: "" %>
+          <%= f.submit t("admin.dashboard.community_switching.back_to_system_admin"),
+              class: "adm-nav-links" %>
+        <% end %>
+      <% end %>
+    <% end %>
+
+    <%# User section %>
+    <div class="adm-nav-user-wrap">
+      <div class="adm-nav-user">
+        <div class="adm-avatar">
+          <%= [current_user.first_name.to_s[0], current_user.last_name.to_s[0]].join.upcase %>
+        </div>
+        <%= current_user.name.presence || current_user.email %>
+      </div>
+
+      <div class="adm-user-dropdown">
+        <%= link_to t("profile"), profile_hke_users_path %>
+        <% if current_user.system_admin? %>
+          <%= link_to t("community_admin.navbar.logs", default: "לוגים"), hke_logs_path %>
+        <% end %>
+        <%= link_to t("logout"), main_app.destroy_user_session_path,
+            data: { turbo_method: :delete, turbo_confirm: t("are_you_sure") } %>
+      </div>
+    </div>
+
+  </div>
+</nav>

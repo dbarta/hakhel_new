@@ -1,99 +1,172 @@
-<div class="container mx-auto p-4" style="direction: rtl;">
-  <div class="my-8">
-    <h1 class="text-3xl font-bold mb-4"><%= t("admin.dashboard.title") %></h1>
-  </div>
-  <!-- Management Actions - Button at top with stats underneath -->
-  <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-    <div class="bg-white p-6 rounded-lg shadow border-r-4 border-blue-500">
-      <%= link_to hke_admin_communities_path, class: 'btn btn-primary block text-center w-full mb-4' do %>
-        <i class="fas fa-users ml-2"></i>
-        <%= t("admin.dashboard.management.communities") %>
-      <% end %>
-      <p class="text-center text-gray-600">
-        <%= t("admin.dashboard.statistics.communities_count", count: @total_communities) %>
-      </p>
-    </div>
+<% avatar_colors = %w[#2563eb #7c3aed #059669 #b45309 #be185d #0284c7 #16a34a #9333ea] %>
 
-    <div class="bg-white p-6 rounded-lg shadow border-r-4 border-green-500">
-      <%= link_to hke_users_path, class: 'btn btn-primary block text-center w-full mb-4' do %>
-        <i class="fas fa-user ml-2"></i>
-        <%= t("admin.dashboard.management.users") %>
-      <% end %>
-      <p class="text-center text-gray-600">
-        <%= t("admin.dashboard.statistics.users_count", count: @total_users) %>
-      </p>
-    </div>
-  </div>
-  <!-- Message Statistics - Single line -->
-  <div class="bg-white p-4 rounded-lg shadow mb-8">
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-center">
-      <div>
-        <span class="text-lg font-semibold text-blue-600"><%= @messages_sent_30_days %></span>
-        <span class="text-gray-600 mr-2"><%= t("admin.dashboard.statistics.messages_sent_30_days") %></span>
-      </div>
-      <div>
-        <span class="text-lg font-semibold text-green-600"><%= @messages_to_send_30_days %></span>
-        <span class="text-gray-600 mr-2"><%= t("admin.dashboard.statistics.messages_to_send_30_days") %></span>
-      </div>
+<div class="adm-page">
+
+  <%# ── Page header ── %>
+  <div class="adm-page-header">
+    <div style="display:flex; align-items:baseline; gap:0.75rem;">
+      <h1 class="adm-page-title"><%= t("admin.dashboard.title") %></h1>
+      <span class="adm-page-subtitle"><%= t("admin.dashboard.system_admin") %></span>
     </div>
   </div>
 
-  <!-- Message Management Section -->
-  <div class="mb-4">
-    <h2 class="text-xl font-bold mb-4"><%= t("message_management.index.title") %></h2>
+  <%# ── Zone 1: Health Bar ── %>
+  <div class="adm-health-bar">
 
-    <!-- Stats -->
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-      <div class="bg-green-100 p-6 rounded-lg">
-        <h3 class="text-lg font-semibold text-green-800"><%= t("message_management.stats.total_sent") %></h3>
-        <p class="text-3xl font-bold text-green-600"><%= @msg_stats[:total_sent] %></p>
-      </div>
-      <div class="bg-red-100 p-6 rounded-lg">
-        <h3 class="text-lg font-semibold text-red-800"><%= t("message_management.stats.total_failed") %></h3>
-        <p class="text-3xl font-bold text-red-600"><%= @msg_stats[:total_failed] %></p>
-      </div>
-      <div class="bg-blue-100 p-6 rounded-lg">
-        <h3 class="text-lg font-semibold text-blue-800"><%= t("message_management.stats.success_rate") %></h3>
-        <p class="text-3xl font-bold text-blue-600"><%= @msg_stats[:success_rate] %>%</p>
-      </div>
+    <div class="adm-stat-tile">
+      <div class="adm-stat-label"><%= t("admin.dashboard.stat.communities") %></div>
+      <div class="adm-stat-value"><%= @total_communities %></div>
     </div>
 
-    <!-- Time Filter -->
-    <div class="bg-white rounded-lg shadow-sm p-4 mb-4 flex items-center gap-4">
-      <label class="text-sm font-medium text-gray-700"><%= t("message_management.filters.time_period") %>:</label>
-      <%= form_with url: hke_admin_root_path, method: :get, data: { turbo: false } do |form| %>
-        <%= hidden_field_tag :tab, @tab %>
-        <%= form.select :time_filter,
-          options_for_select([
-            [t("message_management.filters.last_7_days"), "last_7_days"],
-            [t("message_management.filters.last_30_days"), "last_30_days"],
-            [t("message_management.filters.last_90_days"), "last_90_days"],
-            [t("message_management.filters.this_year"), "this_year"],
-          ], @time_filter),
-          {},
-          { class: "rounded border-gray-300 text-sm", onchange: "this.form.submit();" } %>
-      <% end %>
+    <div class="adm-stat-tile">
+      <div class="adm-stat-label"><%= t("admin.dashboard.stat.contacts") %></div>
+      <div class="adm-stat-value"><%= @total_contacts %></div>
     </div>
 
-    <!-- Tabs + Table -->
-    <div class="bg-white rounded-lg shadow-sm">
-      <div class="border-b border-gray-200">
-        <nav class="flex -mb-px">
-          <%= link_to t("message_management.tabs.sent", count: @msg_stats[:total_sent]),
-            hke_admin_root_path(time_filter: @time_filter, tab: "sent"),
-            class: "px-6 py-3 border-b-2 text-sm font-medium #{@tab == "sent" ? "border-green-500 text-green-700" : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"}" %>
-          <%= link_to t("message_management.tabs.not_sent", count: @msg_stats[:total_failed]),
-            hke_admin_root_path(time_filter: @time_filter, tab: "not_sent"),
-            class: "px-6 py-3 border-b-2 text-sm font-medium #{@tab == "not_sent" ? "border-red-500 text-red-700" : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"}" %>
-        </nav>
+    <div class="adm-stat-tile">
+      <div class="adm-stat-label"><%= t("admin.dashboard.stat.deceased") %></div>
+      <div class="adm-stat-value"><%= @total_deceased %></div>
+    </div>
+
+    <div class="adm-stat-tile">
+      <div class="adm-stat-label"><%= t("admin.dashboard.stat.messages_30d") %></div>
+      <div class="adm-stat-value"><%= @messages_sent_30_days %></div>
+    </div>
+
+    <div class="adm-stat-tile adm-dimmed">
+      <div class="adm-stat-label"><%= t("admin.dashboard.stat.uptime") %></div>
+      <div class="adm-stat-value" style="color:var(--adm-faint);">—</div>
+      <div class="adm-stat-footnote"><%= t("admin.dashboard.stat.coming_soon") %></div>
+    </div>
+
+  </div>
+
+  <%# ── Zone 2: Attention Panel (conditional) ── %>
+  <% if @communities_needing_attention.any? %>
+    <div class="adm-attention">
+      <div class="adm-attention-header">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none"
+             stroke="var(--adm-gold)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/>
+          <line x1="12" y1="9" x2="12" y2="13"/>
+          <line x1="12" y1="17" x2="12.01" y2="17"/>
+        </svg>
+        <span class="adm-attention-label"><%= t("admin.dashboard.attention.title") %></span>
       </div>
-      <div>
-        <% if @tab == "sent" %>
-          <%= render partial: "hke/message_management/messages_table", locals: { messages: @sent_messages } %>
-        <% else %>
-          <%= render partial: "hke/message_management/not_sent_table", locals: { messages: @not_sent_messages } %>
+
+      <% @communities_needing_attention.each do |cs| %>
+        <% issue_texts = cs[:issues].map do |issue|
+             case issue
+             when :low_success_rate    then t("admin.dashboard.attention.low_success_rate",    rate: cs[:success_rate].to_i)
+             when :no_upcoming_messages then t("admin.dashboard.attention.no_upcoming_messages")
+             when :stalled             then t("admin.dashboard.attention.stalled")
+             end
+           end %>
+        <%= form_with url: hke_admin_switch_to_community_path, method: :post, local: true, style: "display:block;" do |f| %>
+          <%= f.hidden_field :community_id, value: cs[:community].id %>
+          <button type="submit" class="adm-attention-row">
+            <span class="adm-attention-dot"></span>
+            <span class="adm-attention-name"><%= cs[:community].name %></span>
+            <span class="adm-attention-desc"><%= issue_texts.join(" · ") %></span>
+            <svg class="adm-attention-arrow" width="13" height="13" viewBox="0 0 24 24"
+                 fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="9 18 15 12 9 6"/>
+            </svg>
+          </button>
         <% end %>
-      </div>
+      <% end %>
     </div>
+  <% end %>
+
+  <%# ── Zone 3: Community Fleet Table ── %>
+  <div class="adm-fleet-card">
+    <div class="adm-fleet-header">
+      <span class="adm-fleet-title"><%= t("admin.dashboard.fleet.title") %></span>
+      <span class="adm-fleet-count"><%= t("admin.dashboard.fleet.communities_count", count: @communities_with_stats.size) %></span>
+    </div>
+
+    <table class="adm-fleet">
+      <thead>
+        <tr>
+          <th><%= t("admin.dashboard.fleet.col.community") %></th>
+          <th><%= t("admin.dashboard.fleet.col.contacts") %></th>
+          <th><%= t("admin.dashboard.fleet.col.deceased") %></th>
+          <th><%= t("admin.dashboard.fleet.col.sent_30d") %></th>
+          <th><%= t("admin.dashboard.fleet.col.upcoming_30d") %></th>
+          <th><%= t("admin.dashboard.fleet.col.success_rate") %></th>
+          <th><%= t("admin.dashboard.fleet.col.last_sent") %></th>
+          <th><%= t("admin.dashboard.fleet.col.admin") %></th>
+          <th><%= t("admin.dashboard.fleet.col.status") %></th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @communities_with_stats.each do |cs| %>
+          <% community     = cs[:community] %>
+          <% avatar_color  = avatar_colors[community.id % avatar_colors.size] %>
+          <% initials      = community.name.split.first(2).map { |w| w[0] }.join %>
+          <tr>
+            <td>
+              <div class="adm-comm-cell">
+                <% if community.logo.attached? %>
+                  <%= image_tag community.logo, class: "adm-comm-avatar" %>
+                <% else %>
+                  <div class="adm-comm-avatar" style="background:<%= avatar_color %>;"><%= initials %></div>
+                <% end %>
+                <div class="adm-comm-name-wrap">
+                  <%= form_with url: hke_admin_switch_to_community_path, method: :post, local: true, style: "display:inline;" do |f| %>
+                    <%= f.hidden_field :community_id, value: community.id %>
+                    <button type="submit" class="adm-comm-btn"><%= community.name %></button>
+                  <% end %>
+                  <% if community.website_url.present? %>
+                    <%= link_to community.website_url, target: "_blank", rel: "noopener",
+                                class: "adm-website-icon", title: t("admin.dashboard.fleet.community_website") do %>
+                      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                           stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/>
+                        <polyline points="15 3 21 3 21 9"/>
+                        <line x1="10" y1="14" x2="21" y2="3"/>
+                      </svg>
+                    <% end %>
+                  <% end %>
+                </div>
+              </div>
+            </td>
+            <td><%= cs[:contacts_count] %></td>
+            <td><%= cs[:deceased_count] %></td>
+            <td><%= cs[:sent_30d] %></td>
+            <td class="<%= 'adm-zero-alert' if cs[:upcoming_30d] == 0 && cs[:status] != 'new' %>">
+              <%= cs[:upcoming_30d] %>
+            </td>
+            <td>
+              <% if cs[:success_rate].nil? %>
+                <span style="color:var(--adm-muted)"><%= t("admin.dashboard.fleet.no_data") %></span>
+              <% elsif cs[:success_rate] >= 90 %>
+                <span class="adm-pill adm-pill-green">● <%= cs[:success_rate].to_i %>%</span>
+              <% elsif cs[:success_rate] >= 70 %>
+                <span class="adm-pill adm-pill-yellow">● <%= cs[:success_rate].to_i %>%</span>
+              <% else %>
+                <span class="adm-pill adm-pill-red">● <%= cs[:success_rate].to_i %>%</span>
+              <% end %>
+            </td>
+            <td class="<%= 'adm-date-old' if cs[:last_sent_at] && cs[:last_sent_at] < 30.days.ago %>">
+              <% if cs[:last_sent_at].nil? %>
+                <span class="adm-date-old"><%= t("admin.dashboard.fleet.never_sent") %></span>
+              <% elsif cs[:last_sent_at].to_date == Date.current %>
+                <%= t("admin.dashboard.fleet.today") %>
+              <% else %>
+                <%= t("admin.dashboard.fleet.days_ago", count: ((Time.current - cs[:last_sent_at]) / 1.day).round) %>
+              <% end %>
+            </td>
+            <td style="font-size:18px;"><%= cs[:admin_name] %></td>
+            <td>
+              <span class="adm-badge adm-badge-<%= cs[:status] %>">
+                <%= t("admin.dashboard.fleet.status.#{cs[:status]}") %>
+              </span>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
   </div>
+
 </div>

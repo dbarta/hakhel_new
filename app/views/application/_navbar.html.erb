@@ -137,9 +137,16 @@
                 d="M19 9l-7 7-7-7"
               ></path>
             </svg>
-            <%= image_tag AvatarHelper.avatar_url_for(current_user, size: 48),
-            alt: current_user.name || current_user.email,
-            class: "h-8 w-8 rounded-full ring-2 ring-gray-200 ml-2" %>
+            <% if system_admin_mode %>
+              <span class="h-7 w-7 rounded-full ml-2 inline-flex items-center justify-center text-white text-xs font-bold flex-shrink-0"
+                    style="background:#b8902a; min-width:1.75rem;">
+                <%= [current_user.first_name.to_s[0], current_user.last_name.to_s[0]].join.upcase %>
+              </span>
+            <% else %>
+              <%= image_tag AvatarHelper.avatar_url_for(current_user, size: 48),
+              alt: current_user.name || current_user.email,
+              class: "h-8 w-8 rounded-full ring-2 ring-gray-200 ml-2" %>
+            <% end %>
             <%= current_user.name.presence || current_user.email %>
           </button>
           <div
