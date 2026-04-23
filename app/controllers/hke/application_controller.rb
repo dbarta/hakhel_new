@@ -12,7 +12,7 @@ module Hke
     include SetLocale
     include CurrentHelper
     include SetCurrentRequestDetails
-    layout 'application'
+    layout 'hke/dashboard'
 
     # Enable Pundit authorization for all Hke controllers
     after_action :verify_authorized, except: [:index]

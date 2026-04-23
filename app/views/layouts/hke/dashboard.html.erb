@@ -65,7 +65,7 @@
 
       .adm-nav-brand {
         font-family: var(--adm-font-serif);
-        font-size: 1.3rem;
+        font-size: 1.615rem;
         font-weight: 700;
         color: var(--adm-text);
         text-decoration: none;
@@ -77,15 +77,49 @@
         align-items: center;
         gap: 1.5rem;
       }
-      .adm-nav-links a {
+      .adm-nav-links a,
+      .adm-nav-links .adm-nav-dropdown-trigger {
         font-family: var(--adm-font-sans);
-        font-size: 0.8125rem;
+        font-size: 1.1875rem;
         color: var(--adm-muted);
         text-decoration: none;
         transition: color 0.15s;
+        background: none;
+        border: none;
+        padding: 0;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.25rem;
       }
-      .adm-nav-links a:hover { color: var(--adm-text); }
+      .adm-nav-links a:hover,
+      .adm-nav-links .adm-nav-dropdown-trigger:hover { color: var(--adm-text); }
       .adm-nav-links a.active { color: var(--adm-text); font-weight: 600; }
+
+      /* Nav dropdown (e.g. הודעות) */
+      .adm-nav-dropdown { position: relative; }
+      .adm-nav-dropdown:hover .adm-nav-dropdown-menu { display: block; }
+      .adm-nav-dropdown-menu {
+        display: none;
+        position: absolute;
+        top: 100%;
+        right: 0;
+        min-width: 160px;
+        background: var(--adm-bg-card);
+        border: 1px solid var(--adm-border);
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        z-index: 60;
+        padding: 0.75rem 0 0.375rem;
+      }
+      .adm-nav-dropdown-menu a {
+        display: block;
+        padding: 0.5rem 1rem;
+        font-size: 1.1875rem;
+        color: var(--adm-text-2);
+        white-space: nowrap;
+      }
+      .adm-nav-dropdown-menu a:hover { background: var(--adm-bg-subtle); color: var(--adm-text); }
 
       /* Left side (RTL): community switcher + user */
       .adm-nav-end {
@@ -97,7 +131,7 @@
       /* Community switcher select */
       .adm-nav-switcher select {
         font-family: var(--adm-font-sans);
-        font-size: 0.8125rem;
+        font-size: 1.1875rem;
         color: var(--adm-text);
         background-color: var(--adm-bg-subtle);
         border: 1px solid var(--adm-border-2);
@@ -121,7 +155,7 @@
         display: flex;
         align-items: center;
         gap: 0.5rem;
-        font-size: 0.8rem;
+        font-size: 1.125rem;
         color: var(--adm-muted);
         padding-right: 1.25rem;
         border-right: 1px solid var(--adm-border);
@@ -151,19 +185,19 @@
         display: none;
         position: absolute;
         left: 0;
-        top: calc(100% + 0.5rem);
+        top: 100%;
         min-width: 160px;
         background: var(--adm-bg-card);
         border: 1px solid var(--adm-border);
         border-radius: 8px;
         box-shadow: 0 4px 12px rgba(0,0,0,0.08);
         z-index: 60;
-        padding: 0.375rem 0;
+        padding: 0.5rem 0 0.375rem;
       }
       .adm-user-dropdown a {
         display: block;
         padding: 0.5rem 1rem;
-        font-size: 0.8125rem;
+        font-size: 1.1875rem;
         color: var(--adm-text-2);
         text-decoration: none;
         transition: background 0.1s;
@@ -176,7 +210,7 @@
       .adm-flash {
         padding: 0.75rem 2rem;
         font-family: var(--adm-font-sans);
-        font-size: 0.875rem;
+        font-size: 1.1875rem;
         border-bottom: 1px solid transparent;
       }
       .adm-flash-notice { background: #f0fdf4; color: #15803d; border-color: #bbf7d0; }
@@ -199,13 +233,13 @@
       .adm-page-header { margin-bottom: 1.75rem; }
       .adm-page-title {
         font-family: var(--adm-font-serif);
-        font-size: 29px;
+        font-size: 34px;
         font-weight: 700;
         color: var(--adm-text);
         line-height: 1;
       }
       .adm-page-subtitle {
-        font-size: 17px;
+        font-size: 24px;
         color: var(--adm-muted);
         margin-top: 0.2rem;
       }
@@ -239,7 +273,7 @@
         opacity: 0.45;
       }
       .adm-stat-label {
-        font-size: 15px;
+        font-size: 20px;
         font-weight: 600;
         letter-spacing: 0.06em;
         text-transform: uppercase;
@@ -248,13 +282,13 @@
       }
       .adm-stat-value {
         font-family: Arial, sans-serif;
-        font-size: 45px;
+        font-size: 50px;
         font-weight: 400;
         color: var(--adm-text);
         line-height: 1;
       }
       .adm-stat-footnote {
-        font-size: 15px;
+        font-size: 20px;
         color: var(--adm-muted);
         margin-top: 0.3rem;
       }
@@ -275,7 +309,7 @@
         margin-bottom: 0.625rem;
       }
       .adm-attention-label {
-        font-size: 15px;
+        font-size: 20px;
         font-weight: 700;
         letter-spacing: 0.09em;
         text-transform: uppercase;
@@ -305,13 +339,13 @@
         flex-shrink: 0;
       }
       .adm-attention-name {
-        font-size: 18px;
+        font-size: 23px;
         font-weight: 600;
         color: var(--adm-text);
         white-space: nowrap;
       }
       .adm-attention-desc {
-        font-size: 17px;
+        font-size: 24px;
         color: var(--adm-muted);
         flex: 1;
       }
@@ -337,19 +371,19 @@
         background: var(--adm-bg-subtle);
       }
       .adm-fleet-title {
-        font-size: 15px;
+        font-size: 20px;
         font-weight: 700;
         letter-spacing: 0.09em;
         text-transform: uppercase;
         color: var(--adm-muted);
       }
-      .adm-fleet-count { font-size: 17px; color: var(--adm-faint); }
+      .adm-fleet-count { font-size: 24px; color: var(--adm-faint); }
 
       table.adm-fleet { width: 100%; border-collapse: collapse; }
       table.adm-fleet thead tr { background: var(--adm-bg-subtle); }
       table.adm-fleet th {
         padding: 0.6rem 1rem;
-        font-size: 15px;
+        font-size: 20px;
         font-weight: 600;
         letter-spacing: 0.07em;
         text-transform: uppercase;
@@ -368,7 +402,7 @@
       table.adm-fleet tbody tr:hover { background: var(--adm-bg-subtle); }
       table.adm-fleet td {
         padding: 0.925rem 1rem;
-        font-size: 19px;
+        font-size: 24px;
         color: var(--adm-text-2);
         vertical-align: middle;
       }
@@ -384,7 +418,7 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: 13px;
+        font-size: 18px;
         font-weight: 700;
         color: white;
         overflow: hidden;
@@ -397,7 +431,7 @@
         cursor: pointer;
         padding: 0;
         font-family: var(--adm-font-serif);
-        font-size: 21px;
+        font-size: 26px;
         font-weight: 600;
         color: #1d4ed8;
         transition: color 0.15s;
@@ -420,7 +454,7 @@
         gap: 0.25rem;
         padding: 0.2rem 0.6rem;
         border-radius: 99px;
-        font-size: 16px;
+        font-size: 21px;
         font-weight: 700;
         white-space: nowrap;
       }
@@ -432,7 +466,7 @@
         display: inline-block;
         padding: 0.175rem 0.55rem;
         border-radius: 99px;
-        font-size: 15px;
+        font-size: 20px;
         font-weight: 600;
       }
       .adm-badge-active  { background: #dcfce7; color: #15803d; border: 1px solid #bbf7d0; }

@@ -5,6 +5,7 @@ module Hke
     before_action :authenticate_user!
     before_action :authorize_community_admin!
     before_action :set_future_message, only: [:show, :destroy, :blast, :preview]
+    skip_after_action :verify_authorized, only: [:preview]
 
     # GET /future_messages index
     # POST /future_messages search

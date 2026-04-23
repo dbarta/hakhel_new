@@ -406,7 +406,7 @@ he:
       contact_people: "אנשי קשר"
       import_csv: "יבוא CSV"
       message_management: "ניהול הודעות"
-
+      preferences: "העדפות"
       logs: "לוגים"
 
   csv_imports:

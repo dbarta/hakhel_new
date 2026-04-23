@@ -13,15 +13,26 @@
 
     <div class="adm-nav-links">
       <% if dash_system_admin %>
-        <%= link_to t("admin.dashboard.management.communities"), hke_admin_communities_path %>
-        <%= link_to t("admin.dashboard.management.users"),       hke_users_path %>
-        <%= link_to t("admin.dashboard.management.system_preferences"), hke_system_preferences_path %>
-        <%= link_to t("admin.advanced.title", default: "כלים מתקדמים"), hke_admin_advanced_path %>
+        <%= link_to t("admin.dashboard.management.communities"), hke_admin_communities_path, data: { turbo_prefetch: "false" } %>
+        <%= link_to t("admin.dashboard.management.users"),       hke_users_path,             data: { turbo_prefetch: "false" } %>
+        <%= link_to t("admin.dashboard.management.system_preferences"), hke_system_preferences_path, data: { turbo_prefetch: "false" } %>
+        <%= link_to t("admin.advanced.title", default: "כלים מתקדמים"), hke_admin_advanced_path, data: { turbo_prefetch: "false" } %>
       <% else %>
-        <%# Community admin links — extend here for community dashboard %>
-        <%= link_to t("community_admin.navbar.deceased_people"), hke_deceased_people_path %>
-        <%= link_to t("community_admin.navbar.contact_people"),  hke_contact_people_path %>
-        <%= link_to "העדפות", hke_community_preferences_path %>
+        <%# Community admin links %>
+        <div class="adm-nav-dropdown">
+          <button class="adm-nav-dropdown-trigger">
+            הודעות
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+          </button>
+          <div class="adm-nav-dropdown-menu">
+            <%= link_to t("community_admin.navbar.message_approval"),   hke_root_path,                      data: { turbo_prefetch: "false" } %>
+            <%= link_to t("community_admin.navbar.message_management"), hke_message_management_index_path, data: { turbo_prefetch: "false" } %>
+          </div>
+        </div>
+        <%= link_to t("community_admin.navbar.deceased_people"), hke_deceased_people_path,        data: { turbo_prefetch: "false" } %>
+        <%= link_to t("community_admin.navbar.contact_people"),  hke_contact_people_path,         data: { turbo_prefetch: "false" } %>
+        <%= link_to t("community_admin.navbar.import_csv"),      hke_csv_imports_path,            data: { turbo_prefetch: "false" } %>
+        <%= link_to t("community_admin.navbar.preferences"),     hke_community_preferences_path,  data: { turbo_prefetch: "false" } %>
       <% end %>
     </div>
   </div>
@@ -59,9 +70,9 @@
       </div>
 
       <div class="adm-user-dropdown">
-        <%= link_to t("profile"), profile_hke_users_path %>
+        <%= link_to t("profile"), profile_hke_users_path, data: { turbo_prefetch: "false" } %>
         <% if current_user.system_admin? %>
-          <%= link_to t("community_admin.navbar.logs", default: "לוגים"), hke_logs_path %>
+          <%= link_to t("community_admin.navbar.logs", default: "לוגים"), hke_logs_path, data: { turbo_prefetch: "false" } %>
         <% end %>
         <%= link_to t("logout"), main_app.destroy_user_session_path,
             data: { turbo_method: :delete, turbo_confirm: t("are_you_sure") } %>

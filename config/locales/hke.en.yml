@@ -168,6 +168,7 @@ en:
       contact_people: "Contact People"
       import_csv: "CSV Import"
       message_management: "Message Management"
+      preferences: "Preferences"
       logs: "Logs"
 
   account_invitations_mailer:
