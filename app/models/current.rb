@@ -5,6 +5,8 @@
 
 class Current < ActiveSupport::CurrentAttributes
   attribute :user, :account, :request_id, :user_agent, :ip_address
+  attribute :portal_request, default: false
+  attribute :portal_contact
   attribute :meta_tags, default: MetaTags.new
 
   resets do

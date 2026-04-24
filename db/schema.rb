@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_03_31_072356) do
+ActiveRecord::Schema[8.1].define(version: 2026_04_23_181935) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -336,6 +336,27 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_31_072356) do
     t.index ["messageable_type", "messageable_id"], name: "index_hke_not_sent_messages_on_messageable"
     t.index ["reason"], name: "index_hke_not_sent_messages_on_reason"
     t.index ["token"], name: "index_hke_not_sent_messages_on_token"
+  end
+
+  create_table "hke_portal_changes", force: :cascade do |t|
+    t.string "change_type", null: false
+    t.datetime "changed_at", null: false
+    t.integer "community_id", null: false
+    t.bigint "contact_person_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["community_id", "changed_at"], name: "index_hke_portal_changes_on_community_id_and_changed_at"
+    t.index ["contact_person_id"], name: "index_hke_portal_changes_on_contact_person_id"
+  end
+
+  create_table "hke_portal_visits", force: :cascade do |t|
+    t.integer "community_id", null: false
+    t.bigint "contact_person_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.datetime "visited_at", null: false
+    t.index ["community_id", "visited_at"], name: "index_hke_portal_visits_on_community_id_and_visited_at"
+    t.index ["contact_person_id"], name: "index_hke_portal_visits_on_contact_person_id"
   end
 
   create_table "hke_preferences", force: :cascade do |t|
@@ -708,6 +729,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_31_072356) do
   add_foreign_key "hke_landing_pages", "hke_communities", column: "community_id"
   add_foreign_key "hke_landing_pages", "users"
   add_foreign_key "hke_not_sent_messages", "hke_communities", column: "community_id"
+  add_foreign_key "hke_portal_changes", "hke_contact_people", column: "contact_person_id"
+  add_foreign_key "hke_portal_visits", "hke_contact_people", column: "contact_person_id"
   add_foreign_key "hke_relations", "hke_communities", column: "community_id"
   add_foreign_key "hke_relations", "hke_contact_people", column: "contact_person_id"
   add_foreign_key "hke_relations", "hke_deceased_people", column: "deceased_person_id"

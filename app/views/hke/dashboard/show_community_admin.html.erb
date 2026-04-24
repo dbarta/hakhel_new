@@ -12,29 +12,153 @@
   <turbo-frame id="message_preview_frame"></turbo-frame>
 </dialog>
 
-<div class="container mx-auto p-4" style="direction: rtl;">
+<div class="adm-page" style="direction: rtl;">
 
-  <!-- 30-day message stats -->
-  <div class="flex gap-6 mb-4 text-sm text-gray-600">
-    <div>
-      <span class="font-semibold text-green-700 text-base"><%= @sent_30_days %></span>
-      <span class="mr-1">הודעות נשלחו ב-30 ימים אחרונים</span>
-    </div>
-    <div>
-      <span class="font-semibold text-red-700 text-base"><%= @failed_30_days %></span>
-      <span class="mr-1">כשלונות</span>
-    </div>
+  <div class="adm-page-header">
+    <h1 class="adm-page-title">סקירת קהילה</h1>
   </div>
 
-  <!-- Message Approval Dashboard -->
-  <div class="bg-white rounded-lg shadow-sm p-6 mb-8">
-    <div class="flex items-center justify-between mb-6">
-      <h2 class="text-xl font-semibold"><%= t('community_admin.dashboard.message_approval.title') %></h2>
+  <%# ── Row 1: Community size ── %>
+  <div class="adm-health-bar" style="grid-template-columns: repeat(4, 1fr); margin-bottom: 1.5rem;">
 
-      <!-- Time Filter Dropdown -->
-	      <div class="flex items-center space-x-4 space-x-reverse">
-        <label class="text-sm font-medium text-gray-700">תקופת זמן:&nbsp;&nbsp;</label>
-	        <%= form_with url: hke_root_path, method: :get, local: false, data: { turbo_stream: true }, class: "inline" do |form| %>
+    <div class="adm-stat-tile">
+      <div class="adm-stat-label">נפטרים</div>
+      <div class="adm-stat-value"><%= @total_deceased %></div>
+      <div class="adm-stat-footnote">סך הכל במאגר</div>
+    </div>
+
+    <div class="adm-stat-tile">
+      <div class="adm-stat-label">אנשי קשר</div>
+      <div class="adm-stat-value"><%= @total_contacts %></div>
+      <div class="adm-stat-footnote">סך הכל במאגר</div>
+    </div>
+
+    <div class="adm-stat-tile">
+      <div class="adm-stat-label">הודעות נשלחו</div>
+      <div class="adm-stat-value"><%= @sent_30_days %></div>
+      <div class="adm-stat-footnote">30 ימים אחרונים</div>
+    </div>
+
+    <div class="adm-stat-tile" style="<%= @failed_30_days > 0 ? 'border-color: #fca5a5;' : '' %>">
+      <div class="adm-stat-label">כשלונות שליחה</div>
+      <div class="adm-stat-value" style="<%= @failed_30_days > 0 ? 'color: #dc2626;' : '' %>"><%= @failed_30_days %></div>
+      <div class="adm-stat-footnote">30 ימים אחרונים</div>
+    </div>
+
+  </div>
+
+  <%# ── Row 2: Portal + upcoming + pending ── %>
+  <div class="adm-health-bar" style="grid-template-columns: repeat(4, 1fr); margin-bottom: 1.5rem;">
+
+    <div class="adm-stat-tile">
+      <div class="adm-stat-label">הודעות צפויות</div>
+      <div class="adm-stat-value"><%= @upcoming_7_days %></div>
+      <div class="adm-stat-footnote">7 ימים הקרובים</div>
+    </div>
+
+    <% if @require_approval %>
+    <div class="adm-stat-tile" style="<%= @pending_approval > 0 ? 'border-color: #fcd34d; cursor: pointer;' : '' %>"
+         <% if @pending_approval > 0 %>onclick="window.location='<%= hke_root_path %>'"<% end %>>
+      <div class="adm-stat-label">ממתינות לאישור</div>
+      <div class="adm-stat-value" style="<%= @pending_approval > 0 ? 'color: #b45309;' : '' %>"><%= @pending_approval %></div>
+      <div class="adm-stat-footnote"><%= @pending_approval > 0 ? 'לחץ לאישור' : 'אין ממתינות' %></div>
+    </div>
+    <% else %>
+    <div class="adm-stat-tile adm-dimmed">
+      <div class="adm-stat-label">ממתינות לאישור</div>
+      <div class="adm-stat-value">—</div>
+      <div class="adm-stat-footnote">אישור לא מופעל</div>
+    </div>
+    <% end %>
+
+    <div class="adm-stat-tile">
+      <div class="adm-stat-label">ביקורי פורטל</div>
+      <div class="adm-stat-value"><%= @portal_visitors_30d %></div>
+      <div class="adm-stat-footnote">אנשי קשר ייחודיים, 30 יום</div>
+    </div>
+
+    <div class="adm-stat-tile">
+      <div class="adm-stat-label">שינויים בפורטל</div>
+      <div class="adm-stat-value"><%= @portal_changers_30d %></div>
+      <div class="adm-stat-footnote">אנשי קשר ששינו נתונים, 30 יום</div>
+    </div>
+
+  </div>
+
+  <%# ── Row 3: Channel breakdown + venue requests + relation distribution ── %>
+  <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem; margin-bottom: 1.5rem;">
+
+    <%# Sent by channel %>
+    <div class="adm-fleet-card">
+      <div class="adm-fleet-header">
+        <span class="adm-fleet-title">שליחות לפי ערוץ</span>
+        <span class="adm-fleet-count">30 יום</span>
+      </div>
+      <% channels = { "sms" => "SMS", "whatsapp" => "WhatsApp", "email" => "דוא״ל" } %>
+      <% channels.each do |key, label| %>
+        <% count = @sent_by_channel[key] || 0 %>
+        <% total = @sent_30_days > 0 ? @sent_30_days : 1 %>
+        <div style="padding: 0.75rem 1.25rem; border-bottom: 1px solid var(--adm-border); display: flex; align-items: center; gap: 1rem;">
+          <span style="font-size: 22px; font-weight: 600; color: var(--adm-text); min-width: 80px;"><%= label %></span>
+          <div style="flex: 1; background: var(--adm-bg-subtle); border-radius: 4px; height: 10px; overflow: hidden;">
+            <div style="background: var(--adm-gold); height: 100%; width: <%= (count.to_f / total * 100).round %>%; min-width: <%= count > 0 ? '4px' : '0' %>;"></div>
+          </div>
+          <span style="font-size: 22px; color: var(--adm-muted); min-width: 40px; text-align: left;"><%= count %></span>
+        </div>
+      <% end %>
+    </div>
+
+    <%# Venue requests %>
+    <div class="adm-fleet-card">
+      <div class="adm-fleet-header">
+        <span class="adm-fleet-title">בקשות שירות</span>
+        <span class="adm-fleet-count">30 יום</span>
+      </div>
+      <% if @venue_requests_30d.any? %>
+        <% total_vr = @venue_requests_30d.values.sum %>
+        <% @venue_requests_30d.each do |venue_type, count| %>
+          <div style="padding: 0.75rem 1.25rem; border-bottom: 1px solid var(--adm-border); display: flex; align-items: center; gap: 1rem;">
+            <span style="font-size: 22px; font-weight: 600; color: var(--adm-text); min-width: 80px;"><%= venue_type %></span>
+            <div style="flex: 1; background: var(--adm-bg-subtle); border-radius: 4px; height: 10px; overflow: hidden;">
+              <div style="background: #6366f1; height: 100%; width: <%= (count.to_f / total_vr * 100).round %>%;"></div>
+            </div>
+            <span style="font-size: 22px; color: var(--adm-muted); min-width: 40px; text-align: left;"><%= count %></span>
+          </div>
+        <% end %>
+      <% else %>
+        <div style="padding: 1.5rem 1.25rem; font-size: 22px; color: var(--adm-faint); text-align: center;">אין בקשות</div>
+      <% end %>
+    </div>
+
+    <%# Relation distribution %>
+    <div class="adm-fleet-card">
+      <div class="adm-fleet-header">
+        <span class="adm-fleet-title">נפטרים לאיש קשר</span>
+        <span class="adm-fleet-count">התפלגות</span>
+      </div>
+      <% dist_labels = { 1 => "1 נפטר", 2 => "2 נפטרים", 3 => "3 נפטרים", 4 => "4 ומעלה" } %>
+      <% dist_max = [@relation_dist.values.max, 1].max %>
+      <% dist_labels.each do |key, label| %>
+        <% count = @relation_dist[key] || 0 %>
+        <div style="padding: 0.75rem 1.25rem; border-bottom: 1px solid var(--adm-border); display: flex; align-items: center; gap: 1rem;">
+          <span style="font-size: 22px; font-weight: 600; color: var(--adm-text); min-width: 80px;"><%= label %></span>
+          <div style="flex: 1; background: var(--adm-bg-subtle); border-radius: 4px; height: 10px; overflow: hidden;">
+            <div style="background: #059669; height: 100%; width: <%= (count.to_f / dist_max * 100).round %>%; min-width: <%= count > 0 ? '4px' : '0' %>;"></div>
+          </div>
+          <span style="font-size: 22px; color: var(--adm-muted); min-width: 40px; text-align: left;"><%= count %></span>
+        </div>
+      <% end %>
+    </div>
+
+  </div>
+
+  <%# ── Message Approval Section ── %>
+  <div class="adm-fleet-card" style="margin-bottom: 1.5rem;">
+    <div class="adm-fleet-header">
+      <span class="adm-fleet-title"><%= t('community_admin.dashboard.message_approval.title') %></span>
+      <div style="display: flex; align-items: center; gap: 1rem;">
+        <%= form_with url: hke_root_path, method: :get, local: false, data: { turbo_stream: true }, style: "display: inline-flex; align-items: center; gap: 0.5rem;" do |form| %>
+          <span style="font-size: 20px; color: var(--adm-muted);">תקופה:</span>
           <%= form.select :time_filter,
                 options_for_select([
                   [t('community_admin.dashboard.message_approval.time_filters.one_week'), 'one_week'],
@@ -44,39 +168,34 @@
                 ], @time_filter),
                 {},
                 {
-                  class: "rounded border-gray-300 text-sm",
+                  style: "font-size: 20px; padding: 4px 8px; border: 1px solid var(--adm-border); border-radius: 6px;",
                   onchange: "this.form.requestSubmit();"
                 } %>
-
         <% end %>
       </div>
     </div>
 
-    <% if @require_approval %>
-      <!-- Stats Line -->
-      <div id="stats_line">
-        <%= render partial: "stats_line", locals: { messages: @messages, time_filter: @time_filter } %>
-      </div>
-
-      <!-- Bulk Actions -->
-      <div id="bulk_actions">
-        <%= render partial: "bulk_actions", locals: { time_filter: @time_filter } %>
-      </div>
-
-      <!-- Messages Table -->
-      <div id="messages_table">
-        <%= render partial: "messages_approval_table", locals: { messages: @messages, time_filter: @time_filter } %>
-      </div>
-    <% else %>
-      <div class="py-6 text-right text-gray-500 text-lg">
-        <%= t('community_admin.dashboard.message_approval.approval_disabled_html',
-              link: link_to(t('community_admin.dashboard.message_approval.approval_disabled_link'),
-                            hke_community_preferences_path,
-                            class: "text-blue-600 hover:underline")).html_safe %>
-      </div>
-    <% end %>
+    <div style="padding: 1.25rem;">
+      <% if @require_approval %>
+        <div id="stats_line">
+          <%= render partial: "stats_line", locals: { messages: @messages, time_filter: @time_filter } %>
+        </div>
+        <div id="bulk_actions">
+          <%= render partial: "bulk_actions", locals: { time_filter: @time_filter } %>
+        </div>
+        <div id="messages_table">
+          <%= render partial: "messages_approval_table", locals: { messages: @messages, time_filter: @time_filter } %>
+        </div>
+      <% else %>
+        <div style="padding: 1.5rem 0; text-align: right; color: var(--adm-muted); font-size: 22px;">
+          <%= t('community_admin.dashboard.message_approval.approval_disabled_html',
+                link: link_to(t('community_admin.dashboard.message_approval.approval_disabled_link'),
+                              hke_community_preferences_path,
+                              style: "color: #1d4ed8; text-decoration: underline;")).html_safe %>
+        </div>
+      <% end %>
+    </div>
   </div>
-
 
 </div>
 </div><%# closes data-controller="modal" %>

@@ -11,6 +11,20 @@
     <%= link_to "הקהל", dash_system_admin ? hke_admin_root_path : hke_root_path,
                 class: "adm-nav-brand" %>
 
+    <% if dash_community && (comm = current_community) %>
+      <div class="adm-nav-community">
+        <% if comm.logo.attached? %>
+          <%= image_tag comm.logo, class: "adm-nav-community-logo", alt: comm.name %>
+        <% end %>
+        <% if comm.website_url.present? %>
+          <%= link_to comm.name, comm.website_url, target: "_blank", rel: "noopener",
+                      class: "adm-nav-community-name", data: { turbo_prefetch: "false" } %>
+        <% else %>
+          <span class="adm-nav-community-name"><%= comm.name %></span>
+        <% end %>
+      </div>
+    <% end %>
+
     <div class="adm-nav-links">
       <% if dash_system_admin %>
         <%= link_to t("admin.dashboard.management.communities"), hke_admin_communities_path, data: { turbo_prefetch: "false" } %>

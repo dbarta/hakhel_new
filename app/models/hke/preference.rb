@@ -11,6 +11,7 @@ module Hke
 
     after_commit :handle_operational_changes
     after_commit :reschedule_community_sweep, if: :community_pref?
+    after_update_commit :track_portal_change, if: -> { Current.portal_request && Current.portal_contact }
 
     private
 
@@ -359,6 +360,15 @@ module Hke
       return unless preferring.respond_to?(:schedule_daily_job)
 
       preferring.schedule_daily_job
+    end
+
+    def track_portal_change
+      Hke::PortalChange.create!(
+        contact_person: Current.portal_contact,
+        community_id: Current.portal_contact.community_id,
+        change_type: :preference,
+        changed_at: Time.current
+      )
     end
   end
 end

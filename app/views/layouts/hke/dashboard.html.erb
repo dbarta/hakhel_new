@@ -72,6 +72,31 @@
       }
       .adm-nav-brand:hover { color: var(--adm-text); text-decoration: none; }
 
+      /* Community identity (logo + name) in community mode */
+      .adm-nav-community {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding-right: 1.25rem;
+        border-right: 1px solid var(--adm-border);
+      }
+      .adm-nav-community-logo {
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        object-fit: cover;
+        flex-shrink: 0;
+      }
+      .adm-nav-community-name {
+        font-family: var(--adm-font-serif);
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: var(--adm-text);
+        text-decoration: none;
+        white-space: nowrap;
+      }
+      a.adm-nav-community-name:hover { color: var(--adm-gold); }
+
       .adm-nav-links {
         display: flex;
         align-items: center;

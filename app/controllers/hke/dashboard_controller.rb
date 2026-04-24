@@ -39,15 +39,39 @@ module Hke
                     .includes(messageable: [:contact_person, :deceased_person], approved_by: [])
                     .order(:send_date)
 
-      # Message stats for last 30 days
-      @sent_30_days = Hke::SentMessage.where(created_at: 30.days.ago..Time.current).count
-      @failed_30_days = Hke::NotSentMessage.where(created_at: 30.days.ago..Time.current).count
+      # ── Community size metrics ──
+      @total_deceased  = Hke::DeceasedPerson.count
+      @total_contacts  = Hke::ContactPerson.count
 
-      @stats = {
-        total_sent_this_week: @sent_30_days,
-        total_failures: 0,
-        pending_this_week: @messages.pending_approval.count
+      # Relation distribution: how many contacts have 1, 2, 3, 4+ deceased
+      relation_counts = Hke::Relation
+        .group(:contact_person_id)
+        .count
+        .values
+      @relation_dist = {
+        1 => relation_counts.count { |c| c == 1 },
+        2 => relation_counts.count { |c| c == 2 },
+        3 => relation_counts.count { |c| c == 3 },
+        4 => relation_counts.count { |c| c >= 4 }
       }
+
+      # ── Message delivery (last 30 days) ──
+      range30 = 30.days.ago..Time.current
+      sent_scope = Hke::SentMessage.where(created_at: range30)
+      @sent_30_days       = sent_scope.count
+      @sent_by_channel    = sent_scope.group(:delivery_method).count
+      @failed_30_days     = Hke::NotSentMessage.where(created_at: range30).count
+      @upcoming_7_days    = Hke::FutureMessage.where(send_date: Date.current..7.days.from_now).count
+      @pending_approval   = @require_approval ? @messages.pending_approval.count : 0
+
+      # ── Portal metrics (last 30 days) ──
+      portal_range = 30.days.ago..Time.current
+      @portal_visitors_30d   = Hke::PortalVisit.where(visited_at: portal_range).distinct.count(:contact_person_id)
+      @portal_changers_30d   = Hke::PortalChange.where(changed_at: portal_range).distinct.count(:contact_person_id)
+      @venue_requests_30d    = Hke::VenueRequest.where(created_at: portal_range)
+        .joins(:community_venue)
+        .group("hke_community_venues.venue_type")
+        .count
 
       # Only respond with turbo_stream for explicit filter changes (time_filter param present).
       # Full page navigation (e.g. after login redirect) must always get HTML.

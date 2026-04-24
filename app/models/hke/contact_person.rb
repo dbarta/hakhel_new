@@ -21,6 +21,7 @@ module Hke
     validates :gender, inclusion: {in: ["male", "female"], message: :gender_invalid}
     accepts_nested_attributes_for :relations, allow_destroy: true, reject_if: :all_blank
     after_commit :process_future_messages, on: :update
+    after_update_commit :track_portal_change, if: -> { Current.portal_request }
 
     EMAIL_VERIFICATION_EXPIRY = 48.hours
 
@@ -60,6 +61,15 @@ module Hke
 
     def process_future_messages
       relations.each(&:process_future_messages)
+    end
+
+    def track_portal_change
+      Hke::PortalChange.create!(
+        contact_person: self,
+        community_id: community_id,
+        change_type: :profile,
+        changed_at: Time.current
+      )
     end
 
     def send_verification_email(to_email, token)

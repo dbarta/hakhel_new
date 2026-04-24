@@ -21,6 +21,7 @@ module Hke
     include Hke::HebrewTransformations
     after_validation :transform_hebrew_dates
     after_commit :process_future_messages, on: :update
+    after_update_commit :track_portal_change, if: -> { Current.portal_request && Current.portal_contact }
 
     def contact_name
       if relations.empty?
@@ -38,6 +39,15 @@ module Hke
 
     def process_future_messages
       relations.each(&:process_future_messages)
+    end
+
+    def track_portal_change
+      Hke::PortalChange.create!(
+        contact_person: Current.portal_contact,
+        community_id: community_id,
+        change_type: :deceased,
+        changed_at: Time.current
+      )
     end
   end
 end
