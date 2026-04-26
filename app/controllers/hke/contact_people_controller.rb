@@ -1,42 +1,34 @@
+require "pagy"
 module Hke
   class ContactPeopleController < ApplicationController
+    include Pagy::Backend
+
     # before_action :authenticate_user!
     before_action :set_community_as_current_tenant
     before_action :authenticate_admin
     before_action :set_contact_person, only: [:show, :edit, :update, :destroy]
 
-    # GET /contact_people index
-    # POST /contact_people search
     def index
-      @contact_people = policy_scope(ContactPerson).includes(relations: [:deceased_person])
-      if params[:name_search]
+      per_page_param = params[:per_page]&.to_i
+      per_page = [10, 25, 50, 100].include?(per_page_param) ? per_page_param : nil
+      per_page ||= session[:contacts_per_page]&.to_i || 25
+      session[:contacts_per_page] = per_page
+      @per_page = per_page
+
+      scope = policy_scope(ContactPerson).includes(relations: [:deceased_person])
+      @total_contacts = policy_scope(ContactPerson).count
+
+      if params[:name_search].present?
         key = "%#{params[:name_search]}%"
-        @contact_people = @contact_people.where("first_name ILIKE ?", key)
-          .or(@contact_people.where("last_name ILIKE ?", key))
+        scope = scope.where("first_name ILIKE ?", key).or(scope.where("last_name ILIKE ?", key))
       end
-      @contact_people = @contact_people.sort_by_params(params[:sort], sort_direction)
+      scope = scope.sort_by_params(params[:sort], sort_direction)
+
+      @pagy, @contact_people = pagy(scope, limit: per_page)
       @contact_people.load
 
       respond_to do |format|
-        format.html # Response for normal get - show full index
-        format.turbo_stream do # Response from post, which is result of input from the search box
-          render turbo_stream: [
-            turbo_stream.update(
-              "search_results",
-              partial: "hke/shared/search_results",
-              locals: {
-                items: @contact_people,
-                fields: [:first_name, :last_name, :email, :phone, :gender],
-                other_fields: [],
-                actions: [
-	                  { name: "action_edit", path: :edit_hke_contact_person_path },
-	                  { name: "action_delete", path: :hke_contact_person_path, method: :delete, confirm: true }
-                ]
-              }
-            ),
-            turbo_stream.update("people_count", @contact_people.count)
-          ]
-        end
+        format.html
       end
     end
 

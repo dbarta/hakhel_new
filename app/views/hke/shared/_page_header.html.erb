@@ -1,0 +1,11 @@
+<div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.75rem;">
+  <div>
+    <h1 class="adm-page-title"><%= title %></h1>
+    <% if local_assigns[:subtitle].present? %>
+      <div class="adm-page-subtitle"><%= subtitle %></div>
+    <% end %>
+  </div>
+  <% if local_assigns[:action_html] %>
+    <div><%= action_html %></div>
+  <% end %>
+</div>

@@ -1,25 +1,36 @@
+<div class="adm-page">
 
-<div class="container mx-auto my-8">
-  <div class="flex items-center mb-8">
-    <h4 class="h4 ml-10">
-      <span id="people_count"><%= "#{@contact_people.count}" %></span>
-      <%= " #{t('contact_people')}" %></h4>
-    </h4>
+  <%= render "hke/shared/page_header",
+        title: t('contact_people'),
+        action_html: link_to(t("shared.scaffold.new.title", model: t("contact_person")),
+                             new_hke_contact_person_path,
+                             class: "adm-btn adm-btn-primary") %>
 
-    <div class="mr-auto flex items-center">
-		      <%= render partial: "hke/shared/search_box", locals: {url: hke_contact_people_path} %>
-	      <%= link_to t("shared.scaffold.new.title", model: t("contact_person")), new_hke_contact_person_path, class: "btn btn-small btn-primary mr-10" %>
+  <%= form_with url: hke_contact_people_path, method: :get,
+        data: { turbo_frame: "contacts_results" },
+        class: "adm-search-bar" do |form| %>
+    <%= form.search_field :name_search,
+          value: params[:name_search],
+          placeholder: t('search_by_first_or_last_name'),
+          class: "adm-search-input",
+          oninput: "this.form.requestSubmit();",
+          onsearch: "this.form.requestSubmit();" %>
+    <div class="adm-per-page-wrap">
+      <span class="adm-per-page-label">שורות בעמוד:</span>
+      <%= form.select :per_page,
+            [10, 25, 50, 100],
+            { selected: @per_page },
+            { class: "adm-per-page-select", onchange: "this.form.requestSubmit();" } %>
     </div>
-  </div>
-  <div id="search_results">
-      <%= render partial: "hke/shared/search_results",
-        locals: {       items: @contact_people,
-                        fields: [ :first_name, :last_name, :email, :phone, :gender],
-                        other_fields: [],
-	                        actions:     [
-	                                      {name: "action_edit", path: :edit_hke_contact_person_path},
-	                                      {name: "action_delete", path: :hke_contact_person_path, method: :delete, confirm: true}
-	                                    ]
-                } %>
-  </div>
+    <%= form.hidden_field :sort, value: params[:sort] %>
+    <%= form.hidden_field :direction, value: params[:direction] %>
+  <% end %>
+
+  <turbo-frame id="contacts_results">
+    <%= render "results",
+          contact_people: @contact_people,
+          pagy: @pagy,
+          total_contacts: @total_contacts %>
+  </turbo-frame>
+
 </div>
